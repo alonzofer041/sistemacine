@@ -27,5 +27,6 @@ export default function FormComponent({PeliculaCategoria,setPeliculaCategoria}){
         <div className="container">
             <Input name="nombre" label="Nombre del Género" value={PeliculaCategoria.nombre} onChange={handleNombre}></Input>
         </div>
+        
     )
 }

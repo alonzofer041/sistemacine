@@ -37,7 +37,7 @@ export default function NavBarComponent() {
         </Link>
       </NavbarItem>
       <NavbarItem>
-        <Link color="foreground" href="#">
+        <Link href="/productos" color="foreground">
           Productos
         </Link>
       </NavbarItem>
