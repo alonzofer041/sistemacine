@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 // import { createBrowserRouter,RouterProvider } from 'react-router-dom'
+import './fonts/Ruberoid/Ruberoid-Bold.otf'
 import { RouterProvider } from 'react-router-dom'
 import { NextUIProvider } from '@nextui-org/react'
 import routerApp from './router/index';
