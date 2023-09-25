@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 export default function SubMenuProducto(){
     const navigate=useNavigate();
     function NavegarCategoria(){
-        navigate('/provedores');
+        navigate('/provedores', );
+    }
+    function NavegarProducto(){
+        navigate('/productoslista', );
     }
     return(
         <div className="container">
@@ -14,7 +17,7 @@ export default function SubMenuProducto(){
                     <FaPeopleCarry size="2em"/>
                     Provedores
                 </Button>
-                <Button className="btn btn-menu">
+                <Button className="btn btn-menu" onClick={NavegarProducto}>
                     <FaHamburger size="2em"/>
                     Productos
                 </Button>
