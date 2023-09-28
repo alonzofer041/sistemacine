@@ -26,6 +26,10 @@ export const Header = ({
 		setCountProducts(0);
 	};
 
+	const payCart = () => {
+		navigate('/pagar');
+	};
+
 	return (
 		<header>
 			<h1>Tienda</h1>
@@ -101,6 +105,10 @@ export const Header = ({
 
 							<button className='btn-clear-all' onClick={onCleanCart}>
 								Vaciar Carrito
+							</button>
+
+							<button className='btn-pay' onClick={payCart}>
+								Pagar Carrito
 							</button>
 						</>
 					) : (

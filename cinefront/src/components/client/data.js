@@ -13,4 +13,32 @@ export const data = [
         price: 110.00,
         quantity: 1,
     },
+    {
+        id: 3,
+        img:"https://menuplatino.mx/wp-content/uploads/2022/07/COMBO-NACHOS-MUNDET.png",
+        nameProduct: "Combo 3",
+        price: 120.00,
+        quantity: 1,
+    },
+    {
+        id: 4,
+        img:"https://menuplatino.mx/wp-content/uploads/2022/07/COMBO-GRANDE.png",
+        nameProduct: "Combo 4",
+        price: 120.00,
+        quantity: 1,
+    },
+    {
+        id: 5,
+        img:"https://menuplatino.mx/wp-content/uploads/2022/07/COMBO-HOT-DOG-COCACOLA.png",
+        nameProduct: "Combo 5",
+        price: 180.00,
+        quantity: 1,
+    },
+    {
+        id: 6,
+        img:"https://menuplatino.mx/wp-content/uploads/2021/11/c-icee.png",
+        nameProduct: "Combo 6",
+        price: 170.00,
+        quantity: 1,
+    },
 ];
