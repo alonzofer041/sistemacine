@@ -10,6 +10,7 @@ import App from './App.jsx'
 import '../dist/output.css'
 import './custom.css'
 import './components/client/index.css'
+import NavBarComponent from './components/cliente/NavBarComponent'
 // const router=createBrowserRouter([
 //   {
 //     path:'/',
@@ -19,8 +20,7 @@ import './components/client/index.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
     <NextUIProvider>
       <main className='dark text-foreground bg-background'>
-      <App />
-        <RouterProvider router={routerApp}></RouterProvider>
+      <RouterProvider router={routerApp}></RouterProvider>
       </main>
     </NextUIProvider>
   
