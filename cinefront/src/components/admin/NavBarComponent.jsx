@@ -16,7 +16,6 @@ export default function NavBarComponent() {
   const location=useLocation();
   const pathname=location.pathname;
   const index=pathname.indexOf("cine");
-  console.log(index);
   return (
     <>
       <Navbar>
