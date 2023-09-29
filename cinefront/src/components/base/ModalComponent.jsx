@@ -8,12 +8,13 @@ export default function ModalComponent({
     IdModal,
     Titulo,
     EventoGuardar,
-    CuerpoFormulario}
+    CuerpoFormulario,
+    Size}
     ){
         // const {isOpen, onOpen, onOpenChange} = useDisclosure();
         return(
             <>
-                <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                <Modal size={Size} isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
                         {(onClose)=>(
                             <>
@@ -23,10 +24,10 @@ export default function ModalComponent({
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button color="danger" variant="light" onPress={onClose}>
-                                      Close
+                                      Cerrar
                                     </Button>
                                     <Button onClick={EventoGuardar} color="primary" onPress={onClose}>
-                                      Action
+                                      Guardar
                                     </Button>
                                 </ModalFooter>
                             </>

@@ -1,26 +1,22 @@
-
 import React, { useState } from "react";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import ListGeneralComponent from "../../../../base/ListGeneralComponent";
 import Modal from "../../../../base/ModalComponent";
-import FormComponent from "./FormComponent";
 import BtnAccionComponent from "../../../../base/BtnAccionComponent";
-
+import FormComponent from "./FormComponent";
 export default function ListComponent(){
     const location=useLocation();
-    const idpelicula=location.state?.idpelicula
-    const titulo=location.state?.titulo
-    const [PeliculaHorario,setPeliculaHorario]=useState({
-        idpelicula:0,
-        titulo: "",
+    const idsala=location.state?.idsala
+    const [SalaAsientos,setSalaAsientos]=useState({
+        idsalaasiento:0,
         idsala:0,
-        idhorario:0,
-        horario: 0,
+        nombre:'',
+        fila:''
     });
-    const[PeliculaHorarioList,setPeliculaHorarioList]=useState([
-        {idpelicula:'1',idsala:'A1',idhorario:'1', titulo:"star wars" ,horario:'23/12/1977 15:15'},
-        
+    const[SalaAsientosList,setSalaAsientosList]=useState([
+        {idsalaasiento:'1',idsala:'1',nombre:'A1',fila:'A'},
+        {idsalaasiento:'2',idsala:'1',nombre:'B1',fila:'B'}
     ]);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     function Lista(){
@@ -44,26 +40,24 @@ export default function ListComponent(){
                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                 EsModal={true}
                 Filtro={1} 
-                Titulo={"Horario"}
-                NombreLista={titulo}
+                Titulo={"Asientos"}
+                NombreLista={"Sala "+idsala}
                 EventoLimpiar={Limpiar}
                 CabeceraTabla={
                    <TableHeader>
                         <TableColumn>#</TableColumn>
-                        <TableColumn>Titulo</TableColumn>
-                        <TableColumn>Sala</TableColumn>
-                        <TableColumn>Horario</TableColumn>
+                        <TableColumn>Nombre</TableColumn>
+                        <TableColumn>Fila</TableColumn>
                         <TableColumn>Acciones</TableColumn>
                    </TableHeader> 
                 }
                 CuerpoTabla={
-                    <TableBody items={PeliculaHorarioList}>
+                    <TableBody items={SalaAsientosList}>
                         {(item)=>(
-                            <TableRow key={item.idpelicula}>
-                                <TableCell>{item.idpelicula}</TableCell>
-                                <TableCell>{item.titulo}</TableCell>
-                                <TableCell>{item.idsala}</TableCell>
-                                <TableCell>{item.horario}</TableCell>
+                            <TableRow key={item.idsalaasiento}>
+                                <TableCell>{item.idsalaasiento}</TableCell>
+                                <TableCell>{item.nombre}</TableCell>
+                                <TableCell>{item.fila}</TableCell>
                                 <TableCell>
                                     <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}></BtnAccionComponent>
                                 </TableCell>
@@ -75,9 +69,9 @@ export default function ListComponent(){
             <Modal
                  Size="xl"
                  EventoGuardar={Guardar}
-                 Titulo={"Agregar Horario"}
+                 Titulo={"Agregar Asiento"}
                  isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-                 CuerpoFormulario={<FormComponent PeliculaHorario={PeliculaHorario} setPeliculaHorario={setPeliculaHorario}></FormComponent>}
+                 CuerpoFormulario={<FormComponent SalaAsientos={SalaAsientos} setSalaAsientos={setSalaAsientos}></FormComponent>}
             ></Modal>
         </div>
     )
