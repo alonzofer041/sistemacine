@@ -7,6 +7,8 @@ import ListPeliculas from "../components/admin/catalogos/pelicula/ListComponent"
 import ListProvedores from "../components/admin/catalogos/listaprovedores/ListComponent";
 import ListProducto from "../components/admin/catalogos/listaproductos/ListComponent";
 import SubMenuConfig from "../components/admin/catalogos/submenu";
+import Productos from "../components/client/ProductComponent";
+import Pago from "../components/client/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
 import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
@@ -62,7 +64,15 @@ const router=createBrowserRouter([
             {
                 path:'/cine/inicio',
                 element:<HomeComponent/>
-            }
+            },
+            {
+              path:"/cine/productosventa",
+              element:<Productos/>
+            },
+            {
+              path:"/cine/pagoventa",
+              element:<Pago/>
+            },
         ]
     }
 ])
