@@ -1,0 +1,196 @@
+/* Estilos globales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    border: 1px solid #000000;
+    color: #fff;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+nav {
+    flex-grow: 1; /* Permite que la barra de navegación ocupe todo el espacio restante */
+    text-align: center; /* Centra el texto horizontalmente */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.hero {
+    background-image: url('hero-image.jpg');
+    background-size: cover;
+    text-align: center;
+    color: #fff;
+    padding: 100px 0;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #141413;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cta-button:hover {
+    background-color: #ff6600;
+}
+
+.movies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.movie {
+    width: 30%;
+    margin-bottom: 20px;
+}
+
+/* Estilos adicionales para películas, imágenes, etc. */
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+.logo {
+    height: auto; /* Mantener la proporción de la imagen */
+    width: 250px; /* Ancho del logo (ajusta según tus necesidades) */
+    height: 120px; /* Alto del logo (ajusta según tus necesidades) */
+    
+}
+nav {
+    text-align: center; /* Centra el texto horizontalmente */
+}
+
+/* styles.css */
+
+/* Estilo de la barra de navegación */
+nav {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+/* Estilo de la lista no ordenada */
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+}
+
+/* Estilo de los elementos de la lista */
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+/* Estilo de los enlaces */
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    transition: color 0.3s; /* Transición de color suave al pasar el mouse */
+}
+
+/* Cambiar el color de los enlaces al pasar el mouse */
+nav ul li a:hover {
+    color: #ff9900;
+}
+
+/* styles.css */
+
+.slider-wrapper {
+    display: flex; /* Muestra las diapositivas en una fila horizontal */
+    overflow: hidden; /* Oculta el contenido que se desborda del contenedor */
+}
+
+.slide {
+    flex: 0 0 100%; /* Cada diapositiva ocupa el 100% del ancho del contenedor */
+    padding: 20px; /* Espacio alrededor de cada diapositiva */
+    box-sizing: border-box; /* Incluye el padding en el ancho total */
+    text-align: center; /* Centra el contenido horizontalmente */
+}
+
+.slide img {
+    max-width: 100%; /* Ajusta la imagen al ancho del contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+
+/* Estilos adicionales para título y contenido de la diapositiva */
+.slide h2 {
+    font-size: 24px;
+}
+
+.slide p {
+    font-size: 16px;
+}
+/* styles.css */
+
+.slider-container {
+    position: relative;
+    max-width: 800px; /* Ajusta el ancho máximo según tus necesidades */
+    margin: 0 auto;
+}
+
+.slider {
+    display: flex;
+    overflow: hidden;
+}
+
+.slide {
+    flex: 0 0 100%;
+}
+
+.slide img {
+    max-width: 100%;
+    height: auto;
+}
+
+.prev-btn,
+.next-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+    background-color: #ff9900;
+}
+
+.title-box {
+    text-align: center;
+    background-color: #333;
+    margin: 20px;
+    padding: 20px;
+    border: 2px solid #333; /* Color y grosor del borde */
+}
+
+h1 {
+    font-size: 24px;
+    color: #ffffff; /* Color del texto */
+}
