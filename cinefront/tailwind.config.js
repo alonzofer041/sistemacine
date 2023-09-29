@@ -4,8 +4,8 @@ const { nextui } = require("@nextui-org/react");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./index.css",
+    "./src/main.js /*.{js,ts,jsx,tsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   themes: {
@@ -15,6 +15,7 @@ module.exports = {
   plugins: [nextui({
     layout:{
       spacingUnit:{
+        
         'unit-xs': '8px', // 2 * spacingUnit
     'unit-sm': '12px', // 3 * spacingUnit
     'unit-md': '16px', // 4 * spacingUnit
