@@ -7,6 +7,9 @@ export default function SubMenuConfig(){
     function NavegarCategoria(){
         navigate('/peliculascategoria');
     }
+    function NavegarPelicula(){
+        navigate('/peliculas');
+    }
     return(
         <div className="container">
             <div className="flex gap-3 justify-center">
@@ -24,7 +27,7 @@ export default function SubMenuConfig(){
                     Sucursales
                 </Button>
 
-                <Button className="btn btn-menu">
+                <Button className="btn btn-menu" onClick={NavegarPelicula}>
                     <FaFilm size="2em"/>
                     Películas
                 </Button>
