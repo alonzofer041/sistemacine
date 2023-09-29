@@ -9,7 +9,7 @@ import {Navbar,
     NavbarMenuItem,
     Link,
     Button} from "@nextui-org/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 
 export default function NavBarComponent() {
@@ -67,6 +67,7 @@ export default function NavBarComponent() {
         </NavbarItem>
       </NavbarContent>
     </Navbar>
+    <Outlet></Outlet>
     </>
   );
 }
