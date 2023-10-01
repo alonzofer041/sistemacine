@@ -10,6 +10,12 @@ export default function SubMenuConfig(){
     function NavegarPelicula(){
         navigate('/peliculas');
     }
+    function NavegarSala(){
+        navigate('/salas');
+    }
+    function NavegarSucursal(){
+        navigate('/sucursales');
+    }
     return(
         <div className="container">
             <div className="flex gap-3 justify-center">
@@ -17,12 +23,12 @@ export default function SubMenuConfig(){
                     <FaFilm size="2em"/>
                     Género de Películas
                 </Button>
-                <Button className="btn btn-menu">
+                <Button className="btn btn-menu" onClick={NavegarSala}>
                     <FaGopuram size="2em"/>
                     Salas
                 </Button>
 
-                <Button className="btn btn-menu">
+                <Button className="btn btn-menu" onClick={NavegarSucursal}>
                     <FaBuilding size="2em"/>
                     Sucursales
                 </Button>

@@ -8,6 +8,7 @@ import {Navbar,
     NavbarMenu,
     NavbarMenuItem,
     Link,
+    Divider,
     Button} from "@nextui-org/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
@@ -18,18 +19,24 @@ export default function NavBarComponent() {
   const index=pathname.indexOf("cine");
   return (
     <>
-      <Navbar>
-      <NavbarContent className="sm:flex gap-4" justify="center">
+      <Navbar className="navigation">
+        
+      <NavbarContent  className="sm:flex gap-4 " justify="center">
         {index!=-1?(
           <>
             <NavbarItem>
-              <Link color="foreground" href="/dashboard">
+              <Link color="foreground" href="/cine/inicio">
                 Inicio
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="/dashboard">
+              <Link color="foreground" href="/cine/cartelera">
                 Cartelera
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link color="foreground" href="/cine/productosventa">
+                Productos
               </Link>
             </NavbarItem>
           </>
@@ -42,16 +49,17 @@ export default function NavBarComponent() {
               </Link>
             </NavbarItem>
             <NavbarItem isActive>
-              <Link href="/configuracion" aria-current="page">
+              <Link href="/configuracion" color="foreground" aria-current="page">
                 Configuración
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="#">
+              <Link color="foreground" href="/productos">
                 Productos
               </Link>
             </NavbarItem>
           </>
+          
 
           )
         }
@@ -67,8 +75,11 @@ export default function NavBarComponent() {
         </NavbarItem>
       </NavbarContent>
     </Navbar>
+    
+    
     <Outlet></Outlet>
     </>
+ 
   );
 }
 // export default NavBarComponent;

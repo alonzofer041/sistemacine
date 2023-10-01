@@ -16,12 +16,14 @@
     font-family: "RuberoidBold";
 }
 
+
 body {
 	margin: 0 auto;
-	max-width: 1200px;
 	font-family: 'RuberoidBold';
 	color: #000;
+
 }
+
 
 .icon-cart {
 	width: 40px;

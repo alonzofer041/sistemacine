@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/react";
 import React from "react";
-import {FaGopuram, FaBuilding, FaFilm, FaPeopleCarry, FaHamburger} from "react-icons/fa";
+import {FaGopuram, FaBuilding, FaFilm, FaPeopleCarry, FaHotdog} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 export default function SubMenuProducto(){
     const navigate=useNavigate();
@@ -18,10 +18,13 @@ export default function SubMenuProducto(){
                     Provedores
                 </Button>
                 <Button className="btn btn-menu" onClick={NavegarProducto}>
-                    <FaHamburger size="2em"/>
+                    <FaHotdog size="2em"/>
                     Productos
                 </Button>
-
+                <Button className="btn btn-menu" >
+                    <FaHotdog size="2em"/>
+                    Combos
+                </Button>
                 
             </div>
         </div>
