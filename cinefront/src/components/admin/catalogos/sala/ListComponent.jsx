@@ -61,7 +61,7 @@ export default function ListComponent(){
                                         MostrarBtnEliminar={true}
                                         BotonesAdicionales={
                                         <>
-                                           <Button onClick={()=>Navegar(item.idsala)} className="ml-2">Asignar asientos</Button>    
+                                           <Button variant="light" onClick={()=>Navegar(item.idsala)} className="ml-2">Asignar asientos</Button>    
                                         </>}
                                     ></BtnAccionComponent>
                                 </TableCell>

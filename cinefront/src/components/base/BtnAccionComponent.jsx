@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import React from "react";
 export default function BtnAccionComponent({
     MostrarBtnEditar,
@@ -10,10 +10,10 @@ export default function BtnAccionComponent({
 }){
     let {BotonEditar,BotonEliminar}=<></>;
     if (MostrarBtnEditar) {
-        BotonEditar=<Button onClick={EventoEditar} color="warning" className="mr-5" radius="full">Editar</Button>
+        BotonEditar=<Button  onClick={EventoEditar} color="warning" as={Link}  variant="light" className="mr-5" radius="full">Editar</Button>
     }
     if (MostrarBtnEliminar) {
-        BotonEliminar=<Button onClick={EventoEliminar} color="danger">Eliminar</Button>
+        BotonEliminar=<Button onClick={EventoEliminar} as={Link}  variant="light"  color="danger" className="mr-5">Eliminar</Button>
     }
     return(
         <>

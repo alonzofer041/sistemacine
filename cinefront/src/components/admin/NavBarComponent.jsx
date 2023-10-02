@@ -1,4 +1,6 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import LogoCine from "/xampp/htdocs/sistemacine/cinefront/src/assets/logo.png"
 
 import {Navbar, 
     NavbarBrand, 
@@ -17,13 +19,19 @@ export default function NavBarComponent() {
   const location=useLocation();
   const pathname=location.pathname;
   const index=pathname.indexOf("cine");
+
+  
   return (
     <>
       <Navbar className="navigation">
-        
-      <NavbarContent  className="sm:flex gap-4 " justify="center">
+      
+      
+      <NavbarContent  className="sm:flex gap-4 " justify="right"  >
         {index!=-1?(
           <>
+            <NavbarBrand className="logo">
+              <img src={LogoCine} width="150" height="40" alt="CineFlash" />
+            </NavbarBrand>
             <NavbarItem>
               <Link color="foreground" href="/cine/inicio">
                 Inicio
@@ -44,12 +52,12 @@ export default function NavBarComponent() {
           ) : (
           <>
             <NavbarItem>
-              <Link color="foreground" href="/dashboard">
+              <Link color="foreground" href="/dashboard" >
                 Dashboard
               </Link>
             </NavbarItem>
-            <NavbarItem isActive>
-              <Link href="/configuracion" color="foreground" aria-current="page">
+            <NavbarItem >
+              <Link href="/configuracion"  color="foreground" aria-current="page" >
                 Configuración
               </Link>
             </NavbarItem>
@@ -65,8 +73,8 @@ export default function NavBarComponent() {
         }
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Bienvenido</Link>
+        <NavbarItem className=" lg:flex" >
+          <Link color="foreground" href="#">Bienvenido</Link>
         </NavbarItem>
         <NavbarItem>
           {/* <Button as={Link} color="primary" href="#" variant="flat">
