@@ -19,7 +19,7 @@ import NavBarComponent from './components/cliente/NavBarComponent'
 // ])
 ReactDOM.createRoot(document.getElementById('root')).render(
     <NextUIProvider>
-      <main className='dark text-foreground bg-background'>
+      <main className='dark text-foreground'>
       <RouterProvider router={routerApp}></RouterProvider>
       </main>
     </NextUIProvider>

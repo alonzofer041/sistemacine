@@ -5,6 +5,8 @@ import ListPeliculasCategoria from "../components/admin/catalogos/peliculascateg
 import ListPeliculaHorario from "../components/admin/catalogos/pelicula/peliculahorario/ListComponent"
 import ListPeliculas from "../components/admin/catalogos/pelicula/ListComponent";
 import ListProvedores from "../components/admin/catalogos/listaprovedores/ListComponent";
+import ListCombo from "../components/admin/catalogos/combo/ListComponent";
+import ListComboDetalle from "../components/admin/catalogos/combo/comboxproducto/ListComponent";
 import ListProducto from "../components/admin/catalogos/listaproductos/ListComponent";
 import SubMenuConfig from "../components/admin/catalogos/submenu";
 import Productos from "../components/client/ProductComponent";
@@ -14,6 +16,7 @@ import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent
 import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
 import HomeComponent from "../components/cliente/HomeComponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
+import PrincipalChart from "../components/admin/dashboard/PrincipalComponent";
 // CAMBIAR POR LA RUTA DE INDEX
 const router=createBrowserRouter([
     // RUTAS ADMIN
@@ -59,6 +62,18 @@ const router=createBrowserRouter([
             {
               path:"/productoslista",
               element:<ListProducto/>
+            },
+            {
+                path:"/dashboard",
+                element:<PrincipalChart/>
+            },
+            {
+                path:"/combo",
+                element:<ListCombo/>
+            },
+            {
+                path:"/combodetalle",
+                element:<ListComboDetalle/>
             },
             //RUTAS CLIENTE
             {
