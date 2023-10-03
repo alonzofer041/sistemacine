@@ -7,13 +7,17 @@ import ListPeliculas from "../components/admin/catalogos/pelicula/ListComponent"
 import ListProvedores from "../components/admin/catalogos/listaprovedores/ListComponent";
 import ListProducto from "../components/admin/catalogos/listaproductos/ListComponent";
 import SubMenuConfig from "../components/admin/catalogos/submenu";
-import Productos from "../components/client/ProductComponent";
-import Pago from "../components/client/PaymentComponent";
+import Productos from "../components/client/products/ProductComponent";
+import Pago from "../components/client/payment/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
 import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
 import HomeComponent from "../components/cliente/HomeComponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
+import Login from "../components/client/login/LoginComponent";
+import Register from "../components/client/register/RegisterComponent";
+import Movies from "../components/client/movies/MoviesComponent";
+import GetTickets from "../components/client/moviesprocess/ProcessComponent";
 // CAMBIAR POR LA RUTA DE INDEX
 const router=createBrowserRouter([
     // RUTAS ADMIN
@@ -73,6 +77,22 @@ const router=createBrowserRouter([
               path:"/cine/pagoventa",
               element:<Pago/>
             },
+            {
+              path:"cine/login",
+              element:<Login/>
+            },
+            {
+              path:"cine/register",
+              element:<Register/>
+            },
+            {
+              path:"cine/peliculas",
+              element:<Movies/>
+            },
+            {
+              path:"cine/peliculas/entradas",
+              element:<GetTickets/>
+            }
         ]
     }
 ])
