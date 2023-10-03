@@ -1,6 +1,6 @@
-import { Button } from "@nextui-org/react";
+import { Link, Button } from "@nextui-org/react";
 import React from "react";
-import {FaGopuram, FaBuilding, FaFilm, FaPeopleCarry, FaHamburger} from "react-icons/fa";
+import {FaGopuram, FaBuilding, FaFilm, FaPeopleCarry, FaHotdog} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 export default function SubMenuProducto(){
     const navigate=useNavigate();
@@ -13,15 +13,18 @@ export default function SubMenuProducto(){
     return(
         <div className="container">
             <div className="flex gap-3 justify-center">
-                <Button className="btn btn-menu" onClick={NavegarCategoria}>
+                <Button className="btn btn-menu" as={Link} variant="shadow" onClick={NavegarCategoria}>
                     <FaPeopleCarry size="2em"/>
                     Provedores
                 </Button>
-                <Button className="btn btn-menu" onClick={NavegarProducto}>
-                    <FaHamburger size="2em"/>
+                <Button className="btn btn-menu" as={Link} variant="shadow" onClick={NavegarProducto}>
+                    <FaHotdog size="2em"/>
                     Productos
                 </Button>
-
+                <Button className="btn btn-menu" as={Link} variant="shadow"href="#" >
+                    <FaHotdog size="2em"/>
+                    Combos
+                </Button>
                 
             </div>
         </div>

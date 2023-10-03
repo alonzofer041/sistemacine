@@ -75,7 +75,7 @@ export default function ListComponent(){
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
                                     MostrarBtnEliminar={true}
-                                    BotonesAdicionales={<><Button>Ver salas</Button></>}>
+                                    BotonesAdicionales={<><Button variant="light">Ver salas</Button></>}>
                                 </BtnAccionComponent>
                             </TableCell>
                         </TableRow>

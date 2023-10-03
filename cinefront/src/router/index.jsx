@@ -71,7 +71,7 @@ const router=createBrowserRouter([
               element:<Productos/>
             },
             {
-              path:"/cine/pagoventa",
+              path:"/cine/pagarproducto",
               element:<Pago/>
             },
             {
