@@ -12,12 +12,13 @@ import Pago from "../components/client/payment/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
 import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
-import HomeComponent from "../components/cliente/HomeComponent";
+import Inicio from "../components/client/inicio/iniciocomponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
 import Login from "../components/client/login/LoginComponent";
 import Register from "../components/client/register/RegisterComponent";
 import Movies from "../components/client/movies/MoviesComponent";
 import GetTickets from "../components/client/moviesprocess/ProcessComponent";
+import Cartelera from "../components/client/inicio/cartelera";
 // CAMBIAR POR LA RUTA DE INDEX
 const router=createBrowserRouter([
     // RUTAS ADMIN
@@ -66,8 +67,8 @@ const router=createBrowserRouter([
             },
             //RUTAS CLIENTE
             {
-                path:'/cine/inicio',
-                element:<HomeComponent/>
+                path:"/cine/inicio",
+                element:<Inicio/>
             },
             {
               path:"/cine/productosventa",
@@ -92,7 +93,11 @@ const router=createBrowserRouter([
             {
               path:"cine/peliculas/entradas",
               element:<GetTickets/>
-            }
+            },
+            {
+                path:"/cine/Cartelera",
+                element:<Cartelera/>
+            },
         ]
     }
 ])
