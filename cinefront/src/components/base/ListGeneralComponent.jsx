@@ -17,12 +17,12 @@ export default function ListGeneralComponent({
     // const {isOpen, onOpen, onOpenChange} = useDisclosure();
     let boton=null;
     if (EsModal) {
-        boton=<button onClick={()=>{onOpen();EventoLimpiar();}}>Nuevo</button>
+        boton=<button onClick={()=>{onOpen();EventoLimpiar();}}><h3>Nuevo</h3></button>
     }
     return(
         <div>
             <div className="flex">
-                <div className="basis-1/4">{NombreLista + " / " + Titulo}</div>
+                <div className="basis-1/4"><h3>{NombreLista + " / " + Titulo}</h3></div>
                 <div className="basis-1/8">
                     {boton}
                 </div>

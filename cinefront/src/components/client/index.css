@@ -19,6 +19,7 @@
 
 body {
 	margin: 0 auto;
+	/* max-width: 1200px; */
 	font-family: 'RuberoidBold';
 	color: #000;
 	background-color: #000;
