@@ -14,9 +14,10 @@ import Pago from "../components/client/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
 import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
-import HomeComponent from "../components/cliente/HomeComponent";
+import Inicio from "../components/client/inicio/iniciocomponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
 import PrincipalChart from "../components/admin/dashboard/PrincipalComponent";
+import Cartelera from "../components/client/inicio/cartelera";
 // CAMBIAR POR LA RUTA DE INDEX
 const router=createBrowserRouter([
     // RUTAS ADMIN
@@ -77,17 +78,21 @@ const router=createBrowserRouter([
             },
             //RUTAS CLIENTE
             {
-                path:'/cine/inicio',
-                element:<HomeComponent/>
+                path:"/cine/inicio",
+                element:<Inicio/>
             },
             {
               path:"/cine/productosventa",
               element:<Productos/>
             },
             {
-              path:"/cine/pagoventa",
+              path:"/cine/pagarproducto",
               element:<Pago/>
             },
+            {
+                path:"/cine/Cartelera",
+                element:<Cartelera/>
+              },
         ]
     }
 ])

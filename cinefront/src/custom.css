@@ -1,3 +1,4 @@
+
 @font-face {
     font-family: "RuberoidBold";
     src: local("RuberoidBold"),url("./fonts/Ruberoid/Ruberoid-Bold.otf");
@@ -6,6 +7,9 @@
 h1,h2,h3,h4,h5,h6{
     color: black !important;
 }
+
+
+
 .fuenteprueba{
     font-family: "RuberoidBold";
 }
@@ -13,13 +17,29 @@ h1,h2,h3,h4,h5,h6{
     width: 15%;
     height: 5rem;
     border-radius: 0.7rem;
+    
 }
+
+.container{
+    padding: 1rem 1rem;
+}
+
+
+.navigation{
+    background-color: grey;
+}
+
+
 .btn-menu{
+    width: 15%;
     background-color: gray;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
+
+
+
 .react-datepicker-popper {
     z-index: 999999 !important;
 }

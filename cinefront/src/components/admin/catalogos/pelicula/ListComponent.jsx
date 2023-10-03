@@ -1,12 +1,13 @@
 import React from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "../pelicula/FormComponent";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 export default function ListComponent(){
     const navigate=useNavigate();
     const [Pelicula,setPelicula]=useState({
@@ -101,11 +102,13 @@ export default function ListComponent(){
                                     MostrarBtnEditar={true} 
                                     MostrarBtnEliminar={true}
                                     BotonesAdicionales={
-                                        <Button onClick={()=>Navegar(item.idpelicula,item.titulo)}>Asignar Horarios</Button>
+                                        <Button as={Link} variant="light" onClick={()=>Navegar(item.idpelicula,item.titulo)}>Asignar Horarios</Button>
                                     }
                                     ></BtnAccionComponent>
                             </TableCell>
+                            
                         </TableRow>
+                        
                     )}
                 </TableBody>
             }
