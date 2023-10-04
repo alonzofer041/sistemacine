@@ -81,7 +81,7 @@ export default function ListComponent(){
                 }
             ></ListGeneralComponent>
              <Modal
-            Size="xl"
+            Size="md"
             EventoGuardar={Guardar}
             Titulo={"Agregar Combo"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}

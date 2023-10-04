@@ -13,7 +13,7 @@ export default function FormComponent({ComboDetalle,setComboDetalle}){
     }
     return(
         <div>
-            <div className="grid-cols-1">
+            <div className="grid-cols-1 mb-3">
                 <Select label="Selecciona un Producto" onChange={changeProducto}>
                     <SelectItem key="0" value={0}>Palomitas</SelectItem>
                     <SelectItem key="1" value={1}>Perros</SelectItem>

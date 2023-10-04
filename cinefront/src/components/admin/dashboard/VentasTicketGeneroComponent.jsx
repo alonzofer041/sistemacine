@@ -5,7 +5,7 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 export default function VentasTicketComponent(){
     return(
         <div>
-            <h1 className="text-black">Ventas por género de película</h1>
+            <h1>Ventas por género de película</h1>
             <Doughnut datasetIdKey='id'
                 data={
                         {

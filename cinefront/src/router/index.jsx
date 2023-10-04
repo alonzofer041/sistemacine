@@ -14,7 +14,7 @@ import Pago from "../components/client/payment/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
 import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
-import Inicio from "../components/client/inicio/iniciocomponent";
+import Inicio from "../components/client/inicio/InicioComponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
 import PrincipalChart from "../components/admin/dashboard/PrincipalComponent";
 import Login from "../components/client/login/LoginComponent";

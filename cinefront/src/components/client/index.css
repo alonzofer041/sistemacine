@@ -23,7 +23,7 @@ body {
 	font-family: 'RuberoidBold';
 	color: #000;
 	background-color: #000;
-	height: 800px;
+	min-height: 800px;
 
 }
 
@@ -47,11 +47,15 @@ body {
 }
 
 .btn {
-	margin-top: 30px;
-	margin-bottom: 30px;
-	width: 100%;
+	width: 30%;
 	height: 40px;
-	color: #000;
+	color: #FFF;
+}
+
+.btnmenus{
+	width: 30%;
+	height: 80px;
+	color: #FFF;
 }
 
 .inputs {
@@ -207,8 +211,9 @@ header {
 
 .container-inputs {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(1, 1fr);
 	gap: 20px;
+	margin: auto;
 }
 
 .item {
@@ -300,4 +305,14 @@ header {
   background-color: #000;
   transform: scale(1.03);
   border-radius: 0;
+}
+.btn-modal{
+	width: 15%;
+	height: 2.4rem;
+}
+.navmain{
+	background-color: #FFF;
+}
+.navigation ul > li > a{
+	color: #000 !important;
 }

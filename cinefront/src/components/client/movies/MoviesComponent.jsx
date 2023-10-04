@@ -22,6 +22,7 @@ import {SearchIcon} from "./SearchIcon";
 import {ChevronDownIcon} from "./ChevronDownIcon";
 import {columns, users, statusOptions, languageOptions, typeOptions} from "./data";
 import {capitalize} from "./utils";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Movies() {
@@ -34,6 +35,7 @@ export default function Movies() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const navigate=useNavigate();
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -103,7 +105,7 @@ export default function Movies() {
 					<p className="titles">{user.name}</p>
                     {user.description}
 				</div>
-                <Button color="secondary" variant="shadow" className="btn">
+                <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} color="secondary" variant="shadow" className="btn">
                     Conseguir entradas.
                 </Button>
             </div>

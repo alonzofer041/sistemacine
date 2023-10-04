@@ -5,7 +5,7 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 export default function VentasTicketProductosComponent(){
     return(
         <div>
-            <h1 className="text-black">Ventas de Productos</h1>
+            <h1>Ventas de Productos</h1>
             <Doughnut
             datasetIdKey='id'
             data={

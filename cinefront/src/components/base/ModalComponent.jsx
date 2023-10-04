@@ -23,10 +23,10 @@ export default function ModalComponent({
                                     {CuerpoFormulario}
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={onClose}>
+                                    <Button className="btn-modal" color="danger" variant="light" onPress={onClose}>
                                       Cerrar
                                     </Button>
-                                    <Button onClick={EventoGuardar} color="primary" onPress={onClose}>
+                                    <Button className="btn-modal" onClick={EventoGuardar} color="primary" onPress={onClose}>
                                       Guardar
                                     </Button>
                                 </ModalFooter>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import LogoCine from "/xampp/htdocs/sistemacine/cinefront/src/assets/logo.png"
+import LogoCine from "../../assets/logo.png";
 
 import {Navbar, 
     NavbarBrand, 
@@ -16,14 +16,18 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 
 export default function NavBarComponent() {
+  const navigate=useNavigate();
   const location=useLocation();
   const pathname=location.pathname;
   const index=pathname.indexOf("cine");
 
+  function Navegar(url){
+    navigate(url);
+  }
   
   return (
     <>
-      <Navbar className="navigation">
+      <Navbar className={index!=-1 ? "navigation navclient" : "navigation navmain"}>
       
       
       <NavbarContent  className="sm:flex gap-4 " justify="right"  >
@@ -33,17 +37,17 @@ export default function NavBarComponent() {
               <img src={LogoCine} width="150" height="40" alt="CineFlash" />
             </NavbarBrand>
             <NavbarItem>
-              <Link color="foreground" href="/cine/inicio">
+              <Link color="foreground" onClick={()=>{Navegar("/cine/inicio")}}>
                 Inicio
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="/cine/cartelera">
+              <Link color="foreground" onClick={()=>{Navegar("/cine/cartelera")}}>
                 Cartelera
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="/cine/productosventa">
+              <Link color="foreground" onClick={()=>{Navegar("/cine/productosventa")}}>
                 Productos
               </Link>
             </NavbarItem>
@@ -52,17 +56,17 @@ export default function NavBarComponent() {
           ) : (
           <>
             <NavbarItem>
-              <Link color="foreground" href="/dashboard" >
+              <Link color="foreground" onClick={()=>{Navegar("/dashboard")}} >
                 Dashboard
               </Link>
             </NavbarItem>
             <NavbarItem >
-              <Link href="/configuracion"  color="foreground" aria-current="page" >
+              <Link onClick={()=>{Navegar("/configuracion")}} color="foreground" aria-current="page" >
                 Configuración
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="/productos">
+              <Link color="foreground" onClick={()=>{Navegar("/productos")}}>
                 Productos
               </Link>
             </NavbarItem>

@@ -9,7 +9,7 @@ export default function FormComponent({Combo,setCombo}){
     }
     return(
         <div>
-            <div className="grid-cols-1">
+            <div className="grid-cols-1 mb-3">
                 <div>
                     <Input name="nombre" label="Nombre" value={Combo.nombre} onChange={handleNombre}></Input>
                 </div>

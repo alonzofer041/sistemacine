@@ -20,7 +20,7 @@ ChartJS.register(
 export default function VentasTicketMesComponent(){
     return(
         <div>
-            <h1 className="text-black">Ventas de tickets por mes</h1>
+            <h1>Ventas de tickets por mes</h1>
             <Bar
                 options={
                     {
@@ -40,7 +40,7 @@ export default function VentasTicketMesComponent(){
                                 label:"No. de Ventas",
                                 data:[100,230,123,45,230,212,304,120,125,340,323,230],
                                 backgroundColor:[
-                                    '#000'
+                                    '#FFF'
                                 ]
                             }
                         ]

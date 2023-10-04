@@ -49,7 +49,7 @@ export default function GetTickets() {
                     <Divider/>
                     
                     <CardFooter>
-                        <Button color="primary" variant="shadow" className="btn" >
+                        <Button variant="shadow" className="btn" >
                             Siguiente paso.
                         </Button>  
                     </CardFooter>
@@ -81,7 +81,7 @@ export default function GetTickets() {
                     <Divider/>
                     
                     <CardFooter>
-                        <Button color="primary" variant="shadow" className="btn" >
+                        <Button variant="shadow" className="btn" >
                             Siguiente paso.
                         </Button>  
                     </CardFooter>
@@ -127,14 +127,14 @@ export default function GetTickets() {
                     <Divider/>
                     
                     <CardFooter>
-                        <Button onPress={onOpen} color="primary" variant="shadow" className="btn" >
+                        <Button onPress={onOpen} variant="shadow" className="btn" >
                             Pagar.
                         </Button>
                         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                             <ModalContent>
                             {(onClose) => (
                                 <>
-                                <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                                <ModalHeader className="flex flex-col gap-1">Datos de Pago</ModalHeader>
                                 <ModalBody>
                                     <Card>
                                         <CardBody>

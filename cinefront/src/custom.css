@@ -4,21 +4,15 @@
     src: local("RuberoidBold"),url("./fonts/Ruberoid/Ruberoid-Bold.otf");
     font-weight: bold;
 }
-h1,h2,h3,h4,h5,h6{
-    color: black !important;
-}
-
-
 
 .fuenteprueba{
     font-family: "RuberoidBold";
 }
-.btn{
+/* .btn{
     width: 15%;
     height: 5rem;
     border-radius: 0.7rem;
-    
-}
+} */
 
 .container{
     padding: 1rem 1rem;
@@ -32,14 +26,15 @@ h1,h2,h3,h4,h5,h6{
 
 .btn-menu{
     width: 15%;
+    height: 6rem;
     background-color: gray;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
-
-
-
+/* .container{
+    height: 34rem;
+} */
 .react-datepicker-popper {
     z-index: 999999 !important;
 }

@@ -10,18 +10,21 @@ export default function SubMenuProducto(){
     function NavegarProducto(){
         navigate('/productoslista', );
     }
+    function NavegarCombo(){
+        navigate('/combo', );
+    }
     return(
-        <div className="container">
+        <div className="container" style={{height:"34rem"}}>
             <div className="flex gap-3 justify-center">
-                <Button className="btn btn-menu" as={Link} variant="shadow" onClick={NavegarCategoria}>
+                <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarCategoria}>
                     <FaPeopleCarry size="2em"/>
                     Provedores
                 </Button>
-                <Button className="btn btn-menu" as={Link} variant="shadow" onClick={NavegarProducto}>
+                <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarProducto}>
                     <FaHotdog size="2em"/>
                     Productos
                 </Button>
-                <Button className="btn btn-menu" as={Link} variant="shadow"href="#" >
+                <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarCombo}>
                     <FaHotdog size="2em"/>
                     Combos
                 </Button>

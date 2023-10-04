@@ -68,6 +68,7 @@ export default function ListComponent(){
             </ListGeneralComponent>
             <Modal 
             EventoGuardar={Guardar}
+            Size={"xl"}
             Titulo={"Agregar Provedor"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             CuerpoFormulario={<FormComponent ProvedorData={ProvedorData} setProvedorData={setProvedorData}/>}></Modal>

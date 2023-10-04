@@ -10,15 +10,13 @@ export default function FormComponent({ProvedorData,setProvedorData}){
     }
     return (
         <div className="container" >
-            <div className="flex w-full flex-wrap md:flex-nowrap gap-2">
-                <Input name="nombre"  label="Nombre"  value={ProvedorData.nombre} onChange={handleNombre}></Input>
-                <Input name="direccion" label="Direccion" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
-                <Input name="email" label="Email" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
-                <Input name="numero" label="Numero" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
-                <div className="flex gap-2 flex w-full">
-                    <Input name="estado" label="Estado" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
+            <div className="grid grid-cols-1">
+                <Input className="mb-3" name="nombre"  label="Nombre"  value={ProvedorData.nombre} onChange={handleNombre}></Input>
+                <Input className="mb-3" name="direccion" label="Direccion" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
+                <Input className="mb-3" name="email" label="Email" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
+                <Input className="mb-3" name="numero" label="Numero" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
+                    <Input className="mb-3" name="estado" label="Estado" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
                     <Input name="ciudad" label="Ciudad" value={ProvedorData.direccion} onChange={handleDireccion}></Input>
-                </div>
             </div>    
         </div>
     )

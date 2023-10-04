@@ -1,12 +1,141 @@
 import React from "react";
 import {Image, Button,Card, CardBody,CardHeader} from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
 export default function Cartelera() {
-return (
-<div className="container-items">
+  const navigate = useNavigate();
+  function IrA(){
+    navigate("/cine/peliculas");
+  }
+  return (
+    <div className="container m-8">
+      <div className="grid grid-cols-1">
+        <div>
+          <h1 className="text-center titles">Descubre Nuestra Cartelera</h1>
+        </div>
+      </div>
+      <div className="grid grid-cols-3">
+        <div>
+          <h2 className="text-center">Jesucristo Cazador de Vampiros</h2>
+          <div className="flex justify-center">
+            <Image
+              alt="Card background"
+              className="object-cover rounded-xl"
+              src="../src/components/client/inicio/imagenes/pelicula1.jpg"
+              width={180}
+            />
+          </div>
+          <h5 className="font-bold">Horario: 2:00 PM a 3:30 PM</h5>
+          <h5 className="font-bold">ESP-SUB</h5>
+          <h5 className="font-bold">Sala A</h5>
+          <div className="flex justify-center">
+            <Button onClick={()=>{IrA()}} className="btn" color="default" size="sl" radius="lg">
+              Comprar boletos
+            </Button>
+          </div>
+        </div>
 
+        <div>
+          <h2 className="text-center">Sonic 2 La Película</h2>
+          <div className="flex justify-center">
+            <Image
+              alt="Card background"
+              className="object-cover rounded-xl"
+              src="../src/components/client/inicio/imagenes/pelicula2.jpg"
+              width={180}
+            />
+          </div>
+          <h5 className="font-bold">Horario: 2:00 PM a 3:30 PM</h5>
+          <h5 className="font-bold">ESP-SUB</h5>
+          <h5 className="font-bold">Sala A</h5>
+          <div className="flex justify-center">
+            <Button onClick={()=>{IrA()}} className="btn" color="default" size="sl" radius="lg">
+              Comprar boletos
+            </Button>
+          </div>
+        </div>
 
-<div>
+        <div>
+          <h2 className="text-center">Avengers: EndGame</h2>
+          <div className="flex justify-center">
+            <Image
+              alt="Card background"
+              className="object-cover rounded-xl"
+              src="../src/components/client/inicio/imagenes/pelicula3.jpg"
+              width={180}
+            />
+          </div>
+          <h5 className="font-bold">Horario: 2:00 PM a 3:30 PM</h5>
+          <h5 className="font-bold">ESP-SUB</h5>
+          <h5 className="font-bold">Sala A</h5>
+          <div className="flex justify-center">
+            <Button onClick={()=>{IrA()}} className="btn" color="default" size="sl" radius="lg">
+              Comprar boletos
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-center">Barbie</h2>
+          <div className="flex justify-center">
+            <Image
+              alt="Card background"
+              className="object-cover rounded-xl"
+              src="../src/components/client/inicio/imagenes/pelicula4.jpg"
+              width={180}
+            />
+          </div>
+          <h5 className="font-bold">Horario: 2:00 PM a 3:30 PM</h5>
+          <h5 className="font-bold">ESP-SUB</h5>
+          <h5 className="font-bold">Sala A</h5>
+          <div className="flex justify-center">
+            <Button onClick={()=>{IrA()}} className="btn" color="default" size="sl" radius="lg">
+              Comprar boletos
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-center">Tortugas Ninja: Caos Mutante</h2>
+          <div className="flex justify-center">
+            <Image
+              alt="Card background"
+              className="object-cover rounded-xl"
+              src="../src/components/client/inicio/imagenes/pelicula5.jpg"
+              width={180}
+            />
+          </div>
+          <h5 className="font-bold">Horario: 2:00 PM a 3:30 PM</h5>
+          <h5 className="font-bold">ESP-SUB</h5>
+          <h5 className="font-bold">Sala A</h5>
+          <div className="flex justify-center">
+            <Button onClick={()=>{IrA()}} className="btn" color="default" size="sl" radius="lg">
+              Comprar boletos
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-center">Five Nights At Freddy's</h2>
+          <div className="flex justify-center">
+            <Image
+              alt="Card background"
+              className="object-cover rounded-xl"
+              src="../src/components/client/inicio/imagenes/pelicula6.jpg"
+              width={180}
+            />
+          </div>
+          <h5 className="font-bold">Horario: 2:00 PM a 3:30 PM</h5>
+          <h5 className="font-bold">ESP-SUB</h5>
+          <h5 className="font-bold">Sala A</h5>
+          <div className="flex justify-center">
+            <Button onClick={()=>{IrA()}} className="btn" color="default" size="sl" radius="lg">
+              Comprar boletos
+            </Button>
+          </div>
+        </div>
+      </div>
+  {/* <div>
 <Card className="py-4">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <p className="text-tiny uppercase font-bold"></p>
@@ -28,9 +157,9 @@ return (
     </Button>
       </CardBody>
     </Card>
-    </div>
+    </div> */}
 
-<div>
+{/* <div>
 <Card className="py-4">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <p className="text-tiny uppercase font-bold"></p>
@@ -220,7 +349,7 @@ return (
     </Button>
       </CardBody>
     </Card>
-</div>
+</div> */}
 
     <footer>
         <p>&copy; 2023 CineFlash. Todos los derechos reservados.</p>
@@ -228,5 +357,5 @@ return (
 </div>
 
 
-);
+  );
 }
