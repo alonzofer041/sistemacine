@@ -65,7 +65,7 @@ export default function Inicio() {
         style={{ backfaceVisibility: "hidden" }}
       >
         <img
-          src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(15).jpg"
+          src="../src/components/client/inicio/imagenes/cinesprogreso-10c121d8.png"
           className="block w-full"
           alt="..."
         />
@@ -81,7 +81,7 @@ export default function Inicio() {
         style={{ backfaceVisibility: "hidden" }}
       >
         <img
-          src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(22).jpg"
+          src="../src/components/client/inicio/imagenes/cinesprogreso-beb7c31d.png"
           className="block w-full"
           alt="..."
         />
@@ -97,7 +97,7 @@ export default function Inicio() {
         style={{ backfaceVisibility: "hidden" }}
       >
         <img
-          src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(23).jpg"
+          src="../src/components/client/inicio/imagenes/Fb5_Lk4XEAII16P.jpg"
           className="block w-full"
           alt="..."
         />
