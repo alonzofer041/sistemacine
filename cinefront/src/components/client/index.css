@@ -16,11 +16,69 @@
     font-family: "RuberoidBold";
 }
 
+
 body {
 	margin: 0 auto;
-	max-width: 1200px;
+	/* max-width: 1200px; */
 	font-family: 'RuberoidBold';
 	color: #000;
+	background-color: #000;
+	min-height: 800px;
+
+}
+
+.center {
+	position: absolute;
+	min-width: 30%;
+	top: 5em;
+	left: 30em;
+	transform: translate(0);
+}
+
+.center2 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 584px;
+}
+
+.posters {
+	margin-left: 70px;
+}
+
+.btn {
+	width: 30%;
+	height: 40px;
+	color: #FFF;
+}
+
+.btnmenus{
+	width: 30%;
+	height: 80px;
+	color: #FFF;
+}
+
+.inputs {
+	width: 100%;
+	height: 40px;
+	color: #000;
+	justify-content: flex-end;
+}
+
+.paddings {
+	padding: 20px;
+}
+
+.margins {
+	height: 20px;
+}
+
+.titles {
+	font-size: x-large;
+	height: 50px;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	color: #fff;
 }
 
 .icon-cart {
@@ -41,7 +99,8 @@ img {
 header {
 	display: flex;
 	justify-content: space-between;
-	padding: 30px 0 40px 0;
+	padding: 30px 20px 40px 530px;
+	font-size: 50px;
 }
 
 .container-icon {
@@ -152,12 +211,13 @@ header {
 
 .container-inputs {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(1, 1fr);
 	gap: 20px;
+	margin: auto;
 }
 
 .item {
-	border-radius: 10px;
+	border-radius: 30px;
 }
 
 .item:hover {
@@ -245,4 +305,14 @@ header {
   background-color: #000;
   transform: scale(1.03);
   border-radius: 0;
+}
+.btn-modal{
+	width: 15%;
+	height: 2.4rem;
+}
+.navmain{
+	background-color: #FFF;
+}
+.navigation ul > li > a{
+	color: #000 !important;
 }

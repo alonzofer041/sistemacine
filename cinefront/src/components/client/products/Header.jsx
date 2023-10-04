@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Button } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
 export const Header = ({
 	allProducts,
@@ -9,6 +11,7 @@ export const Header = ({
 	setTotal,
 }) => {
 	const [active, setActive] = useState(false);
+	const navigate=useNavigate();
 
 	const onDeleteProduct = product => {
 		const results = allProducts.filter(
@@ -27,7 +30,7 @@ export const Header = ({
 	};
 
 	const payCart = () => {
-		navigate('/pagar');
+		navigate ('/cine/pagarproducto', );
 	};
 
 	return (
@@ -106,10 +109,10 @@ export const Header = ({
 							<button className='btn-clear-all' onClick={onCleanCart}>
 								Vaciar Carrito
 							</button>
-
-							<button className='btn-pay' onClick={payCart}>
+							<button className='btn-clear-all' onClick={payCart}>
 								Pagar Carrito
-							</button>
+							</button>		
+							
 						</>
 					) : (
 						<p className='cart-empty'>El carrito está vacío</p>

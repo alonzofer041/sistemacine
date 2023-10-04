@@ -41,7 +41,7 @@ export default function FormComponent({Pelicula,setPelicula}){
             </div>
             <div className="grid grid-cols-1">
                 <div>
-                    <Textarea value={Pelicula.sinopsis} onChange={handleSinopsis} label="Sinopsis" labelPlacement="outside" placeholder="Sinopsis"></Textarea>
+                    <Textarea value={Pelicula.sinopsis} onChange={handleSinopsis} label="Sinopsis" labelPlacement="inside"></Textarea>
                 </div>
             </div>
             <div className="grid grid-cols-3">
@@ -54,7 +54,7 @@ export default function FormComponent({Pelicula,setPelicula}){
             </div>
             <div className="grid grid-cols-3">
                 <Input name="productora" label="Productora" value={Pelicula.productora} onChange={handleProductora}></Input>
-                <Input name="productora" label="Productora" value={Pelicula.distribuidora} onChange={handleDistribuidora}></Input>
+                <Input name="productora" label="Distribuidora" value={Pelicula.distribuidora} onChange={handleDistribuidora}></Input>
                 <Input name="duracion" label="Duración" value={Pelicula.duracion} onChange={handleDuracion}></Input>
             </div>
         </div>

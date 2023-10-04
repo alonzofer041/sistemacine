@@ -6,7 +6,8 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/tw-elements/dist/js/**/*.js"
   ],
   themes: {
     extend: {},
@@ -77,5 +78,5 @@ module.exports = {
               }
         },
       },
-  })]
+  }),require("tw-elements/dist/plugin.cjs")]
 }
