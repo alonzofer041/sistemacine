@@ -9,8 +9,6 @@ import routerApp from './router/index';
 import App from './App.jsx'
 import '../dist/output.css'
 import './custom.css'
-import './components/client/index.css'
-import NavBarComponent from './components/cliente/NavBarComponent'
 // const router=createBrowserRouter([
 //   {
 //     path:'/',

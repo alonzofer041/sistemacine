@@ -1,6 +1,7 @@
 import React from "react";
 
 const columns = [
+  /*
   {name: "NOMBRE", uid: "name", sortable: true},
   {name: "IDIOMA", uid: "language", sortable: true},
   {name: "DURACION", uid: "duration", sortable: true},
@@ -8,6 +9,9 @@ const columns = [
   {name: "CLASIFICACION", uid: "classification", sortable: true},
   {name: "HORA", uid: "time", sortable: true},
   {name: "SUCURSAL", uid: "sucursal", sortable: true},
+  */
+ {name: "PELÍCULA", uid: "name"},
+ {name: "DETALLES", uid: "detalles"}
 ];
 
 const statusOptions = [
