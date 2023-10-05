@@ -82,6 +82,10 @@ const router=createBrowserRouter([
             },
             //RUTAS CLIENTE
             {
+              path:"/",
+              element:<Inicio/>
+            },
+            {
                 path:"/cine/inicio",
                 element:<Inicio/>
             },
