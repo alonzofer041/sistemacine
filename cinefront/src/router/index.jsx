@@ -21,7 +21,6 @@ import Login from "../components/client/login/LoginComponent";
 import Register from "../components/client/register/RegisterComponent";
 import Movies from "../components/client/movies/MoviesComponent";
 import GetTickets from "../components/client/moviesprocess/ProcessComponent";
-import Cartelera from "../components/client/inicio/cartelera";
 // CAMBIAR POR LA RUTA DE INDEX
 const router=createBrowserRouter([
     // RUTAS ADMIN
@@ -106,16 +105,12 @@ const router=createBrowserRouter([
               element:<Register/>
             },
             {
-              path:"cine/peliculas",
+              path:"cine/cartelera",
               element:<Movies/>
             },
             {
               path:"cine/peliculas/entradas",
               element:<GetTickets/>
-            },
-            {
-                path:"/cine/Cartelera",
-                element:<Cartelera/>
             },
         ]
     }

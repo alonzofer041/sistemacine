@@ -29,7 +29,7 @@ export default function Movies() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState("all");
-  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [sucursalFilter, setsucursalFilter] = React.useState("all");
   const [languageFilter, setLanguageFilter] = React.useState("all");
   const [typeFilter, setTypeFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -53,9 +53,9 @@ export default function Movies() {
         user.name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+    if (sucursalFilter !== "all" && Array.from(sucursalFilter).length !== statusOptions.length) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.sucursal),
+        Array.from(sucursalFilter).includes(user.sucursal),
       );
     }
     if (languageFilter !== "all" && Array.from(languageFilter).length !== languageOptions.length) {
@@ -70,7 +70,7 @@ export default function Movies() {
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter, languageFilter, typeFilter]);
+  }, [users, filterValue, sucursalFilter, languageFilter, typeFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -97,54 +97,62 @@ export default function Movies() {
     switch (columnKey) {
       case "name":
         return (
+          <div>
+            <figure>
+                <img className="posters" src={user.avatar} />
+            </figure>
             <div>
-                <figure className="posters">
-                    <img src={user.avatar} />
-                </figure>
-                <div>
-					<p className="titles">{user.name}</p>
-                    {user.description}
-				</div>
-                <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} color="secondary" variant="shadow" className="btn">
-                    Conseguir entradas.
-                </Button>
+					    <p className="titles">{user.name}</p>
+              
+				    </div>
+            <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} color="secondary" variant="shadow">
+              Conseguir entradas.
+            </Button>
             </div>
         );
-      case "sucursal":
+      case "detalles":
         return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-        case "language":
-        return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-        case "type":
-        return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-        case "classification":
-        return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-        case "time":
-        return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-        case "duration":
-        return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
+          <div>
+            {user.description}
+            <div>
+              <div>
+                Idioma:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.language}
+                </Chip>
+              </div>
+              <div>
+                Duración:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.duration}
+                </Chip>
+              </div>
+              <div>
+                Género:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.type}
+                </Chip>
+              </div>
+              <div>
+                Clasificación:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.classification}
+                </Chip>
+              </div>
+              <div>
+                Hora:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.time}
+                </Chip>
+              </div>
+              <div>
+                Sucursal:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.sucursal}
+                </Chip>
+              </div>
+            </div>
+          </div>
         );
       default:
         return cellValue;
@@ -193,9 +201,9 @@ export default function Movies() {
                 disallowEmptySelection
                 aria-label="Table Columns"
                 closeOnSelect={false}
-                selectedKeys={statusFilter}
+                selectedKeys={sucursalFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={setsucursalFilter}
               >
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
@@ -273,7 +281,7 @@ export default function Movies() {
     );
   }, [
     filterValue,
-    statusFilter,
+    sucursalFilter,
     languageFilter,
     typeFilter,
     visibleColumns,
