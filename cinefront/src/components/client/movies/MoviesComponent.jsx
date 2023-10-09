@@ -105,8 +105,8 @@ export default function Movies() {
 					    <p className="titles">{user.name}</p>
               
 				    </div>
-            <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} color="secondary" variant="shadow">
-              Conseguir entradas.
+            <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} className="btn-cartelera">
+              Conseguir entradas
             </Button>
             </div>
         );
@@ -314,7 +314,7 @@ export default function Movies() {
   return (
     <Table
       aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
+      
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{

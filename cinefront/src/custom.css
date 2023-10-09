@@ -3,7 +3,10 @@
     src: local("RuberoidBold"),url("./fonts/Ruberoid/Ruberoid-Bold.otf");
     font-weight: bold;
 }
-
+body{
+	background-color: #000;
+	min-height: 620px;
+}
 .fuenteruberoidbold{
     font-family: "RuberoidBold";
 }
@@ -76,11 +79,15 @@ body {
 }
 
 .btn {
-	width: 100%;
+	width: 35%;
 	height: 40px;
 	color: #FFF;
 }
 
+.btn-cartelera{
+	width: 60%;
+	height: 40px;
+}
 
 .btnmenus{
 	width: 30%;
@@ -341,8 +348,8 @@ header {
 	height: 2.4rem;
 }
 .navmain{
-	background-color: #FFF;
+	background-color: #000;
 }
 .navigation ul > li > a{
-	color: #000 !important;
+	color: #FFF !important;
 }

@@ -27,7 +27,7 @@ export default function NavBarComponent() {
   
   return (
     <>
-      <Navbar className={index!=-1 ? "navigation navclient" : "navigation navmain"}>
+      <Navbar className={"navigation navmain"}>
       
       
       <NavbarContent  className="sm:flex gap-4 " justify="right"  >
@@ -78,7 +78,7 @@ export default function NavBarComponent() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className=" lg:flex" >
-          <Link color="foreground" href="#">Bienvenido</Link>
+          {/* <Link color="foreground" href="#">Bienvenido</Link> */}
         </NavbarItem>
         <NavbarItem>
           {/* <Button as={Link} color="primary" href="#" variant="flat">
