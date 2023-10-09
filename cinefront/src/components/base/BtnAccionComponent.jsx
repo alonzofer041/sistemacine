@@ -6,14 +6,15 @@ export default function BtnAccionComponent({
     EmitSeccion,
     BotonesAdicionales,
     EventoEliminar,
-    EventoEditar
+    EventoEditar,
+    Id
 }){
     let {BotonEditar,BotonEliminar}=<></>;
     if (MostrarBtnEditar) {
-        BotonEditar=<Button  onClick={EventoEditar} color="warning" as={Link}  variant="light" className="mr-5" radius="full">Editar</Button>
+        BotonEditar=<Button onClick={()=>EventoEditar(Id)} color="warning" as={Link}  variant="light" className="mr-5" radius="full">Editar</Button>
     }
     if (MostrarBtnEliminar) {
-        BotonEliminar=<Button onClick={EventoEliminar} as={Link}  variant="light"  color="danger" className="mr-5">Eliminar</Button>
+        BotonEliminar=<Button onClick={()=>EventoEliminar(Id)} as={Link}  variant="light"  color="danger" className="mr-5">Eliminar</Button>
     }
     return(
         <>
