@@ -4,4 +4,5 @@ const {addPeliculaCategoria, getPeliculaCategoria, updatePeliculaCategoria, dele
 
 router.route('/api/peliculacategoria').post(addPeliculaCategoria).get(getPeliculaCategoria);
 router.route('/api/peliculacategoria/:id').post(updatePeliculaCategoria).delete(deletePeliculaCategoria);
+
 module.exports=router;

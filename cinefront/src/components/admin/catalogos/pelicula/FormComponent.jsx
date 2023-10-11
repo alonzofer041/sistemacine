@@ -1,10 +1,17 @@
-import { Input, Textarea } from "@nextui-org/react";
-import React, { useState } from "react";
+import { Input, Select, SelectItem, Textarea } from "@nextui-org/react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-export default function FormComponent({Pelicula,setPelicula}){
+export default function FormComponent({Pelicula,setPelicula,File,setFile}){
     const [startDate, setStartDate] = useState(new Date());
-    
+    const [PeliculaCategoriaList,setPeliculasCategoriaList]=useState([]);
+    useEffect(()=>{
+        ListaCategoria();
+    },[]);
+    function handleIdPeliculaCategoria(e){
+        setPelicula({...Pelicula,idpeliculacategoria:e.target.value});
+    }
     function handleTitulo(e){
         setPelicula({...Pelicula,titulo:e.target.value});
     }
@@ -32,8 +39,34 @@ export default function FormComponent({Pelicula,setPelicula}){
     function handleDistribuidora(e){
         setPelicula({...Pelicula,distribuidora:e.target.value});
     }
+    function handleFile(e){
+        let value=e.target.files;
+        console.log(value[0]);
+        setFile(value[0]);
+    }
+    function ListaCategoria(){
+        axios.get("/api/peliculacategoria"
+        ).then((res)=>{
+            let data=res.data;
+            setPeliculasCategoriaList(data);
+        });
+    }
     return (
         <div>
+            <div className="grid grid-cols-2">
+                <div>
+                    <input type="file" name="files" onChange={handleFile}/>
+                </div>
+                <div>
+                    <Select onChange={handleIdPeliculaCategoria} label="Seleccione una Categoría">
+                        {PeliculaCategoriaList.map((PeliculaCategoria)=>(
+                            <SelectItem key={PeliculaCategoria.idpeliculacategoria} value={PeliculaCategoria.idpeliculacategoria}>
+                                {PeliculaCategoria.nombre}
+                            </SelectItem>
+                        ))}
+                    </Select>
+                </div>
+            </div>
             <div className="grid grid-cols-1">
                 <div>
                     <Input name="titulo" label="Titulo de la pelicula" value={Pelicula.titulo} onChange={handleTitulo}></Input>

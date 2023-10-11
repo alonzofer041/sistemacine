@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
@@ -8,6 +8,9 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 export default function ListComponent(){
+    useEffect(()=>{
+        Lista();
+    },[]);
     // SWAL
     const [swalProps, setSwalProps] = useState({});
     
@@ -61,9 +64,7 @@ export default function ListComponent(){
         }
     }
 
-    // LLAMADA INICIAL
-    Lista();
-    
+
     return(
         <div>
             <ListGeneralComponent

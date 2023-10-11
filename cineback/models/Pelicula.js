@@ -2,7 +2,7 @@ const pool=require('../db');
 class Pelicula{
     constructor(){
         this.idpelicula=0;
-        this.idpeliculacategoria=0;
+        this.idpeliculacategoria='';
         this.idempresa=0;
         this.idsucursal=0;
         this.titulo='';
@@ -19,7 +19,7 @@ class Pelicula{
         this.updated_at='';
         this.deleted_at='';
     }
-    insertar(){
+    insertar(res){
         pool.query('INSERT INTO peliculas (idempresa,idsucursal,idpeliculacategoria,titulo,sinopsis,fechaestreno,aniorealizacion,director,reparto,duracion,productora,distribuidora,imgportada,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[
             this.idempresa,
             this.idsucursal,
@@ -38,14 +38,42 @@ class Pelicula{
             null,
             null
         ],function(err,results,fields){
-            console.log(err);
+            res.json(err);
         })
     }
-    actualizar(){
-
+    actualizar(res){
+        pool.query('UPDATE peliculas SET idpeliculacategoria=?,titulo=?,sinopsis=?,aniorealizacion=?,director=?,reparto=?,duracion=?,productora=?,distribuidora=?,imgportada=? ,updated_at=? WHERE idpelicula=?',[
+            this.idpeliculacategoria,
+            this.titulo,
+            this.sinopsis,
+            this.fechaestreno,
+            this.aniorealizacion,
+            this.director,
+            this.reparto,
+            this.duracion,
+            this.productora,
+            this.distribuidora,
+            this.imgportada,
+            this.idpelicula
+        ],function(err,results,fields){
+            res.json(results);
+        })
     }
-    borrar(){
-
+    eliminar(res){
+        pool.query('UPDATE peliculas SET deleted_at=? WHERE idpelicula=?',[
+            this.deleted_at,
+            this.idpelicula
+        ],function(err,results,fields){
+            res.json(results);
+        })
+    }
+    listar(res){
+        pool.execute('SELECT * FROM `peliculas` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
+            this.idempresa,
+            this.idsucursal
+        ],function (err,results,fields){
+            res.json(results);
+        })
     }
 }
 module.exports=Pelicula
