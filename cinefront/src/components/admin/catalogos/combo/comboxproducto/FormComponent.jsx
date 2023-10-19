@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React,{ useState } from "react";
 import { Input, Select, SelectItem } from "@nextui-org/react";
 export default function FormComponent({ComboDetalle,setComboDetalle}){
     const [ListaProductos,setListaProductos]=useState([
