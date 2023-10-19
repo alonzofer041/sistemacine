@@ -1,5 +1,6 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+import ListBanners from "../components/admin/catalogos/banner/ListComponent";
 import ListSalas from "../components/admin/catalogos/sala/ListComponent";
 import ListPeliculasCategoria from "../components/admin/catalogos/peliculascategoria/ListComponent";
 import ListPeliculaHorario from "../components/admin/catalogos/pelicula/peliculahorario/ListComponent"
@@ -13,7 +14,7 @@ import Productos from "../components/client/products/ProductComponent";
 import Pago from "../components/client/payment/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
-import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
+import ListAsientos from "../components/admin/catalogos/sala/salaasientos/ListComponent";
 import Inicio from "../components/client/inicio/InicioComponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
 import PrincipalChart from "../components/admin/dashboard/PrincipalComponent";
@@ -32,6 +33,10 @@ const router=createBrowserRouter([
                 element:<SubMenuConfig/>
             },
             {
+              path:"/banners",
+              element:<ListBanners/>
+            },
+            {
                 path:"/peliculas",
                 element:<ListPeliculas/>
             },
@@ -48,8 +53,8 @@ const router=createBrowserRouter([
                 element:<ListPeliculasCategoria/>
             },
             {
-                path:"/salaasiento",
-                element:<ListSalaAsiento/>
+                path:"/asientos",
+                element:<ListAsientos/>
             },
             {
                 path:'/peliculahorario',
@@ -64,7 +69,7 @@ const router=createBrowserRouter([
               element:<ListProvedores/>
             },
             {
-              path:"/productoslista",
+              path:"/producto",
               element:<ListProducto/>
             },
             {
