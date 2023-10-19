@@ -15,7 +15,8 @@ export default function ListGeneralComponent({
     CabeceraTabla,
     CuerpoTabla,
     isOpen,onOpen,onOpenChange,
-    EventoLimpiar
+    EventoLimpiar,
+    TotalPagina
 }){
     // const {isOpen, onOpen, onOpenChange} = useDisclosure();
     // useEffect(()=>{
@@ -37,6 +38,10 @@ export default function ListGeneralComponent({
         let Filas=Number(e.target.value);
         setFiltro({...Filtro,NumFilas:Filas,Pagina:1});
     },[]);
+    const onClear = React.useCallback(()=>{
+        setFiltro({...Filtro,Nombre:''});
+        setFiltro({...Filtro,Pagina:1});
+      },[])
 
     // const Bottom=React.useMemo(()=>{
     //     return(
@@ -73,11 +78,12 @@ export default function ListGeneralComponent({
                 className="w-full"
                 style={{height:"40px"}}
                 value={Filtro.Nombre}
+                onClear={() => onClear()}
                 onValueChange={FiltroEvento}></Input>
 
                 <div>
                     <label className="text-default-400 text-small">Número de Filas</label>
-                    <select className="bg-transparent outline-none text-default-400 text-small" onChange={()=>onRowsPerPageChange}>
+                    <select className="bg-transparent outline-none text-default-400 text-small" onChange={onRowsPerPageChange}>
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="15">15</option>
@@ -88,16 +94,17 @@ export default function ListGeneralComponent({
             {CabeceraTabla}
             {CuerpoTabla}
             </Table>
-
-            <Pagination
+            {TotalPagina>0?(
+                <Pagination
                 isCompact
                 showControls
                 showShadow
                 color="primary"
                 page={Filtro.Pagina}
-                total={Filtro.TotalPaginas}
+                total={TotalPagina}
                 onChange={(page)=>setFiltro({...Filtro,Pagina:page})}
             ></Pagination>
+            ):null}
             {/* <div className="hidden sm:flex w-[30%] justify-end gap-2">
                 <Button isDisabled={Filtro.TotalPaginas === 1} size="sm" variant="flat" onPress={onPrevPage}>
                     Previous

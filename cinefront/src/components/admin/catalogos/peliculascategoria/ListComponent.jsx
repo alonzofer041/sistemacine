@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
@@ -32,7 +32,7 @@ export default function ListComponent(){
 
     useEffect(()=>{
         Lista();
-    },[PeliculasCategoriaList]);
+    },[]);
 
     // MEMOS
     const BndFiltro=Boolean(Filtro.Nombre);
@@ -46,32 +46,27 @@ export default function ListComponent(){
         return PeliculaCategoriaFiltrado;
     },[PeliculasCategoriaList,Filtro.Nombre]);
     
-    // const Pages=Math.ceil(ItemsFiltro.length/Filtro.NumFilas);
-    // useEffect(()=>{setFiltro({...Filtro,TotalPaginas:Pages});},[]);
-    // const SetPaginator=React.useCallback(()=>{
-    //     let Pages=Math.ceil(PeliculasCategoriaList.length/Filtro.NumFilas);
-    //     setFiltro({...Filtro,TotalPaginas:Pages});
-    // },[Filtro.TotalPaginas]);
-    function SetPaginator(){
-        let Pages=Math.ceil(ItemsFiltro.length/Filtro.NumFilas);
-        setFiltro({...Filtro,TotalPaginas:Pages});
-    }
+    const Paginator=React.useMemo(()=>{
+        // let Pages=Math.ceil(ItemsFiltro.length/Filtro.NumFilas);
+        // setFiltro({...Filtro,TotalPaginas:Pages});
+        return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
+    },[ItemsFiltro?.length,Filtro.NumFilas]);
 
     const ItemsPaginado=React.useMemo(()=>{
-        const Inicio=((Filtro.Pagina)-1)*Filtro.NumFilas;
+        const Inicio=(Filtro.Pagina-1)*Filtro.NumFilas;
         const Fin=Inicio+Filtro.NumFilas;
         return ItemsFiltro.slice(Inicio,Fin);
     },[Filtro.Pagina,ItemsFiltro,Filtro.NumFilas]);
     
     // METODOS
-    async function Lista(){
-        await axios.get("/api/peliculacategoria"
+    function Lista(){
+        axios.get("/api/peliculacategoria"
         ).then((res)=>{
             let data=res.data;
             setPeliculasCategoriaList(data);
             // setFiltro({...Filtro});
         }).finally(()=>{
-            SetPaginator();
+            // SetPaginator();
         });
     }
     const FiltrarLista=React.useCallback((value)=>{
@@ -129,6 +124,7 @@ export default function ListComponent(){
             Titulo={"Géneros de Películas"}
             NombreLista={"Configuración"}
             EventoLimpiar={Limpiar}
+            TotalPagina={Paginator}
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
