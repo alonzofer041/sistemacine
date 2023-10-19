@@ -3,18 +3,17 @@ const cors=require('cors');
 const path=require('path');
 const PeliculasRoutes = require('./routes/RutaPeliculas');
 const PeliculasCategoriaRoutes=require("./routes/RutaPeliculasCategoria");
-const bodyParser = require("body-parser");
+const BannersRoutes=require("./routes/RutaBanners")
 
 const dotenv=require('dotenv').config();
 const app=express();
 const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'assets')))
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(PeliculasRoutes);
 app.use(PeliculasCategoriaRoutes);
+app.use(BannersRoutes);
 app.listen(port,()=>{
     console.log(`servidor corriendo en puerto ${port}`);
 })

@@ -77,7 +77,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
-        let indexPelicula=PeliculaList.find((element)=>element.idpelicula.index);
+        let indexPelicula=PeliculaList.find((element)=>element.idpelicula=index);
         setPelicula({
             ...Pelicula,
             idpelicula:index,
