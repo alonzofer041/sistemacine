@@ -170,6 +170,8 @@ export default function ListComponent(){
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
                                     MostrarBtnEliminar={true}
+                                    EventoEditar={Editar}
+                                    EventoEliminar={Eliminar}
                                     BotonesAdicionales={
                                         <Button as={Link} variant="light" onClick={()=>Navegar(item.idpelicula,item.titulo)}>Asignar Horarios</Button>
                                     }
