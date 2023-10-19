@@ -3,6 +3,10 @@ const cors = require('cors');
 const path=require('path');
 const PeliculasRoutes = require('./routes/RutaPeliculas');
 const PeliculasCategoriaRoutes=require("./routes/RutaPeliculasCategoria");
+const SalasRoutes=require("./routes/RutaSalas");
+const SucursalRoutes=require("./routes/RutaSucursal");
+const AsientosRoutes=require("./routes/RutaAsientos");
+const bodyParser = require("body-parser");
 const BannersRoutes=require("./routes/RutaBanners")
 
 const ProveedorRoutes = require("./routes/RutaProveedor");
@@ -16,6 +20,9 @@ app.use(express.static(path.join(__dirname,'assets')))
 app.use(cors());
 app.use(PeliculasRoutes);
 app.use(PeliculasCategoriaRoutes);
+app.use(SalasRoutes);
+app.use(SucursalRoutes);
+app.use(AsientosRoutes);
 app.use(BannersRoutes);
 app.use(ProveedorRoutes);
 app.use(ProductoRoutes);

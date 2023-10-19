@@ -14,7 +14,7 @@ import Productos from "../components/client/products/ProductComponent";
 import Pago from "../components/client/payment/PaymentComponent";
 import SubMenuProducto from "../components/admin/catalogos/submenuproductos";
 import ListSucursal from "../components/admin/catalogos/sucursales/ListComponent";
-import ListSalaAsiento from "../components/admin/catalogos/sala/salaasientos/ListComponent";
+import ListAsientos from "../components/admin/catalogos/sala/salaasientos/ListComponent";
 import Inicio from "../components/client/inicio/InicioComponent";
 import NavBarComponent from "../components/admin/NavBarComponent";
 import PrincipalChart from "../components/admin/dashboard/PrincipalComponent";
@@ -53,8 +53,8 @@ const router=createBrowserRouter([
                 element:<ListPeliculasCategoria/>
             },
             {
-                path:"/salaasiento",
-                element:<ListSalaAsiento/>
+                path:"/asientos",
+                element:<ListAsientos/>
             },
             {
                 path:'/peliculahorario',
