@@ -1,83 +1,142 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { Button, TableBody, TableCell, TableColumn,TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
-import BtnAccionComponent from "../../../base/BtnAccionComponent";
-import FormComponent from "../sala/FormComponent";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
+import BtnAccionComponent from "../../../base/BtnAccionComponent";
+import FormComponent from "./FormComponent";
+import { useState } from "react";
+import axios from "axios";
+import SweetAlert2 from 'react-sweetalert2';
 import { Link, useNavigate } from "react-router-dom";
 
-const ListaPrueba=[
-    {key:"1",idsala:"1",nombre:"sala 1",ubicacion:"a la vuelta"},
-    {key:"2",idsala:"2",nombre:"sala 2",ubicacion:"al fondo"},
-];
 export default function ListComponent(){
     const navigate=useNavigate();
-    const[Sala,setSala]=useState({
-        idsala:0,
-        idempresa:0,
-        idsucursal:0,
-        nombre:'',
-        ubicacion:''
-    })
-    // const[ListaPrueba,setListaPrueba]=useState([]);
+    useEffect(()=>{
+        Lista();
+    },[]);
+    // SWAL
+    const [swalProps, setSwalProps] = useState({});
+    
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const {isOpen2, onOpen2, onOpenChange2} = useDisclosure();
-    const [Filtro,setFiltro]=useState(0);
-    // useEffect(()=>{})
-    function click(e){
-        e.preventDefault();
-        setFiltro(Filtro+1);
+    // USER STATE
+    const [Sala,setSala]=useState({
+        idsala:0,
+        nombre:"",
+        ubicacion:""
+    });
+    const [SalasList,setSalasList]=useState([
+        
+    ]);
+    
+    function Lista(){
+        axios.get("/api/salas"
+        ).then((res)=>{
+            let data=res.data;
+            setSalasList(data);
+        });
+    }
+    function Limpiar(){
+        setSala({...Sala,idsala:0,nombre:"",ubicacion:""});
+    }
+    function Eliminar(index){
+        setSala({...Sala,idsala:index});
+        setSwalProps({
+            icon:'warning',
+            show: true,
+            title: 'Eliminar',
+            text: '¿Seguro que quiere eliminar este dato?',
+            confirmButtonText:'Si',
+            showConfirmButton:true,
+            showDenyButton:true
+        }); 
+    }
+    function Editar(index){
+        let indexSala=SalasList.findIndex((element)=>element.idsala==index);
+        setSala({...Sala,idsala:index,nombre:SalasList[indexSala].nombre,ubicacion:SalasList[indexSala].ubicacion});
+        onOpen();
     }
     function Guardar(){
-        
+        var obj={
+            idsala:Sala.idsala,
+            nombre:Sala.nombre,
+            ubicacion:Sala.ubicacion
+        };
+        if (obj.idsala==0) {
+            axios.post("/api/salas",obj).then((res)=>{Lista()});   
+        }
+        else{
+            axios.post("/api/salas/"+Sala.idsala,obj).then((res)=>Lista());
+        }
     }
     function Navegar(idsala){
-        navigate('/salaasiento',{state:{idsala:idsala}});
+        navigate('/asientos',{state:{idsala:idsala}});
     }
+
+
     return(
         <div>
             <ListGeneralComponent
-                EsModal={true}
-                isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} 
-                Filtro={Filtro} 
-                Titulo={"Salas"}
-                NombreLista={"Configuración"}
-                CabeceraTabla={
-                    <TableHeader>
-                        <TableColumn>Nombre</TableColumn>
-                        <TableColumn>Ubicacion</TableColumn>
-                        <TableColumn>Acciones</TableColumn>
-                    </TableHeader>
-                }
-                CuerpoTabla={
-                    <TableBody items={ListaPrueba}>
-                        {(item)=>(
-                            <TableRow>
-                                <TableCell className="fuenteprueba">{item.nombre}</TableCell>
-                                <TableCell>{item.ubicacion}</TableCell>
-                                <TableCell>
-                                    <BtnAccionComponent 
-                                        MostrarBtnEditar={true} 
-                                        MostrarBtnEliminar={true}
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+            EsModal={true}
+            Filtro={1} 
+            Titulo={"Salas"}
+            NombreLista={"Configuración"}
+            EventoLimpiar={Limpiar}
+            CabeceraTabla={
+                <TableHeader>
+                    <TableColumn>#</TableColumn>
+                    <TableColumn>Nombre</TableColumn>
+                    <TableColumn>Ubicación</TableColumn>
+                    <TableColumn>Acciones</TableColumn>
+                </TableHeader>
+            }
+            CuerpoTabla={
+                <TableBody items={SalasList}>
+                    {(item)=>(
+                        <TableRow key={item.idsala}>
+                            <TableCell>{item.idsala}</TableCell>
+                            <TableCell>{item.nombre}</TableCell>
+                            <TableCell>{item.ubicacion}</TableCell>
+                            <TableCell>
+                                <BtnAccionComponent 
+                                    MostrarBtnEditar={true} 
+                                    MostrarBtnEliminar={true} 
+                                    EventoEditar={Editar}
+                                    EventoEliminar={Eliminar}
+                                    Id={item.idsala}
                                         BotonesAdicionales={
                                         <>
                                            <Button variant="light" onClick={()=>Navegar(item.idsala)} className="ml-2">Asignar asientos</Button>    
                                         </>}
                                     ></BtnAccionComponent>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                }
-                >
-                </ListGeneralComponent>
-                <Modal
-                 Size="xl"
-                 EventoGuardar={Guardar}
-                 Titulo={"Agregar Sala"} 
-                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-                 CuerpoFormulario={<FormComponent Sala={Sala} setSala={setSala}/>}></Modal>
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            }
+            >
+            </ListGeneralComponent>
+            <Modal 
+            EventoGuardar={Guardar}
+            Titulo={"Agregar Sala"} 
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+            CuerpoFormulario={<FormComponent Sala={Sala} setSala={setSala}/>}></Modal>
 
+            <SweetAlert2 {...swalProps}
+            onConfirm={()=>{
+                axios.delete('/api/salas/'+Sala.idsala
+                ).then((res)=>{
+                    Lista();
+                });
+            }}
+            didClose={()=>{
+                Limpiar();
+                setSwalProps({
+                    show:false
+                })
+            }}
+            ></SweetAlert2>
         </div>
+
     )
 }

@@ -77,7 +77,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
-        let indexPelicula=PeliculaList.find((element)=>element.idpelicula.index);
+        let indexPelicula=PeliculaList.find((element)=>element.idpelicula=index);
         setPelicula({
             ...Pelicula,
             idpelicula:index,
@@ -170,6 +170,8 @@ export default function ListComponent(){
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
                                     MostrarBtnEliminar={true}
+                                    EventoEditar={Editar}
+                                    EventoEliminar={Eliminar}
                                     BotonesAdicionales={
                                         <Button as={Link} variant="light" onClick={()=>Navegar(item.idpelicula,item.titulo)}>Asignar Horarios</Button>
                                     }

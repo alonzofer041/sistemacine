@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import { Input } from "@nextui-org/react";
+import React, { useState } from "react";
+
 export default function FormComponent({Sucursal,setSucursal}){
     function handleNombre(e){
         setSucursal({...Sucursal,nombre:e.target.value});
@@ -13,20 +14,13 @@ export default function FormComponent({Sucursal,setSucursal}){
     function handleEmail(e){
         setSucursal({...Sucursal,email:e.target.value});
     }
-    return(
-        <div>
-            <div className="grid grid-cols-1">
-                <Input name="nombre" label="Nombre" value={Sucursal.nombre} onChange={handleNombre}></Input>
-            </div>
-            <div className="grid grid-cols-1 mt-2">
-                <Input name="direccion" label="Direccion" value={Sucursal.direccion} onChange={handleDireccion}></Input>
-            </div>
-            <div className="grid grid-cols-1 mt-2">
-                <Input name="telefono" label="Telefono" value={Sucursal.telefono} onChange={handleTelefono}></Input>
-            </div>
-            <div className="grid grid-cols-1 mt-2">
-                <Input name="email" label="Email" value={Sucursal.email} onChange={handleEmail}></Input>
-            </div>
+    return (
+        <div className="container">
+            <Input name="nombre" label="Nombre de la sucursal" value={Sucursal.nombre} onChange={handleNombre}></Input>
+            <Input name="direccion" label="Dirección" value={Sucursal.ubicacion} onChange={handleDireccion}></Input>
+            <Input name="telefono" label="Teléfono" value={Sucursal.telefono} onChange={handleTelefono}></Input>
+            <Input name="email" label="Correo electrónico" value={Sucursal.email} onChange={handleEmail}></Input>
         </div>
+        
     )
 }

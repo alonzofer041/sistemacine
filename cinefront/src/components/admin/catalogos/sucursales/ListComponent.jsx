@@ -1,48 +1,82 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
-import FormComponent from "../sucursales/FormComponent";
+import FormComponent from "./FormComponent";
 import { useState } from "react";
 import axios from "axios";
+import SweetAlert2 from 'react-sweetalert2';
+
 export default function ListComponent(){
-    const[Sucursal,setSucursal]=useState({
+    useEffect(()=>{
+        Lista();
+    },[]);
+    // SWAL
+    const [swalProps, setSwalProps] = useState({});
+    
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    // USER STATE
+    const [Sucursal,setSucursal]=useState({
         idsucursal:0,
-        idempresa:0,
-        nombre:'',
-        direccion:'',
-        telefono:'',
-        email:''
+        nombre:"",
+        direccion:"",
+        telefono:"",
+        email:""
     });
     const [SucursalList,setSucursalList]=useState([
-        {key:"1",idsucursal:"1",nombre:"colectivo",direccion:'calle 99 425 A dolores otero',telefono:'99987788',email:'email@gmail.com'},
-        {key:"2",idsucursal:"1",nombre:"norte",direccion:'calle 34 257 san ramon',telefono:'999766777',email:'norte@gmail.com'},
-        {key:"3",idsucursal:"1",nombre:"klub",direccion:'la isla',telefono:'9998077678',email:'cine@klub.fr'}
+        
     ]);
-    function Lista(){
     
+    function Lista(){
+        axios.get("/api/sucursal"
+        ).then((res)=>{
+            let data=res.data;
+            setSucursalList(data);
+        });
     }
     function Limpiar(){
-        setSucursal({...Sucursal,
-            idsucursal:0,
-            idempresa:0,
-            nombre:'',
-            direccion:'',
-            telefono:'',
-            email:''
-        })
+        setSucursal({...Sucursal,idsucursal:0,nombre:"",direccion:"",telefono:"",email:""});
     }
     function Eliminar(index){
-        
+        setSucursal({...Sucursal,idsucursal:index});
+        setSwalProps({
+            icon:'warning',
+            show: true,
+            title: 'Eliminar',
+            text: '¿Seguro que quiere eliminar este dato?',
+            confirmButtonText:'Si',
+            showConfirmButton:true,
+            showDenyButton:true
+        }); 
     }
     function Editar(index){
-    
+        let indexSucursal=SucursalList.findIndex((element)=>element.idsucursal==index);
+        setSucursal({...Sucursal,idsucursal:index,
+            nombre:SucursalList[indexSucursal].nombre,
+            direccion:SucursalList[indexSucursal].direccion,
+            telefono:SucursalList[indexSucursal].telefono,
+            email:SucursalList[indexSucursal].email
+        });
+        onOpen();
     }
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
     function Guardar(){
-
+        var obj={
+            idsucursal:Sucursal.idsucursal,
+            nombre:Sucursal.nombre,
+            direccion:Sucursal.direccion,
+            telefono:Sucursal.telefono,
+            email:Sucursal.email
+        };
+        if (obj.idsucursal==0) {
+            axios.post("/api/sucursal",obj).then((res)=>{Lista()});   
+        }
+        else{
+            axios.post("/api/sucursal/"+Sucursal.idsucursal,obj).then((res)=>Lista());
+        }
     }
+
+
     return(
         <div>
             <ListGeneralComponent
@@ -56,16 +90,16 @@ export default function ListComponent(){
                 <TableHeader>
                     <TableColumn>#</TableColumn>
                     <TableColumn>Nombre</TableColumn>
-                    <TableColumn>Direccion</TableColumn>
-                    <TableColumn>Telefono</TableColumn>
-                    <TableColumn>Email</TableColumn>
+                    <TableColumn>Dirección</TableColumn>
+                    <TableColumn>Teléfono</TableColumn>
+                    <TableColumn>Correo electrónico</TableColumn>
                     <TableColumn>Acciones</TableColumn>
                 </TableHeader>
             }
             CuerpoTabla={
                 <TableBody items={SucursalList}>
                     {(item)=>(
-                        <TableRow key={item.key}>
+                        <TableRow key={item.idsucursal}>
                             <TableCell>{item.idsucursal}</TableCell>
                             <TableCell>{item.nombre}</TableCell>
                             <TableCell>{item.direccion}</TableCell>
@@ -74,20 +108,37 @@ export default function ListComponent(){
                             <TableCell>
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
-                                    MostrarBtnEliminar={true}
-                                    BotonesAdicionales={<><Button variant="light">Ver salas</Button></>}>
-                                </BtnAccionComponent>
+                                    MostrarBtnEliminar={true} 
+                                    EventoEditar={Editar}
+                                    EventoEliminar={Eliminar}
+                                    Id={item.idsucursal}></BtnAccionComponent>
                             </TableCell>
                         </TableRow>
-    )}
+                    )}
                 </TableBody>
-            }></ListGeneralComponent>
-            <Modal
-            Size="xl"
+            }
+            >
+            </ListGeneralComponent>
+            <Modal 
             EventoGuardar={Guardar}
-            Titulo={"Agregar Sucursal"} 
+            Titulo={Sucursal.idsucursal==0 ? "Agregar Sala" : "Editar Sala"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             CuerpoFormulario={<FormComponent Sucursal={Sucursal} setSucursal={setSucursal}/>}></Modal>
+
+            <SweetAlert2 {...swalProps}
+            onConfirm={()=>{
+                axios.delete('/api/sucursal/'+Sucursal.idsucursal
+                ).then((res)=>{
+                    Lista();
+                });
+            }}
+            didClose={()=>{
+                Limpiar();
+                setSwalProps({
+                    show:false
+                })
+            }}
+            ></SweetAlert2>
         </div>
     )
 }

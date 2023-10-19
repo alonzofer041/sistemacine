@@ -1,15 +1,20 @@
-import React from "react";
+import React,{ useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import Modal from "../../../base/ModalComponent";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button } from "@nextui-org/react";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
-import FormComponent from "./FormComponent";
+import FormComponent from "../combo/FormComponent";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const url=import.meta.env.VITE_ASSET_URL+'/combos/';
 export default function ListComponent(){
+    useEffect(()=>{
+        Lista();
+    },[]);
     const navigate=useNavigate();
+    const [File,setFile]=useState({});
     const [Combo,setCombo]=useState({
         idcombo:0,
         nombre:'',
@@ -20,7 +25,14 @@ export default function ListComponent(){
         {idcombo:1,nombre:'combo amigos',valor:'216',imgcombo:'nada.png'},
         {idcombo:2,nombre:'combo pareja',valor:'220',imgcombo:'nada.png'}
     ]);
+    
     function Lista(){
+        axios.get('/api/combo'
+        ).then((res)=>{
+            let data=res.data;
+            setComboList(data);
+            // console.log(import.meta.env.VITE_ASSET_URL);
+        })
     
     }
     function Limpiar(){
@@ -28,17 +40,62 @@ export default function ListComponent(){
         idcombo:0,nombre:'',valor:0,imgcombo:''});
     }
     function Eliminar(index){
+        setCombo({...Combo,idcombo:index});
+        setSwalProps({
+            icon:'warning',
+            show: true,
+            title: 'Eliminar',
+            text: '¿Seguro que quiere eliminar este dato?',
+            confirmButtonText:'Si',
+            showConfirmButton:true,
+            showDenyButton:true,
+        }); 
         
     }
     function Editar(index){
+        let indexCombo=ComboList.find((element)=>element.idcombo.index);
+        setCombo({
+            ...Combo,
+            idcombo:index,
+            idcombo:ComboList[indexCombo].idcombo,
+            nombre:ComboList[indexCombo].nombre,
+            valor:ComboList[indexCombo].valor,
+            acciones:ComboList[indexCombo].acciones,
+            imgcombo:ComboList[indexCombo].imgcombo,
+        });
+        onOpen();
     
     }
     function Navegar(idcombo,nombre){
-        navigate('/combodetalle',{state:{idcombo:idcombo,nombre:nombre}});
+        navigate('/combodetalle',{state:{idcombo:idcombo,nombre:nombre,}});
     }
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     function Guardar(){
-
+        var obj={
+            idcombo:Combo.idcombo,
+            nombre:Combo.nombre,
+            valor:Combo.valor,
+            imagen:Combo.imagen,
+            acciones:Combo.acciones,
+            files:File
+        }
+        axios.post('/api/combo',obj,{
+            headers:{
+                "Content-Type":"multipart/form-data"
+            }
+        }).then((res)=>{Lista()});
+        // let formData=new FormData();
+        // formData.set("idcombo",combo.idcombo);
+        // formData.set("nombre",combo.nombre);
+        // formData.set("valor",Pelicula.valor);
+        // formData.set("acciones",Pelicula.acciones);
+        // formData.set("imgcombo",Pelicula.imgcombo);
+        // formData.append("files",File);
+        // axios.post("/api/pelicula",formData,{
+        //     headers:{
+        //         "Content-Type":"multipart/form-data"
+        //     }
+        // }).then(()=>{});
     }
     return (
         <div>
@@ -85,7 +142,7 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={"Agregar Combo"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Combo={Combo} setCombo={setCombo}/>}></Modal>
+            CuerpoFormulario={<FormComponent Combo={Combo} setCombo={setCombo} File={File} setFile={setFile}/>}></Modal>
         </div>
     )
 }

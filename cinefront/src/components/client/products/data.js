@@ -1,3 +1,10 @@
+// import axios from "axios";
+// let data=[];
+// axios.get("/url"
+// ).then((res)=>{
+//     data=res.data;
+// })
+// export default data
 export const data = [
     {
         id: 1,
