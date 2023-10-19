@@ -1,39 +1,81 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import ListGeneralComponent from "../../../../base/ListGeneralComponent";
 import Modal from "../../../../base/ModalComponent";
 import BtnAccionComponent from "../../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
-export default function ListComponent(){
-    const location=useLocation();
-    const idsala=location.state?.idsala
-    const [SalaAsientos,setSalaAsientos]=useState({
-        idsalaasiento:0,
-        idsala:0,
-        nombre:'',
-        fila:''
-    });
-    const[SalaAsientosList,setSalaAsientosList]=useState([
-        {idsalaasiento:'1',idsala:'1',nombre:'A1',fila:'A'},
-        {idsalaasiento:'2',idsala:'1',nombre:'B1',fila:'B'}
-    ]);
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    function Lista(){
+import axios from "axios";
+import SweetAlert2 from 'react-sweetalert2';
 
+export default function ListComponent(){
+    // SWAL
+    const [swalProps, setSwalProps] = useState({});
+
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    // USER STATE
+    const [Asientos,setAsientos]=useState({
+        idasiento:0,
+        nombre:"",
+        fila:""
+    });
+    const location=useLocation();//ojito
+    const idsala=location.state?.idsala
+    const [AsientosList,setAsientosList]=useState([ 
+        
+    ]);
+    useEffect(()=>{
+        Lista();
+    },[]);
+    function Lista(){
+        axios.get("/api/asientos",{
+            params:{
+                idsala:idsala
+            }
+        }
+        ).then((res)=>{
+            let data=res.data;
+            setAsientosList(data);
+        });
     }
     function Limpiar(){
-
+        setAsientos({...Asientos,idasiento:0,nombre:"",fila:""});
     }
     function Eliminar(index){
-
-    }
-    function Guardar(){
-
+        setAsientos({...Asientos,idasiento:index});
+        setSwalProps({
+            icon:'warning',
+            show: true,
+            title: 'Eliminar',
+            text: '¿Seguro que quiere eliminar este dato?',
+            confirmButtonText:'Si',
+            showConfirmButton:true,
+            showDenyButton:true
+        }); 
     }
     function Editar(index){
-
+        let indexAsientos=AsientosList.findIndex((element)=>element.idasiento==index);
+        setAsientos({...Asientos,idasiento:index,
+            nombre:AsientosList[indexAsientos].nombre,
+            fila:AsientosList[indexAsientos].fila
+        });
+        onOpen();
     }
+    function Guardar(){
+        var obj={
+            idasiento:Asientos.idasiento,
+            idsala:idsala,
+            nombre:Asientos.nombre,
+            fila:Asientos.fila
+        };
+        if (obj.idasiento==0) {
+            axios.post("/api/asientos",obj).then((res)=>{Lista()});   
+        }
+        else{
+            axios.post("/api/asientos/"+Asientos.idasiento,obj).then((res)=>Lista());
+        }
+    }
+
     return(
         <div>
             <ListGeneralComponent
@@ -52,27 +94,46 @@ export default function ListComponent(){
                    </TableHeader> 
                 }
                 CuerpoTabla={
-                    <TableBody items={SalaAsientosList}>
+                    <TableBody items={AsientosList}>
                         {(item)=>(
-                            <TableRow key={item.idsalaasiento}>
-                                <TableCell>{item.idsalaasiento}</TableCell>
+                            <TableRow key={item.idasiento}>
+                                <TableCell>{item.idasiento}</TableCell>
                                 <TableCell>{item.nombre}</TableCell>
                                 <TableCell>{item.fila}</TableCell>
                                 <TableCell>
-                                    <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}></BtnAccionComponent>
+                                    <BtnAccionComponent 
+                                        MostrarBtnEditar={true} 
+                                        MostrarBtnEliminar={true} 
+                                        EventoEditar={Editar}
+                                        EventoEliminar={Eliminar}
+                                        Id={item.idasiento}></BtnAccionComponent>
                                 </TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 }
-            ></ListGeneralComponent>
-            <Modal
-                 Size="xl"
-                 EventoGuardar={Guardar}
-                 Titulo={"Agregar Asiento"}
-                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-                 CuerpoFormulario={<FormComponent SalaAsientos={SalaAsientos} setSalaAsientos={setSalaAsientos}></FormComponent>}
-            ></Modal>
+            >
+            </ListGeneralComponent>
+            <Modal 
+            EventoGuardar={Guardar}
+            Titulo={Asientos.idasiento==0 ? "Agregar Asiento" : "Editar Asiento"} 
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+            CuerpoFormulario={<FormComponent Asientos={Asientos} setAsientos={setAsientos}/>}></Modal>
+
+            <SweetAlert2 {...swalProps}
+            onConfirm={()=>{
+                axios.delete('/api/asientos/'+Asientos.idasiento
+                ).then((res)=>{
+                    Lista();
+                });
+            }}
+            didClose={()=>{
+                Limpiar();
+                setSwalProps({
+                    show:false
+                })
+            }}
+            ></SweetAlert2>
         </div>
     )
 }
