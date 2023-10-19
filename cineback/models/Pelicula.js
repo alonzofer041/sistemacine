@@ -54,6 +54,7 @@ class Pelicula{
             this.productora,
             this.distribuidora,
             this.imgportada,
+            this.updated_at,
             this.idpelicula
         ],function(err,results,fields){
             res.json(results);

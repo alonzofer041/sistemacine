@@ -1,59 +1,142 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Link ,Image } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
 import { useState } from "react";
+import axios from "axios";
+import SweetAlert2 from 'react-sweetalert2';
+import { useNavigate } from "react-router-dom";
 
+const url=import.meta.env.VITE_ASSET_URL+'/productos/';
 export default function ListComponent(){
-    const [ProductoData,setProductoData]=useState({
-        nombre:"",
-        precio: 0,
-        cantidad: 0,
-    });
-    const [ProductoList,setProductoList]=useState([
-        {key:"1",nombre:"Palomitas grandes", precio:"$"+250, cantidad:3},
-        {key:"2",nombre:"Nachos Grandes", precio:"$"+90, cantidad:5},
-        {key:"3",nombre:"Hot-dog", precio:"$"+ 60, cantidad:9},
-        
-    ]);
+
+    useEffect(()=>{
+        Lista();
+    },[]);
+     // SWAL
+    const [swalProps, setSwalProps] = useState({});
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    function Guardar(){
-        fetch('/api/listaproductos').then((res)=>console.log(res));
-        
+
+    const navigate=useNavigate();
+    const [Producto,setProducto]=useState({
+        idproducto:0,
+        nombre:'',
+        valor:0,
+        cantidad:0,
+        imgproducto:''
+    });
+    const [ProductoList,setProductoList]=useState([]);
+
+    // ESTADO DE ARCHIVO
+    const [File,setFile]=useState({});
+    function Lista(){
+        axios.get('/api/producto'
+        ).then((res)=>{
+            let data=res.data;
+            setProductoList(data);
+            // console.log(import.meta.env.VITE_ASSET_URL);
+        })
     }
+    function Limpiar(){
+        setProducto({
+            ...Producto,
+            idproducto:0,
+            nombre:'',
+            valor:0,
+            cantidad:0,
+            imgproducto:'',
+        });
+    }
+
+    function Eliminar(index){
+        setProducto({...Producto,idproducto:index});
+        setSwalProps({
+            icon:'warning',
+            show: true,
+            title: 'Eliminar',
+            text: '¿Seguro que quiere eliminar este dato?',
+            confirmButtonText:'Si',
+            showConfirmButton:true,
+            showDenyButton:true
+        }); 
+    }
+
+    function Editar(index){
+        let indexProducto=ProductoList.findIndex((element)=>element.idproducto==index);
+        setProducto({
+            ...Producto,
+            idproducto:index,
+            nombre:ProductoList[indexProducto].nombre,
+            valor:ProductoList[indexProducto].valor,
+            cantidad:ProductoList[indexProducto].cantidad,
+            imgproducto:ProductoList[indexProducto].imgproducto,
+        });
+        onOpen();
+    }
+    function Guardar(){
+        var obj={
+            idproducto:Producto.idproducto,
+            nombre:Producto.nombre,
+            valor:Producto.valor,
+            cantidad:Producto.cantidad,
+            files:File
+        }
+        if (obj.idproducto==0) {
+            axios.post("/api/producto",obj,{headers:{
+                "Content-Type":"multipart/form-data"
+            }}).then((res)=>{Lista()});   
+        }
+        else{
+            axios.post("/api/producto/"+Producto.idproducto,obj,{headers:{
+                "Content-Type":"multipart/form-data"
+            }}).then((res)=>Lista());
+        }
+        // let formData=new FormData();
+        // formData.set("nombre",Producto.nombre);
+        // formData.set("valor",Producto.valor);
+        // formData.set("cantidad",Producto.cantidad);
+        // formData.append("files",File);
+        // axios.post("/api/producto",formData,{
+        //     headers:{
+        //         "Content-Type":"multipart/form-data"
+        //     }
+        // }).then(()=>{});
+    }
+    // Lista();
     return(
         <div>
             <ListGeneralComponent
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             EsModal={true}
-            Filtro={""} 
+            Filtro={"1"} 
             Titulo={"Producto"}
             NombreLista={"Configuración"}
-            
-            
+            EventoLimpiar={Limpiar}
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
                     <TableColumn>Producto</TableColumn>
                     <TableColumn>Precio</TableColumn>
                     <TableColumn>Cantidad</TableColumn>
-                   
-                    <TableColumn></TableColumn>
+                    <TableColumn>Imagen Producto</TableColumn>
+                    <TableColumn>Acciones</TableColumn>
                 </TableHeader>
             }
             CuerpoTabla={
                 <TableBody items={ProductoList}>
                     {(item)=>(
-                        <TableRow key={item.key}>
-                            <TableCell>{item.key}</TableCell>
+                        <TableRow key={item.idproducto}>
+                            <TableCell>{item.idproducto}</TableCell>
                             <TableCell>{item.nombre}</TableCell>
-                            <TableCell>{item.precio}</TableCell>
+                            <TableCell>{'$'+item.valor}</TableCell>
                             <TableCell>{item.cantidad}</TableCell>
+                            <TableCell>{<Image width={200} height={200} src={url+item.imgproducto}></Image>}</TableCell>
                             
                             <TableCell>
-                                <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}></BtnAccionComponent>
+                                <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true} EventoEditar={Editar}
+                                    EventoEliminar={Eliminar} Id={item.idproducto}></BtnAccionComponent>
                             </TableCell>
                         </TableRow>
                     )}
@@ -65,8 +148,22 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={"Agregar Producto"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent ProductoData={ProductoData} setProductoData={setProductoData}/>}></Modal>
-        
+            CuerpoFormulario={<FormComponent Producto={Producto} setProducto={setProducto} File={File} setFile={setFile}/>}></Modal>
+
+            <SweetAlert2 {...swalProps}
+            onConfirm={()=>{
+                axios.delete('/api/producto/'+Producto.idproducto
+                ).then((res)=>{
+                    Lista();
+                });
+            }}
+            didClose={()=>{
+                Limpiar();
+                setSwalProps({
+                    show:false
+                })
+            }}
+            ></SweetAlert2>
         </div>
 
     )

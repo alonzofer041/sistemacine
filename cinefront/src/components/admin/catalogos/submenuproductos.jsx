@@ -8,7 +8,7 @@ export default function SubMenuProducto(){
         navigate('/provedores', );
     }
     function NavegarProducto(){
-        navigate('/productoslista', );
+        navigate('/producto', );
     }
     function NavegarCombo(){
         navigate('/combo', );
