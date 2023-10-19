@@ -1,6 +1,6 @@
 import {Link, Button } from "@nextui-org/react";
 import React from "react";
-import {FaGopuram, FaBuilding, FaFilm} from "react-icons/fa";
+import {FaGopuram, FaBuilding, FaFilm, FaImages} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 export default function SubMenuConfig(){
     const navigate=useNavigate();
@@ -16,9 +16,17 @@ export default function SubMenuConfig(){
     function NavegarSucursal(){
         navigate('/sucursales');
     }
+    function NavegarBanner(){
+        navigate('/banners');
+    }
     return(
         <div className="container" style={{height:"34rem"}}>
             <div className="flex gap-3 justify-center">
+                <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarBanner}>
+                    <FaImages size="2em"/>
+                    Banners
+                </Button>
+
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarCategoria}>
                     <FaFilm size="2em"/>
                     Género de Películas

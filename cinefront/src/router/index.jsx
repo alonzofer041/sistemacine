@@ -1,5 +1,6 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+import ListBanners from "../components/admin/catalogos/banner/ListComponent";
 import ListSalas from "../components/admin/catalogos/sala/ListComponent";
 import ListPeliculasCategoria from "../components/admin/catalogos/peliculascategoria/ListComponent";
 import ListPeliculaHorario from "../components/admin/catalogos/pelicula/peliculahorario/ListComponent"
@@ -30,6 +31,10 @@ const router=createBrowserRouter([
             {
                 path:"/configuracion",
                 element:<SubMenuConfig/>
+            },
+            {
+              path:"/banners",
+              element:<ListBanners/>
             },
             {
                 path:"/peliculas",
@@ -64,7 +69,7 @@ const router=createBrowserRouter([
               element:<ListProvedores/>
             },
             {
-              path:"/productoslista",
+              path:"/producto",
               element:<ListProducto/>
             },
             {

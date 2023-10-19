@@ -48,4 +48,5 @@ class PeliculaCategoria{
         })
     }
 }
+
 module.exports=PeliculaCategoria;
