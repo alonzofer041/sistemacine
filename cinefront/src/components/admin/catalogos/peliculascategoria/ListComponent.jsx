@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
@@ -8,14 +8,20 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 export default function ListComponent(){
-    useEffect(()=>{
-        Lista();
-    },[]);
     // SWAL
     const [swalProps, setSwalProps] = useState({});
     
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     // USER STATE
+
+    // FILTROS
+    const [Filtro,setFiltro]=useState({
+        NumFilas:5,
+        Pagina:1,
+        Nombre:'',
+        TotalPaginas:1
+    });
+
     const [PeliculaCategoria,setPeliculaCategoria]=useState({
         idpeliculacategoria:0,
         nombre:""
@@ -23,14 +29,55 @@ export default function ListComponent(){
     const [PeliculasCategoriaList,setPeliculasCategoriaList]=useState([
         {idpeliculacategoria:0,nombre:''}
     ]);
+
+    useEffect(()=>{
+        Lista();
+    },[]);
+
+    // MEMOS
+    const BndFiltro=Boolean(Filtro.Nombre);
+    const ItemsFiltro=React.useMemo(()=>{
+        let PeliculaCategoriaFiltrado=[...PeliculasCategoriaList];
+        if (BndFiltro) {
+            PeliculaCategoriaFiltrado=PeliculaCategoriaFiltrado.filter((PeliculaCategoriaElement)=>
+                PeliculaCategoriaElement.nombre.toLowerCase().includes(Filtro.Nombre.toLowerCase())
+            );     
+        }
+        return PeliculaCategoriaFiltrado;
+    },[PeliculasCategoriaList,Filtro.Nombre]);
     
+    const Paginator=React.useMemo(()=>{
+        // let Pages=Math.ceil(ItemsFiltro.length/Filtro.NumFilas);
+        // setFiltro({...Filtro,TotalPaginas:Pages});
+        return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
+    },[ItemsFiltro?.length,Filtro.NumFilas]);
+
+    const ItemsPaginado=React.useMemo(()=>{
+        const Inicio=(Filtro.Pagina-1)*Filtro.NumFilas;
+        const Fin=Inicio+Filtro.NumFilas;
+        return ItemsFiltro.slice(Inicio,Fin);
+    },[Filtro.Pagina,ItemsFiltro,Filtro.NumFilas]);
+    
+    // METODOS
     function Lista(){
         axios.get("/api/peliculacategoria"
         ).then((res)=>{
             let data=res.data;
             setPeliculasCategoriaList(data);
+            // setFiltro({...Filtro});
+        }).finally(()=>{
+            // SetPaginator();
         });
     }
+    const FiltrarLista=React.useCallback((value)=>{
+        setFiltro({...Filtro,Nombre:value})
+        // if (value) {
+        //     setFiltro({...Filtro,nombre:value})
+        // }
+        // else{
+        //     setFiltro({...Filtro,nombre:''});
+        // }
+    })
     function Limpiar(){
         setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:0,nombre:""});
     }
@@ -70,10 +117,14 @@ export default function ListComponent(){
             <ListGeneralComponent
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             EsModal={true}
-            Filtro={1} 
+            Filtro={Filtro}
+            setFiltro={setFiltro}
+            FiltroEvento={FiltrarLista} 
+            TotalElementos={ItemsFiltro.length}
             Titulo={"Géneros de Películas"}
             NombreLista={"Configuración"}
             EventoLimpiar={Limpiar}
+            TotalPagina={Paginator}
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
@@ -82,7 +133,7 @@ export default function ListComponent(){
                 </TableHeader>
             }
             CuerpoTabla={
-                <TableBody items={PeliculasCategoriaList}>
+                <TableBody items={ItemsPaginado}>
                     {(item)=>(
                         <TableRow key={item.idpeliculacategoria}>
                             <TableCell>{item.idpeliculacategoria}</TableCell>
@@ -103,7 +154,7 @@ export default function ListComponent(){
             </ListGeneralComponent>
             <Modal 
             EventoGuardar={Guardar}
-            Titulo={"Agregar Genero"} 
+            Titulo={PeliculaCategoria.idpeliculacategoria==0 ? "Agregar Género" : "Editar Género"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             CuerpoFormulario={<FormComponent PeliculaCategoria={PeliculaCategoria} setPeliculaCategoria={setPeliculaCategoria}/>}></Modal>
 
