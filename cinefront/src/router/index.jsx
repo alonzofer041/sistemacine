@@ -8,6 +8,7 @@ import ListPeliculas from "../components/admin/catalogos/pelicula/ListComponent"
 import ListProvedores from "../components/admin/catalogos/listaprovedores/ListComponent";
 import ListCombo from "../components/admin/catalogos/combo/ListComponent";
 import ListComboDetalle from "../components/admin/catalogos/combo/comboxproducto/ListComponent";
+import ListProductoCategoria from "../components/admin/catalogos/productocategoria/ListComponent";
 import ListProducto from "../components/admin/catalogos/listaproductos/ListComponent";
 import SubMenuConfig from "../components/admin/catalogos/submenu";
 import Productos from "../components/client/products/ProductComponent";
@@ -67,6 +68,10 @@ const router=createBrowserRouter([
             {
               path:"/provedores",
               element:<ListProvedores/>
+            },
+            {
+              path:"/productocategoria",
+              element:<ListProductoCategoria/>
             },
             {
               path:"/producto",

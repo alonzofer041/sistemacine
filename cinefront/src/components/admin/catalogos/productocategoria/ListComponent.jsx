@@ -7,27 +7,28 @@ import FormComponent from "./FormComponent";
 import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
+
 export default function ListComponent(){
-    // SWAL
-    const [swalProps, setSwalProps] = useState({});
+     // SWAL
+     const [swalProps, setSwalProps] = useState({});
     
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    // USER STATE
+     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+     // USER STATE
+ 
+     // FILTROS
+     const [Filtro,setFiltro]=useState({
+         NumFilas:5,
+         Pagina:1,
+         Nombre:'',
+         TotalPaginas:1
+     });
 
-    // FILTROS
-    const [Filtro,setFiltro]=useState({
-        NumFilas:5,
-        Pagina:1,
-        Nombre:'',
-        TotalPaginas:1
-    });
-
-    const [PeliculaCategoria,setPeliculaCategoria]=useState({
-        idpeliculacategoria:0,
+     const [ProductoCategoria,setProductoCategoria]=useState({
+        idproductocategoria:0,
         nombre:""
     });
-    const [PeliculasCategoriaList,setPeliculasCategoriaList]=useState([
-        {idpeliculacategoria:0,nombre:''}
+    const [ProductoCategoriaList,setProductoCategoriaList]=useState([
+        {idproductocategoria:0,nombre:''}
     ]);
 
     useEffect(()=>{
@@ -37,14 +38,14 @@ export default function ListComponent(){
     // MEMOS
     const BndFiltro=Boolean(Filtro.Nombre);
     const ItemsFiltro=React.useMemo(()=>{
-        let PeliculaCategoriaFiltrado=[...PeliculasCategoriaList];
+        let ProductoCategoriaFiltrado=[...ProductoCategoriaList];
         if (BndFiltro) {
-            PeliculaCategoriaFiltrado=PeliculaCategoriaFiltrado.filter((PeliculaCategoriaElement)=>
-                PeliculaCategoriaElement.nombre.toLowerCase().includes(Filtro.Nombre.toLowerCase())
+            ProductoCategoriaFiltrado=ProductoCategoriaFiltrado.filter((ProductoCategoriaElement)=>
+                ProductoCategoriaElement.nombre.toLowerCase().includes(Filtro.Nombre.toLowerCase())
             );     
         }
-        return PeliculaCategoriaFiltrado;
-    },[PeliculasCategoriaList,Filtro.Nombre]);
+        return ProductoCategoriaFiltrado;
+    },[ProductoCategoriaList,Filtro.Nombre]);
     
     const Paginator=React.useMemo(()=>{
         return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
@@ -58,29 +59,21 @@ export default function ListComponent(){
     
     // METODOS
     function Lista(){
-        axios.get("/api/peliculacategoria"
+        axios.get("/api/productocategoria"
         ).then((res)=>{
             let data=res.data;
-            setPeliculasCategoriaList(data);
-            // setFiltro({...Filtro});
+            setProductoCategoriaList(data);
         }).finally(()=>{
-            // SetPaginator();
         });
     }
     const FiltrarLista=React.useCallback((value)=>{
         setFiltro({...Filtro,Nombre:value})
-        // if (value) {
-        //     setFiltro({...Filtro,nombre:value})
-        // }
-        // else{
-        //     setFiltro({...Filtro,nombre:''});
-        // }
     })
     function Limpiar(){
-        setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:0,nombre:""});
+        setProductoCategoria({...ProductoCategoria,idproductocategoria:0,nombre:""});
     }
     function Eliminar(index){
-        setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:index});
+        setProductoCategoria({...ProductoCategoria,idproductocategoria:index});
         setSwalProps({
             icon:'warning',
             show: true,
@@ -92,24 +85,22 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
-        let indexPeliculaCategoria=PeliculasCategoriaList.findIndex((element)=>element.idpeliculacategoria==index);
-        setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:index,nombre:PeliculasCategoriaList[indexPeliculaCategoria].nombre});
+        let indexProductoCategoria=ProductoCategoriaList.findIndex((element)=>element.idproductocategoria==index);
+        setProductoCategoria({...ProductoCategoria,idproductocategoria:index,nombre:ProductoCategoriaList[indexProductoCategoria].nombre});
         onOpen();
     }
     function Guardar(){
         var obj={
-            idpeliculacategoria:PeliculaCategoria.idpeliculacategoria,
-            nombre:PeliculaCategoria.nombre
+            idproductocategoria:ProductoCategoria.idproductocategoria,
+            nombre:ProductoCategoria.nombre
         };
-        if (obj.idpeliculacategoria==0) {
-            axios.post("/api/peliculacategoria",obj).then((res)=>{Lista()});   
+        if (obj.idproductocategoria==0) {
+            axios.post("/api/productocategoria",obj).then((res)=>{Lista()});   
         }
         else{
-            axios.post("/api/peliculacategoria/"+PeliculaCategoria.idpeliculacategoria,obj).then((res)=>Lista());
+            axios.post("/api/productocategoria/"+ProductoCategoria.idproductocategoria,obj).then((res)=>Lista());
         }
     }
-
-
     return(
         <div>
             <ListGeneralComponent
@@ -119,7 +110,7 @@ export default function ListComponent(){
             setFiltro={setFiltro}
             FiltroEvento={FiltrarLista} 
             TotalElementos={ItemsFiltro.length}
-            Titulo={"Géneros de Películas"}
+            Titulo={"Tipos de Productos"}
             NombreLista={"Configuración"}
             EventoLimpiar={Limpiar}
             TotalPagina={Paginator}
@@ -133,8 +124,8 @@ export default function ListComponent(){
             CuerpoTabla={
                 <TableBody items={ItemsPaginado}>
                     {(item)=>(
-                        <TableRow key={item.idpeliculacategoria}>
-                            <TableCell>{item.idpeliculacategoria}</TableCell>
+                        <TableRow key={item.idproductocategoria}>
+                            <TableCell>{item.idproductocategoria}</TableCell>
                             <TableCell>{item.nombre}</TableCell>
                             <TableCell>
                                 <BtnAccionComponent 
@@ -142,7 +133,7 @@ export default function ListComponent(){
                                     MostrarBtnEliminar={true} 
                                     EventoEditar={Editar}
                                     EventoEliminar={Eliminar}
-                                    Id={item.idpeliculacategoria}></BtnAccionComponent>
+                                    Id={item.idproductocategoria}></BtnAccionComponent>
                             </TableCell>
                         </TableRow>
                     )}
@@ -152,13 +143,13 @@ export default function ListComponent(){
             </ListGeneralComponent>
             <Modal 
             EventoGuardar={Guardar}
-            Titulo={PeliculaCategoria.idpeliculacategoria==0 ? "Agregar Género" : "Editar Género"} 
+            Titulo={ProductoCategoria.idproductocategoria==0 ? "Agregar Tipo de Producto" : "Editar Tipo de Producto"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent PeliculaCategoria={PeliculaCategoria} setPeliculaCategoria={setPeliculaCategoria}/>}></Modal>
+            CuerpoFormulario={<FormComponent ProductoCategoria={ProductoCategoria} setProductoCategoria={setProductoCategoria}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{
-                axios.delete('/api/peliculacategoria/'+PeliculaCategoria.idpeliculacategoria
+                axios.delete('/api/productocategoria/'+ProductoCategoria.idproductocategoria
                 ).then((res)=>{
                     Lista();
                 });
@@ -171,6 +162,5 @@ export default function ListComponent(){
             }}
             ></SweetAlert2>
         </div>
-
     )
 }

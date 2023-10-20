@@ -53,14 +53,12 @@ export default function ListComponent(){
         
     }
     function Editar(index){
-        let indexCombo=ComboList.find((element)=>element.idcombo.index);
+        let indexCombo=ComboList.findIndex((element)=>element.idcombo==index);
         setCombo({
             ...Combo,
             idcombo:index,
-            idcombo:ComboList[indexCombo].idcombo,
             nombre:ComboList[indexCombo].nombre,
             valor:ComboList[indexCombo].valor,
-            acciones:ComboList[indexCombo].acciones,
             imgcombo:ComboList[indexCombo].imgcombo,
         });
         onOpen();
@@ -79,23 +77,20 @@ export default function ListComponent(){
             acciones:Combo.acciones,
             files:File
         }
-        axios.post('/api/combo',obj,{
-            headers:{
-                "Content-Type":"multipart/form-data"
-            }
-        }).then((res)=>{Lista()});
-        // let formData=new FormData();
-        // formData.set("idcombo",combo.idcombo);
-        // formData.set("nombre",combo.nombre);
-        // formData.set("valor",Pelicula.valor);
-        // formData.set("acciones",Pelicula.acciones);
-        // formData.set("imgcombo",Pelicula.imgcombo);
-        // formData.append("files",File);
-        // axios.post("/api/pelicula",formData,{
-        //     headers:{
-        //         "Content-Type":"multipart/form-data"
-        //     }
-        // }).then(()=>{});
+        if (obj.idcombo==0) {
+            axios.post('/api/combo',obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{Lista()});   
+        }
+        else{
+            axios.post('/api/combo/'+Combo.idcombo,obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{Lista()});
+        }
     }
     return (
         <div>
@@ -127,9 +122,12 @@ export default function ListComponent(){
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
                                     MostrarBtnEliminar={true}
+                                    EventoEditar={Editar}
+                                    EventoEliminar={Eliminar}
                                     BotonesAdicionales={
                                         <Button onClick={()=>Navegar(item.idcombo,item.nombre)}>Asignar Productos</Button>
                                     }
+                                    Id={item.idcombo}
                                     ></BtnAccionComponent>
                             </TableCell>
                         </TableRow>
