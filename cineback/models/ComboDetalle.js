@@ -12,7 +12,7 @@ class CombosDetalle{
         this.deleted_at='';
     }
     insertar(res){
-        pool.query('INSERT INTO combosdetalle (idcombo,idproducto,cantidad,valor,nombre,imgcombo,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
+        pool.query('INSERT INTO combosdetalle (idcombo,idproducto,cantidad,valor,nombre,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
             this.idcombo,
             this.idproducto,
             this.cantidad,
@@ -26,13 +26,14 @@ class CombosDetalle{
         })
     }
     actualizar(res){
-        pool.query('UPDATE combosdetalle SET idcombodetalle=?,idcombo=?,idproducto=?,cantida=?,valor=?,nombre=?,updated_at=? WHERE idcombodetalle=?',[
-            this.idcombodetalle,
+        pool.query('UPDATE combosdetalle SET idcombo=?,idproducto=?,cantidad=?,valor=?,nombre=?,updated_at=? WHERE idcombodetalle=?',[
             this.idcombo,
             this.idproducto,
             this.cantidad,
             this.valor,
             this.nombre,
+            this.updated_at,
+            this.idcombodetalle,
         ],function(err,results,fields){
             res.json(results);
         })
