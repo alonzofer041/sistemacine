@@ -28,16 +28,30 @@ export default function FormComponent({Proveedor,setProveedor}){
     }
     return (
         <div className="container" >
-            <div className="grid grid-cols-1">
+            {/* <div className="grid grid-cols-1">
                 <Input className="mb-3" name="nombrecomercial"  label="Nombre"  value={Proveedor.nombrecomercial} onChange={handleNombre}></Input>
                 <Input className="mb-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
                 <Input className="mb-3" name="email" label="Email" value={Proveedor.email} onChange={handleEmail}></Input>
                 <Input className="mb-3" name="contacto" label="Contacto" value={Proveedor.contacto} onChange={handleContacto}></Input>
                 <Input className="mb-3" name="telefono" label="Telefono" value={Proveedor.telefono} onChange={handleTelefono}></Input>
                 <Input className="mb-3" name="direccion" label="Direccion" value={Proveedor.direccion} onChange={handleDireccion}></Input>
-                    <Input className="mb-3" name="estado" label="Estado" value={Proveedor.estado} onChange={handleEstado}></Input>
-                    <Input name="ciudad" label="Ciudad" value={Proveedor.ciudad} onChange={handleCiudad}></Input>
-            </div>    
+                <Input className="mb-3" name="estado" label="Estado" value={Proveedor.estado} onChange={handleEstado}></Input>
+                <Input name="ciudad" label="Ciudad" value={Proveedor.ciudad} onChange={handleCiudad}></Input>
+            </div>     */}
+            <div className="grid grid-cols-2">
+                <Input className="mb-3" name="nombrecomercial"  label="Nombre"  value={Proveedor.nombrecomercial} onChange={handleNombre}></Input>
+                <Input className="ml-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
+            </div>
+            <div className="grid grid-cols-3 mb-3">
+                <Input name="email" label="Email" value={Proveedor.email} onChange={handleEmail}></Input>
+                <Input className="ml-2" name="contacto" label="Contacto" value={Proveedor.contacto} onChange={handleContacto}></Input>
+                <Input className="ml-4" name="telefono" label="Telefono" value={Proveedor.telefono} onChange={handleTelefono}></Input>
+            </div>
+            <div className="grid grid-cols-3">
+                <Input name="direccion" label="Direccion" value={Proveedor.direccion} onChange={handleDireccion}></Input>
+                <Input className="ml-2" name="estado" label="Estado" value={Proveedor.estado} onChange={handleEstado}></Input>
+                <Input className="ml-4" name="ciudad" label="Ciudad" value={Proveedor.ciudad} onChange={handleCiudad}></Input>
+            </div>
         </div>
     )
 }

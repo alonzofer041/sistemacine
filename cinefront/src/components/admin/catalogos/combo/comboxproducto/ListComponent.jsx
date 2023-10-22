@@ -26,7 +26,10 @@ export default function ListComponent(){
     })
     const [ComboDetalleList,setComboDetalleList]=useState([]);
     function Lista(){
-        axios.get("/api/combodetalle"
+        axios.get("/api/combodetalle",
+        {params:{
+            idcombo:idcombo
+        }}
         ).then((res)=>{
             let data=res.data;
             setComboDetalleList(data);
@@ -64,16 +67,13 @@ export default function ListComponent(){
     function Guardar(){
         var obj={
             idcombodetalle:ComboDetalle.idcombodetalle,
+            idcombo:idcombo,
             nombre:ComboDetalle.nombre,
             cantidad:ComboDetalle.cantidad,
-            acciones:ComboDetalle.acciones,
-            files:File
+            valor:ComboDetalle.valor
         }
-        axios.post('/api/combodetalle',obj,{
-            headers:{
-                "Content-Type":"multipart/form-data"
-            }
-        }).then((res)=>{Lista()});
+        axios.post('/api/combodetalle',obj,
+        ).then((res)=>{Lista()});
         // let formData=new FormData();
         // formData.set("idcombodetalle",comboDetalle.idcombodetalle);
         // formData.set("idcombo",comboDetalle.nombre);
@@ -130,7 +130,7 @@ export default function ListComponent(){
                 Titulo={"Agregar Producto a "+nombre} 
                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                 CuerpoFormulario={
-                    <FormComponent ComboDetalle={ComboDetalle} setComboDetalle={setComboDetalle} ComboDetalleList={setComboDetalleList}></FormComponent>
+                    <FormComponent ComboDetalle={ComboDetalle} setComboDetalle={setComboDetalle}></FormComponent>
                 }
             ></Modal>
         </div>

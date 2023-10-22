@@ -25,7 +25,9 @@ export default function ListComponent(){
         nombre:'',
         valor:0,
         cantidad:0,
-        imgproducto:''
+        imgproducto:'',
+        idproveedor:0,
+        idproductocategoria:0
     });
     const [ProductoList,setProductoList]=useState([]);
 
@@ -47,6 +49,8 @@ export default function ListComponent(){
             valor:0,
             cantidad:0,
             imgproducto:'',
+            idproveedor:0,
+            idproductocategoria:0
         });
     }
 
@@ -72,6 +76,8 @@ export default function ListComponent(){
             valor:ProductoList[indexProducto].valor,
             cantidad:ProductoList[indexProducto].cantidad,
             imgproducto:ProductoList[indexProducto].imgproducto,
+            idproveedor:ProductoList[indexProducto].idproveedor,
+            idproductocategoria:ProductoList[indexProducto].idproductocategoria
         });
         onOpen();
     }
@@ -81,6 +87,8 @@ export default function ListComponent(){
             nombre:Producto.nombre,
             valor:Producto.valor,
             cantidad:Producto.cantidad,
+            idproveedor:Producto.idproveedor,
+            idproductocategoria:Producto.idproductocategoria,
             files:File
         }
         if (obj.idproducto==0) {
@@ -93,18 +101,7 @@ export default function ListComponent(){
                 "Content-Type":"multipart/form-data"
             }}).then((res)=>Lista());
         }
-        // let formData=new FormData();
-        // formData.set("nombre",Producto.nombre);
-        // formData.set("valor",Producto.valor);
-        // formData.set("cantidad",Producto.cantidad);
-        // formData.append("files",File);
-        // axios.post("/api/producto",formData,{
-        //     headers:{
-        //         "Content-Type":"multipart/form-data"
-        //     }
-        // }).then(()=>{});
     }
-    // Lista();
     return(
         <div>
             <ListGeneralComponent
@@ -146,6 +143,7 @@ export default function ListComponent(){
             </ListGeneralComponent>
             <Modal 
             EventoGuardar={Guardar}
+            Size={"xl"}
             Titulo={"Agregar Producto"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             CuerpoFormulario={<FormComponent Producto={Producto} setProducto={setProducto} File={File} setFile={setFile}/>}></Modal>
