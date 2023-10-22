@@ -23,8 +23,8 @@ const addProducto=((req,res)=>{
     // SUBIDA DE ARCHIVO
     uploads.single('files');
     // SUBIDA EN BD
-    Producto.idproductocategoria=1;
-    Producto.idproveedor=1;
+    Producto.idproductocategoria=req.body.idproductocategoria;
+    Producto.idproveedor=req.body.idproveedor;
     Producto.idempresa=1;
     Producto.idsucursal=1;
     Producto.nombre=req.body.nombre;
@@ -41,8 +41,6 @@ const addProducto=((req,res)=>{
 //@access public
 const getProducto=((req,res)=>{
     let Producto=new ProductoClass;
-    Producto.idproductocategoria=1;
-    Producto.idproveedor=1;
     Producto.idempresa=1;
     Producto.idsucursal=1;
     Producto.listar(res);
@@ -54,6 +52,8 @@ const getProducto=((req,res)=>{
 const updateProducto=((req,res)=>{
     let Producto=new ProductoClass;
     uploads.single('files');
+    Producto.idproductocategoria=req.body.idproductocategoria;
+    Producto.idproveedor=req.body.idproveedor;
     Producto.nombre=req.body.nombre;
     Producto.valor=req.body.valor;
     Producto.cantidad=req.body.cantidad;

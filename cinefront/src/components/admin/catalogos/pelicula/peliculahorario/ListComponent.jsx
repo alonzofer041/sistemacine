@@ -1,22 +1,25 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import ListGeneralComponent from "../../../../base/ListGeneralComponent";
 import Modal from "../../../../base/ModalComponent";
 import FormComponent from "./FormComponent";
 import BtnAccionComponent from "../../../../base/BtnAccionComponent";
+import axios from "axios";
 
 export default function ListComponent(){
     const location=useLocation();
     const idpelicula=location.state?.idpelicula
     const titulo=location.state?.titulo
+    useEffect(()=>{
+        Lista();
+    },[])
     const [PeliculaHorario,setPeliculaHorario]=useState({
         idpelicula:0,
         titulo: "",
         idsala:0,
-        idhorario:0,
-        horario: 0,
+        hora: '',
     });
     const[PeliculaHorarioList,setPeliculaHorarioList]=useState([
         {idpelicula:'1',idsala:'A1',idhorario:'1', titulo:"star wars" ,horario:'23/12/1977 15:15'},
@@ -24,16 +27,29 @@ export default function ListComponent(){
     ]);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     function Lista(){
-
+        axios.get("/api/horariopelicula",
+        {params:{
+            idpelicula:idpelicula
+        }}
+        ).then((res)=>{
+            let data=res.data;
+            setPeliculaHorarioList(data);
+        });
     }
     function Limpiar(){
-
+        setPeliculaHorario({...PeliculaHorario,idsala:0,hora:''})
     }
     function Eliminar(index){
 
     }
     function Guardar(){
-
+        var obj={
+            idpelicula:idpelicula,
+            idsala:PeliculaHorario.idsala,
+            hora:PeliculaHorario.hora
+        }
+        axios.post('/api/horariopelicula',obj,
+        ).then((res)=>{Lista()});
     }
     function Editar(index){
 
@@ -63,7 +79,7 @@ export default function ListComponent(){
                                 <TableCell>{item.idpelicula}</TableCell>
                                 <TableCell>{item.titulo}</TableCell>
                                 <TableCell>{item.idsala}</TableCell>
-                                <TableCell>{item.horario}</TableCell>
+                                <TableCell>{item.hora}</TableCell>
                                 <TableCell>
                                     <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}></BtnAccionComponent>
                                 </TableCell>
