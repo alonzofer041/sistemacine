@@ -1,5 +1,7 @@
 import React from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider,createBrowserRouter } from "react-router-dom";
+import { useAuth } from "../provider/AuthProvider";
+import { ProtectedRoute } from "./ProtectedRoute";
 import ListBanners from "../components/admin/catalogos/banner/ListComponent";
 import ListSalas from "../components/admin/catalogos/sala/ListComponent";
 import ListPeliculasCategoria from "../components/admin/catalogos/peliculascategoria/ListComponent";
@@ -23,106 +25,153 @@ import Login from "../components/client/login/LoginComponent";
 import Register from "../components/client/register/RegisterComponent";
 import Movies from "../components/client/movies/MoviesComponent";
 import GetTickets from "../components/client/moviesprocess/ProcessComponent";
-// CAMBIAR POR LA RUTA DE INDEX
-const router=createBrowserRouter([
-    // RUTAS ADMIN
+
+const Routes=()=>{
+  const {Token} = useAuth();
+  const PublicRoutes=([
+
+  ])
+  const RoutesForAuthenticatedOnly=([
     {
-        element:<NavBarComponent/>,
-        children:[
+      path:"/",
+      element:<ProtectedRoute/>,
+      children:[
+        {
+          element:<NavBarComponent/>,
+          children:[
             {
-                path:"/configuracion",
-                element:<SubMenuConfig/>
+              path:"/configuracion",
+              element:<SubMenuConfig/>
             },
             {
               path:"/banners",
               element:<ListBanners/>
-            },
-            {
-                path:"/peliculas",
-                element:<ListPeliculas/>
-            },
-            {
-                path:'/sucursales',
-                element:<ListSucursal/>
-            },
-            {
-                path:"/salas",
-                element:<ListSalas/>
-            },
-            {
-                path:"/peliculascategoria",
-                element:<ListPeliculasCategoria/>
-            },
-            {
-                path:"/asientos",
-                element:<ListAsientos/>
-            },
-            {
-                path:'/peliculahorario',
-                element:<ListPeliculaHorario/>
-            },
-            {
-              path:"/productos",
-              element:<SubMenuProducto/>
-            },
-            {
-              path:"/provedores",
-              element:<ListProvedores/>
-            },
-            {
-              path:"/productocategoria",
-              element:<ListProductoCategoria/>
-            },
-            {
-              path:"/producto",
-              element:<ListProducto/>
-            },
-            {
-                path:"/dashboard",
-                element:<PrincipalChart/>
-            },
-            {
-                path:"/combo",
-                element:<ListCombo/>
-            },
-            {
-                path:"/combodetalle",
-                element:<ListComboDetalle/>
-            },
-            //RUTAS CLIENTE
-            {
-              path:"/",
-              element:<Inicio/>
-            },
-            {
-                path:"/cine/inicio",
-                element:<Inicio/>
-            },
-            {
-              path:"/cine/productosventa",
-              element:<Productos/>
-            },
-            {
-              path:"/cine/pagarproducto",
-              element:<Pago/>
-            },
-            {
-              path:"cine/login",
-              element:<Login/>
-            },
-            {
-              path:"cine/register",
-              element:<Register/>
-            },
-            {
-              path:"cine/cartelera",
-              element:<Movies/>
-            },
-            {
-              path:"cine/peliculas/entradas",
-              element:<GetTickets/>
-            },
-        ]
+            }
+          ]
+        }
+      ]
     }
-])
-export default router;
+  ]);
+  const RoutesForNotAuthenticatedOnly=[
+    {
+      path:"/login",
+      element:<Login/>
+    },
+    {
+      path:"/cines/inicio",
+      element:<Inicio/>
+    }
+  ]
+  const router=createBrowserRouter([
+    ...PublicRoutes,
+    ...(!Token ? RoutesForNotAuthenticatedOnly : []),
+    ...RoutesForAuthenticatedOnly
+  ]);
+
+  return <RouterProvider router={router} />
+}
+export default Routes;
+
+
+// const router=createBrowserRouter([
+
+//     {
+//         element:<NavBarComponent/>,
+//         children:[
+//             {
+//                 path:"/configuracion",
+//                 element:<SubMenuConfig/>
+//             },
+//             {
+//               path:"/banners",
+//               element:<ListBanners/>
+//             },
+//             {
+//                 path:"/peliculas",
+//                 element:<ListPeliculas/>
+//             },
+//             {
+//                 path:'/sucursales',
+//                 element:<ListSucursal/>
+//             },
+//             {
+//                 path:"/salas",
+//                 element:<ListSalas/>
+//             },
+//             {
+//                 path:"/peliculascategoria",
+//                 element:<ListPeliculasCategoria/>
+//             },
+//             {
+//                 path:"/asientos",
+//                 element:<ListAsientos/>
+//             },
+//             {
+//                 path:'/peliculahorario',
+//                 element:<ListPeliculaHorario/>
+//             },
+//             {
+//               path:"/productos",
+//               element:<SubMenuProducto/>
+//             },
+//             {
+//               path:"/provedores",
+//               element:<ListProvedores/>
+//             },
+//             {
+//               path:"/productocategoria",
+//               element:<ListProductoCategoria/>
+//             },
+//             {
+//               path:"/producto",
+//               element:<ListProducto/>
+//             },
+//             {
+//                 path:"/dashboard",
+//                 element:<PrincipalChart/>
+//             },
+//             {
+//                 path:"/combo",
+//                 element:<ListCombo/>
+//             },
+//             {
+//                 path:"/combodetalle",
+//                 element:<ListComboDetalle/>
+//             },
+
+//             {
+//               path:"/",
+//               element:<Inicio/>
+//             },
+//             {
+//                 path:"/cine/inicio",
+//                 element:<Inicio/>
+//             },
+//             {
+//               path:"/cine/productosventa",
+//               element:<Productos/>
+//             },
+//             {
+//               path:"/cine/pagarproducto",
+//               element:<Pago/>
+//             },
+//             {
+//               path:"cine/login",
+//               element:<Login/>
+//             },
+//             {
+//               path:"cine/register",
+//               element:<Register/>
+//             },
+//             {
+//               path:"cine/cartelera",
+//               element:<Movies/>
+//             },
+//             {
+//               path:"cine/peliculas/entradas",
+//               element:<GetTickets/>
+//             },
+//         ]
+//     }
+// ])
+// export default router;

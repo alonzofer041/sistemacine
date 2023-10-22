@@ -1,3 +1,4 @@
+const jwt=require("jsonwebtoken");
 let BannerClass=require('../models/Banner');
 const multer=require('multer');
 
@@ -30,10 +31,13 @@ const addBanner=((req,res)=>{
 //@route GET /api/banner
 //@access public
 const getBanner=((req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
+    console.log(decoded.idempresa);
     let Banner=new BannerClass;
-    Banner.idempresa=1;
-    Banner.idsucursal=1;
-    Banner.listar(res);
+    // Banner.idempresa=decoded.Usuario.idempresa;
+    // Banner.idsucursal=decoded.Usuario.idsucursal;
+    // Banner.listar(res);
 });
 
 //@desc actualizar banner
