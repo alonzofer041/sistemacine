@@ -5,12 +5,22 @@ import {Button, Card, CardHeader, CardBody, CardFooter, Divider, Image, Tabs, Ta
 import { BiLogIn } from 'react-icons/bi';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 export default function Login() {
     const [Usuario,setUsuario]=useState({
         id:0,
         correo:'',
         password:''
+    })
+    const [UsuarioRegistro,setUsuarioRegistro]=useState({
+        nombre:'',
+        correo:'',
+        password:'',
+        token:'',
+        rol:'admin',
+        idempresa:0,
+        idsucursal:0
     })
     function handleCorreo(e){
         setUsuario({...Usuario,correo:e.target.value})
@@ -27,8 +37,16 @@ export default function Login() {
         };
         await axios.post("/api/login",obj
         ).then((res)=>{
-            setToken(res.data.token);
-            navigate("/configuracion");
+            const token=res.data.token;
+            setToken(token);
+            const DecodedToken=jwtDecode(token);
+            // console.log(DecodedToken.Usuario.rol);
+            if (DecodedToken.Usuario.rol=='root') {
+                navigate("/menuroot");
+            }
+            else{
+                navigate("/configuracion");
+            }
         })
     }
     return (

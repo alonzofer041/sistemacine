@@ -1,9 +1,7 @@
 const pool=require('../db');
-class Banner{
+class Empresa{
     constructor(){
-        this.idbanner=0;
         this.idempresa=0;
-        this.idsucursal=0;
         this.imgbanner='';
         this.created_at='';
         this.updated_at='';
@@ -48,4 +46,4 @@ class Banner{
         return rows;
     }
 }
-module.exports=Banner
+module.exports=Empresa

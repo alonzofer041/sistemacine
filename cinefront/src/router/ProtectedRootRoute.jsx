@@ -2,7 +2,7 @@ import {Navigate,Outlet} from "react-router-dom";
 import {useAuth} from "../provider/AuthProvider";
 import jwtDecode from "jwt-decode";
 
-export const ProtectedRoute=()=>{
+export const ProtectedRootRoute=()=>{
     const {Token}=useAuth();
     if (!Token) {
         return <Navigate to="/login" />
@@ -11,6 +11,10 @@ export const ProtectedRoute=()=>{
         const DecodedToken=jwtDecode(Token);
         const CurrentDate=new Date();
         if (DecodedToken.exp*1000<CurrentDate.getTime()) {
+            return <Navigate to="/login" />
+        }
+        else if(DecodedToken.Usuario.rol!='root'){
+            localStorage.removeItem("token");
             return <Navigate to="/login" />
         }
     }

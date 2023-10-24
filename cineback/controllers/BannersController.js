@@ -30,14 +30,14 @@ const addBanner=((req,res)=>{
 //@desc listar banner
 //@route GET /api/banner
 //@access public
-const getBanner=((req,res)=>{
+const getBanner=(async (req,res)=>{
     const token=req.headers.authorization
     const decoded=jwt.verify(token,"jwtSecretKey");
-    console.log(decoded.idempresa);
     let Banner=new BannerClass;
-    // Banner.idempresa=decoded.Usuario.idempresa;
-    // Banner.idsucursal=decoded.Usuario.idsucursal;
-    // Banner.listar(res);
+    Banner.idempresa=decoded.Usuario.idempresa;
+    Banner.idsucursal=decoded.Usuario.idsucursal;
+    let rows=await Banner.listar();
+    res.json(rows);
 });
 
 //@desc actualizar banner

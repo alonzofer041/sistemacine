@@ -2,6 +2,8 @@ import React from "react";
 import { RouterProvider,createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
+import ListEmpresa from "../components/admin/catalogos/empresa/ListComponent";
+import SubMenuRoot from "../components/admin/catalogos/submenuroot";
 import ListBanners from "../components/admin/catalogos/banner/ListComponent";
 import ListSalas from "../components/admin/catalogos/sala/ListComponent";
 import ListPeliculasCategoria from "../components/admin/catalogos/peliculascategoria/ListComponent";
@@ -25,11 +27,27 @@ import Login from "../components/client/login/LoginComponent";
 import Register from "../components/client/register/RegisterComponent";
 import Movies from "../components/client/movies/MoviesComponent";
 import GetTickets from "../components/client/moviesprocess/ProcessComponent";
+import { ProtectedRootRoute } from "./ProtectedRootRoute";
 
 const Routes=()=>{
   const {Token} = useAuth();
   const PublicRoutes=([
 
+  ])
+  const RoutesForAdminOnly=([
+    {
+      element:<ProtectedRootRoute/>,
+      children:[
+        {
+          path:"/menuroot",
+          element:<SubMenuRoot/>
+        },
+        {
+          path:"/empresa",
+          element:<ListEmpresa/>
+        }
+      ]
+    }
   ])
   const RoutesForAuthenticatedOnly=([
     {
@@ -65,7 +83,8 @@ const Routes=()=>{
   const router=createBrowserRouter([
     ...PublicRoutes,
     ...(!Token ? RoutesForNotAuthenticatedOnly : []),
-    ...RoutesForAuthenticatedOnly
+    ...RoutesForAuthenticatedOnly,
+    ...RoutesForAdminOnly
   ]);
 
   return <RouterProvider router={router} />
