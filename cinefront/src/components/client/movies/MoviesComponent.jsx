@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Table,
@@ -19,16 +19,32 @@ import {
   Image
 } from "@nextui-org/react";
 import {SearchIcon} from "./SearchIcon";
+import axios from "axios";
 import {ChevronDownIcon} from "./ChevronDownIcon";
 import {columns, users, statusOptions, languageOptions, typeOptions} from "./data";
 import {capitalize} from "./utils";
 import { useNavigate } from "react-router-dom";
 
+const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
 export default function Movies() {
+  
+  const [PeliculaList,setPeliculaList]=useState([]);
+
+  useEffect(()=>{
+    Lista();
+  },[]);
+
+  function Lista(){
+    axios.get('/api/pelicula'
+      ).then((res)=>{
+          let data=res.data;
+          setPeliculaList(data);
+      })
+  }
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState("all");
+  const [visibleColumns, setVisibleColumns] = useState("all");
   const [sucursalFilter, setsucursalFilter] = React.useState("all");
   const [languageFilter, setLanguageFilter] = React.useState("all");
   const [typeFilter, setTypeFilter] = React.useState("all");
@@ -46,7 +62,7 @@ export default function Movies() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...PeliculaList];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -70,7 +86,7 @@ export default function Movies() {
     }
 
     return filteredUsers;
-  }, [users, filterValue, sucursalFilter, languageFilter, typeFilter]);
+  }, [PeliculaList, filterValue, sucursalFilter, languageFilter, typeFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -91,73 +107,43 @@ export default function Movies() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  
+  
+
+  const renderCell = React.useCallback((item, columnKey) => {
+    const cellValue = item[columnKey];
 
     switch (columnKey) {
+      
       case "name":
         return (
-          <div>
-            <figure>
-                <img className="posters" src={user.avatar} />
-            </figure>
-            <div>
-					    <p className="titles">{user.name}</p>
-              
-				    </div>
-            <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} className="btn-cartelera">
-              Conseguir entradas
-            </Button>
-            </div>
+          
+          <div >
+            {(PeliculaList.map((Pelicula)=>(
+              <div key={Pelicula.idpelicula}>
+                <img className="posters" src={url+Pelicula.imgportada} />
+                <div>
+                  <p className="titles">{Pelicula.titulo}</p>
+                </div>
+                <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} className="btn-cartelera">
+                  Conseguir entradas
+                </Button>
+              </div>
+            )))}
+          </div>
         );
       case "detalles":
         return (
           <div>
-            {user.description}
-            <div>
-              <div>
-                Idioma:
-                <Chip className="capitalize" size="sm" variant="flat">
-                  {user.language}
-                </Chip>
-              </div>
-              <div>
-                Duración:
-                <Chip className="capitalize" size="sm" variant="flat">
-                  {user.duration}
-                </Chip>
-              </div>
-              <div>
-                Género:
-                <Chip className="capitalize" size="sm" variant="flat">
-                  {user.type}
-                </Chip>
-              </div>
-              <div>
-                Clasificación:
-                <Chip className="capitalize" size="sm" variant="flat">
-                  {user.classification}
-                </Chip>
-              </div>
-              <div>
-                Hora:
-                <Chip className="capitalize" size="sm" variant="flat">
-                  {user.time}
-                </Chip>
-              </div>
-              <div>
-                Sucursal:
-                <Chip className="capitalize" size="sm" variant="flat">
-                  {user.sucursal}
-                </Chip>
-              </div>
-            </div>
+
           </div>
         );
       default:
         return cellValue;
     }
   }, []);
+  
+  
 
   const onRowsPerPageChange = React.useCallback((e) => {
     setRowsPerPage(Number(e.target.value));
@@ -263,7 +249,7 @@ export default function Movies() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">{users.length} resultados en total.</span>
+          <span className="text-default-400 text-small">{PeliculaList.length} resultados en total.</span>
           <label className="flex items-center text-default-400 text-small">
             Resultados por página:
             <select
@@ -286,7 +272,7 @@ export default function Movies() {
     typeFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    PeliculaList.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -340,7 +326,7 @@ export default function Movies() {
       </TableHeader>
       <TableBody emptyContent={"Ninguna película cumple con los filtros."} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.idpelicula}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}

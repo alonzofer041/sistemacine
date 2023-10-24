@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
@@ -7,24 +6,30 @@ import Modal from "../../../../base/ModalComponent";
 import FormComponent from "./FormComponent";
 import BtnAccionComponent from "../../../../base/BtnAccionComponent";
 import axios from "axios";
+import SweetAlert2 from 'react-sweetalert2';
 
 export default function ListComponent(){
     const location=useLocation();
     const idpelicula=location.state?.idpelicula
     const titulo=location.state?.titulo
+
+    const[PeliculaHorarioList,setPeliculaHorarioList]=useState([
+        
+    ]);
     useEffect(()=>{
         Lista();
     },[])
+    // SWAL
+    const [swalProps, setSwalProps] = useState({});
     const [PeliculaHorario,setPeliculaHorario]=useState({
+        idhorariopelicula:0,
         idpelicula:0,
-        titulo: "",
+        titulo: '',
         idsala:0,
         hora: '',
     });
-    const[PeliculaHorarioList,setPeliculaHorarioList]=useState([
-        {idpelicula:'1',idsala:'A1',idhorario:'1', titulo:"star wars" ,horario:'23/12/1977 15:15'},
-        
-    ]);
+
+
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     function Lista(){
         axios.get("/api/horariopelicula",
@@ -37,22 +42,44 @@ export default function ListComponent(){
         });
     }
     function Limpiar(){
-        setPeliculaHorario({...PeliculaHorario,idsala:0,hora:''})
+        setPeliculaHorario({...PeliculaHorario, idhorariopelicula:0, idsala:0,hora:''})
     }
     function Eliminar(index){
+        setPeliculaHorario({...PeliculaHorario, idhorariopelicula:index})
+        setSwalProps({
+            icon:'warning',
+            show: true,
+            title: 'Eliminar',
+            text: '¿Seguro que quiere eliminar este dato?',
+            confirmButtonText:'Si',
+            showConfirmButton:true,
+            showDenyButton:true
+        }); 
 
     }
     function Guardar(){
         var obj={
+            idhorariopelicula:PeliculaHorario.idhorariopelicula,
             idpelicula:idpelicula,
             idsala:PeliculaHorario.idsala,
             hora:PeliculaHorario.hora
         }
-        axios.post('/api/horariopelicula',obj,
-        ).then((res)=>{Lista()});
+        if (obj.idhorariopelicula==0) {
+            axios.post("/api/horariopelicula",obj).then((res)=>{Lista()});   
+        }
+        else{
+            axios.post("/api/horariopelicula/"+PeliculaHorario.idhorariopelicula,obj).then((res)=>Lista());
+        }
     }
     function Editar(index){
-
+        let indexPeliculaHorario=PeliculaHorarioList.findIndex((element)=>element.idhorariopelicula==index);
+        setPeliculaHorario({...PeliculaHorario,
+            idhorariopelicula:index,
+            idpelicula:PeliculaHorarioList[indexPeliculaHorario].idpelicula,
+            idsala:PeliculaHorarioList[indexPeliculaHorario].idsala,
+            hora:PeliculaHorarioList[indexPeliculaHorario].hora
+        });
+        onOpen();
     }
     return(
         <div>
@@ -75,13 +102,16 @@ export default function ListComponent(){
                 CuerpoTabla={
                     <TableBody items={PeliculaHorarioList}>
                         {(item)=>(
-                            <TableRow key={item.idpelicula}>
-                                <TableCell>{item.idpelicula}</TableCell>
-                                <TableCell>{item.titulo}</TableCell>
+                            <TableRow key={item.idhorariopelicula}>
+                                <TableCell>{item.idhorariopelicula}</TableCell>
+                                <TableCell>{titulo}</TableCell>
                                 <TableCell>{item.idsala}</TableCell>
                                 <TableCell>{item.hora}</TableCell>
                                 <TableCell>
-                                    <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}></BtnAccionComponent>
+                                    <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}  
+                                        EventoEditar={Editar}
+                                        EventoEliminar={Eliminar}
+                                        Id={item.idhorariopelicula}></BtnAccionComponent>
                                 </TableCell>
                             </TableRow>
                         )}
@@ -95,6 +125,19 @@ export default function ListComponent(){
                  isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                  CuerpoFormulario={<FormComponent PeliculaHorario={PeliculaHorario} setPeliculaHorario={setPeliculaHorario}></FormComponent>}
             ></Modal>
+            <SweetAlert2 {...swalProps}
+            onConfirm={()=>{
+                axios.delete('/api/horariopelicula/'+PeliculaHorario.idhorariopelicula
+                ).then((res)=>{
+                    Lista();
+                });
+            }}
+            didClose={()=>{
+                Limpiar();
+                setSwalProps({
+                    show:false
+                })
+            }}></SweetAlert2>
         </div>
     )
 }

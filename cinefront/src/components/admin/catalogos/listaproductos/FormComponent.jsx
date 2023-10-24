@@ -69,7 +69,7 @@ export default function FormComponent({Producto,setProducto, File, setFile}){
                     <Input name="cantidad"  label="Cantidad" type="number" value={Producto.cantidad} onChange={handleCantidad}></Input>
                 </div> 
                 <div>
-                    <input type="file" name="files" onChange={handleFile}/>
+                    <input type="file" name="files"  onChange={handleFile}/>
                 </div> 
             </div>  
         </div>

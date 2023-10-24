@@ -9,6 +9,14 @@ import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 
 export default function ListComponent(){
+    const location=useLocation();//ojito
+    const idsala=location.state?.idsala
+    const [AsientosList,setAsientosList]=useState([ 
+        
+    ]);
+    useEffect(()=>{
+        Lista();
+    },[]);
     // SWAL
     const [swalProps, setSwalProps] = useState({});
 
@@ -19,14 +27,7 @@ export default function ListComponent(){
         nombre:"",
         fila:""
     });
-    const location=useLocation();//ojito
-    const idsala=location.state?.idsala
-    const [AsientosList,setAsientosList]=useState([ 
-        
-    ]);
-    useEffect(()=>{
-        Lista();
-    },[]);
+
     function Lista(){
         axios.get("/api/asientos",{
             params:{
