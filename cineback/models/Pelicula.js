@@ -69,7 +69,10 @@ class Pelicula{
         })
     }
     listar(res){
-        pool.execute('SELECT * FROM `peliculas` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
+        let sql=`SELECT *, pc.nombre AS categoria FROM peliculas AS p
+        JOIN peliculascategoria AS pc ON p.idpeliculacategoria=pc.idpeliculacategoria
+        WHERE p.idempresa=? AND p.idsucursal=? AND p.deleted_at IS NULL`
+        pool.execute(sql,[
             this.idempresa,
             this.idsucursal
         ],function (err,results,fields){

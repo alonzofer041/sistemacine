@@ -23,20 +23,33 @@ import axios from "axios";
 import {ChevronDownIcon} from "./ChevronDownIcon";
 import {columns, users, statusOptions, languageOptions, typeOptions} from "./data";
 import {capitalize} from "./utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
 export default function Movies() {
-  
+  const [PeliculaCategoriaList,setPeliculasCategoriaList]=useState([]);
   const [PeliculaList,setPeliculaList]=useState([]);
 
   useEffect(()=>{
     Lista();
   },[]);
 
+  useEffect(()=>{
+    ListaCategoria();
+  },[]);
+
+  function ListaCategoria(){
+    axios.get("/api/peliculacategoria"
+    ).then((res)=>{
+      let data=res.data;
+      setPeliculasCategoriaList(data);
+    });
+  }
+
   function Lista(){
     axios.get('/api/pelicula'
+
       ).then((res)=>{
           let data=res.data;
           setPeliculaList(data);
@@ -63,10 +76,11 @@ export default function Movies() {
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...PeliculaList];
+    let filteredCategoria = [...PeliculaCategoriaList];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+        user.titulo.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (sucursalFilter !== "all" && Array.from(sucursalFilter).length !== statusOptions.length) {
@@ -80,13 +94,13 @@ export default function Movies() {
         );
     }
     if (typeFilter !== "all" && Array.from(typeFilter).length !== typeOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(typeFilter).includes(user.type),
+      filteredCategoria = filteredCategoria.filter((user) =>
+        Array.from(typeFilter).includes(user.nombre),
       );
     }
 
     return filteredUsers;
-  }, [PeliculaList, filterValue, sucursalFilter, languageFilter, typeFilter]);
+  }, [PeliculaList, PeliculaCategoriaList, filterValue, sucursalFilter, languageFilter, typeFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -119,24 +133,96 @@ export default function Movies() {
         return (
           
           <div >
-            {(PeliculaList.map((Pelicula)=>(
-              <div key={Pelicula.idpelicula}>
-                <img className="posters" src={url+Pelicula.imgportada} />
-                <div>
-                  <p className="titles">{Pelicula.titulo}</p>
-                </div>
-                <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} className="btn-cartelera">
-                  Conseguir entradas
-                </Button>
-              </div>
-            )))}
+            <img className="posters" src={url+item.imgportada} />
+                
+            <p className="titles">{item.titulo}</p>
+                
+            <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} className="btn-cartelera">
+              Conseguir entradas
+            </Button>
           </div>
         );
       case "detalles":
         return (
           <div>
-
+            Sinopsis: <br />
+            {item.sinopsis}
+            <div>
+              <br />
+              <div>
+                Duración:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.duracion}
+                </Chip>
+              </div>
+              <div>
+                Reparto:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.reparto}
+                </Chip>
+              </div>
+              <div>
+                Género:
+                  <Chip className="capitalize" size="sm" variant="flat">
+                    {item.categoria}
+                  </Chip>
+              </div>
+              <div>
+                Director:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.director}
+                </Chip>
+              </div>
+              <div>
+                Distriuidora:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.distribuidora}
+                </Chip>
+              </div>
+              
+            </div>
           </div>
+          /*<div>
+            {item.sinopsis}
+            <div>
+              <div>
+                Idioma:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {.language}
+                </Chip>
+              </div>
+              <div>
+                Duración:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.duration}
+                </Chip>
+              </div>
+              <div>
+                Género:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.type}
+                </Chip>
+              </div>
+              <div>
+                Clasificación:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.classification}
+                </Chip>
+              </div>
+              <div>
+                Hora:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.time}
+                </Chip>
+              </div>
+              <div>
+                Sucursal:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {user.sucursal}
+                </Chip>
+              </div>
+            </div>
+          </div>*/
         );
       default:
         return cellValue;
@@ -239,9 +325,9 @@ export default function Movies() {
                 selectionMode="multiple"
                 onSelectionChange={setTypeFilter}
               >
-                {typeOptions.map((type) => (
-                  <DropdownItem key={type.uid} className="capitalize">
-                    {capitalize(type.name)}
+                {PeliculaCategoriaList.map((type) => (
+                  <DropdownItem key={type.idpeliculacategoria} className="capitalize">
+                    {capitalize(type.nombre)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
