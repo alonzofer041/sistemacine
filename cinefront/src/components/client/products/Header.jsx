@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { Button } from "@nextui-org/react";
+import { Button,useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import ModalComponent from '../../base/ModalComponent';
+import Pago from '../payment/PaymentComponent';
+import axios from "axios";
 
 export const Header = ({
 	allProducts,
@@ -10,7 +13,13 @@ export const Header = ({
 	setCountProducts,
 	setTotal,
 }) => {
+	const {isOpen,onOpen,onOpenChange}=useDisclosure();
 	const [active, setActive] = useState(false);
+	const [OrdenProductos,setOrdenProductos]=useState({
+		folio:'',
+		nombrecliente:'',
+		correocliente:''
+	})
 	const navigate=useNavigate();
 
 	const onDeleteProduct = Producto => {
@@ -30,8 +39,23 @@ export const Header = ({
 	};
 
 	const payCart = () => {
-		navigate ('/cine/pagarproducto', );
+		// navigate ('/cine/pagarproducto', );
+		onOpen();
 	};
+	const GuardarOrden=()=>{
+		let obj={
+			nombrecliente:OrdenProductos.nombrecliente,
+			importe:total,
+			correocliente:OrdenProductos.correocliente,
+			ordenproductosdetalle:allProducts
+		}
+		axios.post("/api/ordenproducto",obj
+		).then((res)=>{
+			alert("Realizado con éxito");
+		}).catch((err)=>{
+			alert("Error");
+		})
+	}
 
 	return (
 		<header>
@@ -119,6 +143,14 @@ export const Header = ({
 					)}
 				</div>
 			</div>
+
+			<ModalComponent
+				Titulo={"Pagar"}
+				isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+				Size={"xl"}
+				EventoGuardar={GuardarOrden}
+				CuerpoFormulario={<Pago Orden={OrdenProductos} setOrden={setOrdenProductos}/>}
+			></ModalComponent>
 		</header>
 	);
 };

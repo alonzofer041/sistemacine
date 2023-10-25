@@ -16,6 +16,7 @@ const AsientosRoutes=require("./routes/RutaAsientos");
 const BannersRoutes=require("./routes/RutaBanners")
 const ProveedorRoutes = require("./routes/RutaProveedor");
 const ProductoRoutes = require("./routes/RutaProducto");
+const OrdenProductosRoutes = require("./routes/RutaOrdenProductos");
 
 const bodyParser = require("body-parser");
 const dotenv=require('dotenv').config();
@@ -40,6 +41,7 @@ app.use(AsientosRoutes);
 app.use(BannersRoutes);
 app.use(ProveedorRoutes);
 app.use(ProductoRoutes);
+app.use(OrdenProductosRoutes);
 
 app.listen(port,()=>{
     console.log(`servidor corriendo en puerto ${port}`);

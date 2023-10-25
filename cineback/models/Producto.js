@@ -51,13 +51,12 @@ class Producto{
             res.json(results);
         })
     }
-    listar(res){
-        pool.execute('SELECT * FROM `productos` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
+    async listar(){
+        const [rows]=await pool.execute('SELECT * FROM `productos` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
             this.idempresa,
             this.idsucursal
-        ],function (err,results,fields){
-            res.json(results);
-        })
+        ])
+        return rows;
     }
 }
 module.exports=Producto

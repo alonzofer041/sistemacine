@@ -39,11 +39,12 @@ const addProducto=((req,res)=>{
 //@desc listar producto
 //@route GET /api/producto
 //@access public
-const getProducto=((req,res)=>{
+const getProducto=(async (req,res)=>{
     let Producto=new ProductoClass;
     Producto.idempresa=1;
     Producto.idsucursal=1;
-    Producto.listar(res);
+    let respuesta=await Producto.listar();
+    res.json(respuesta);
 })
 
 //@desc actualizar producto

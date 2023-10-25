@@ -29,14 +29,18 @@ export const ProductList = ({
 	};
 
 	const [ProductoList,setProductoList]=useState([]);
+
 	useEffect(()=>{
 		Lista();
 	  },[]);
 	  function Lista(){
 		axios.get('/api/producto'
 		  ).then((res)=>{
-			  let data=res.data;
-			  setProductoList(data);
+				res.data.forEach(element => {
+					element.cantidad_default=1;
+				});
+				let data=res.data;
+				setProductoList(data);
 		  })
 	  }
 
