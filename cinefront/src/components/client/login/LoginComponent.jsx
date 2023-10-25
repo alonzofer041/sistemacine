@@ -6,6 +6,7 @@ import { BiLogIn } from 'react-icons/bi';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import Register from "../register/RegisterComponent";
 
 export default function Login() {
     const [Usuario,setUsuario]=useState({
@@ -17,10 +18,9 @@ export default function Login() {
         nombre:'',
         correo:'',
         password:'',
-        token:'',
         rol:'admin',
-        idempresa:0,
-        idsucursal:0
+        idempresa:1,
+        idsucursal:1
     })
     function handleCorreo(e){
         setUsuario({...Usuario,correo:e.target.value})
@@ -47,6 +47,19 @@ export default function Login() {
             else{
                 navigate("/configuracion");
             }
+        })
+    }
+    async function register(){
+        let obj={
+            nombre:UsuarioRegistro.nombre,
+            correo:UsuarioRegistro.correo,
+            password:UsuarioRegistro.password,
+        }
+        axios.post("/api/register",obj
+        ).then((res)=>{
+            alert("usuario registrado");
+        }).catch((err)=>{
+            alert ("Algo falló");
         })
     }
     return (
@@ -83,7 +96,7 @@ export default function Login() {
                             <Divider/>
 
                             <CardFooter>
-                                <Button color="primary" variant="shadow" className="btn" onClick={Login}>
+                                <Button className="btn" onClick={Login}>
                                     Iniciar sesión.
                                 </Button>  
                             </CardFooter>
@@ -96,14 +109,15 @@ export default function Login() {
                     <CardBody>
                         <Card className="max-w-[400px]">
                     <CardBody>
-                        <Image
+                        <Register UsuarioRegistro={UsuarioRegistro} setUsuarioRegistro={setUsuarioRegistro}></Register>
+                        {/* <Image
                             src="https://cur.glitter-graphics.net/pub/3719/3719211j01pncxkem.gif"
                             width={300}
-                        /> 
+                        />  */}
                     </CardBody>
                     <Divider/>
                     <CardFooter>
-                        <Button color="primary" variant="shadow" className="btn">
+                        <Button className="btn" onClick={register}>
                             Crear una cuenta.
                         </Button>
                     </CardFooter>

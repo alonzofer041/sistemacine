@@ -69,12 +69,6 @@ export default function ListComponent(){
     }
     const FiltrarLista=React.useCallback((value)=>{
         setFiltro({...Filtro,Nombre:value})
-        // if (value) {
-        //     setFiltro({...Filtro,nombre:value})
-        // }
-        // else{
-        //     setFiltro({...Filtro,nombre:''});
-        // }
     })
     function Limpiar(){
         setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:0,nombre:""});

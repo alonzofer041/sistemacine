@@ -12,9 +12,8 @@ class Sucursal{
         this.deleted_at='';
 
     }
-    insertar(res){
-        pool.query('INSERT INTO sucursal (idsucursal,idempresa,nombre,direccion,telefono,email,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?,?)',[
-            this.idsucursal,
+    async insertar(){
+        const respuesta=await pool.query('INSERT INTO sucursal (idempresa,nombre,direccion,telefono,email,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
             this.idempresa,
             this.nombre,
             this.direccion,
@@ -23,37 +22,32 @@ class Sucursal{
             this.created_at,
             null,
             null
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta
     }
-    actualizar(res){
-        pool.query('UPDATE sucursal SET nombre=?, direccion=?, telefono=?, email=?, updated_at=? WHERE idsucursal=?',[
+    async actualizar(){
+        const respuesta=await pool.query('UPDATE sucursal SET nombre=?, direccion=?, telefono=?, email=?, updated_at=? WHERE idsucursal=?',[
             this.nombre,
             this.direccion,
             this.telefono,
             this.email,
             this.updated_at,
             this.idsucursal
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    eliminar(res){
-        pool.query('UPDATE sucursal SET deleted_at=? WHERE idsucursal=?',[
+    async eliminar(){
+        const respuesta=await pool.query('UPDATE sucursal SET deleted_at=? WHERE idsucursal=?',[
             this.deleted_at,
             this.idsucursal
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta
     }
-    listar(res){
-        pool.execute('SELECT * FROM `sucursal` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
-            this.idsucursal,
+    async listar(){
+        const [rows]=await pool.execute('SELECT * FROM `sucursal` WHERE `idempresa`=? AND deleted_at IS NULL',[
             this.idempresa
-        ],function (err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return rows;
     }
 }
 module.exports=Sucursal;

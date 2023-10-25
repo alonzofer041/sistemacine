@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
@@ -9,6 +10,10 @@ import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 
 export default function ListComponent(){
+    const location=useLocation();
+    const idempresa=location.state?.idempresa;
+    const nombrecomercial=location.state?.nombrecomercial;
+
     useEffect(()=>{
         Lista();
     },[]);
@@ -19,6 +24,7 @@ export default function ListComponent(){
     // USER STATE
     const [Sucursal,setSucursal]=useState({
         idsucursal:0,
+        idempresa:0,
         nombre:"",
         direccion:"",
         telefono:"",
@@ -29,14 +35,18 @@ export default function ListComponent(){
     ]);
     
     function Lista(){
-        axios.get("/api/sucursal"
+        axios.get("/api/sucursal",{
+            params:{
+                idempresa:idempresa
+            }
+        }
         ).then((res)=>{
             let data=res.data;
             setSucursalList(data);
         });
     }
     function Limpiar(){
-        setSucursal({...Sucursal,idsucursal:0,nombre:"",direccion:"",telefono:"",email:""});
+        setSucursal({...Sucursal,idsucursal:0,idempresa:0,nombre:"",direccion:"",telefono:"",email:""});
     }
     function Eliminar(index){
         setSucursal({...Sucursal,idsucursal:index});
@@ -63,6 +73,7 @@ export default function ListComponent(){
     function Guardar(){
         var obj={
             idsucursal:Sucursal.idsucursal,
+            idempresa:idempresa,
             nombre:Sucursal.nombre,
             direccion:Sucursal.direccion,
             telefono:Sucursal.telefono,
@@ -76,7 +87,6 @@ export default function ListComponent(){
         }
     }
 
-
     return(
         <div>
             <ListGeneralComponent
@@ -84,7 +94,7 @@ export default function ListComponent(){
             EsModal={true}
             Filtro={1} 
             Titulo={"Sucursales"}
-            NombreLista={"Configuración"}
+            NombreLista={nombrecomercial}
             EventoLimpiar={Limpiar}
             CabeceraTabla={
                 <TableHeader>

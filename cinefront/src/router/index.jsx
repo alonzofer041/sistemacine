@@ -32,7 +32,31 @@ import { ProtectedRootRoute } from "./ProtectedRootRoute";
 const Routes=()=>{
   const {Token} = useAuth();
   const PublicRoutes=([
-
+    {
+      element:<NavBarComponent/>,
+      children:[
+        {
+          path:"/cines/inicio",
+          element:<Inicio/>
+        },
+        {
+          path:"/cine/productosventa",
+          element:<Productos/>
+        },
+        {
+          path:"/cine/pagarproducto",
+          element:<Pago/>
+        },
+        {
+          path:"cine/cartelera",
+          element:<Movies/>
+        },
+        {
+          path:"cine/peliculas/entradas",
+          element:<GetTickets/>
+        },
+      ]
+    }
   ])
   const RoutesForAdminOnly=([
     {
@@ -45,7 +69,11 @@ const Routes=()=>{
         {
           path:"/empresa",
           element:<ListEmpresa/>
-        }
+        },
+        {
+          path:'/sucursales',
+          element:<ListSucursal/>
+        },
       ]
     }
   ])
@@ -64,7 +92,55 @@ const Routes=()=>{
             {
               path:"/banners",
               element:<ListBanners/>
-            }
+            },
+            {
+              path:"/peliculas",
+              element:<ListPeliculas/>
+            },
+            {
+              path:"/salas",
+              element:<ListSalas/>
+            },
+            {
+              path:"/peliculascategoria",
+              element:<ListPeliculasCategoria/>
+            },
+            {
+              path:"/asientos",
+              element:<ListAsientos/>
+            },
+            {
+              path:'/peliculahorario',
+              element:<ListPeliculaHorario/>
+            },
+            {
+              path:"/productos",
+              element:<SubMenuProducto/>
+            },
+            {
+              path:"/provedores",
+              element:<ListProvedores/>
+            },
+            {
+              path:"/productocategoria",
+              element:<ListProductoCategoria/>
+            },
+            {
+              path:"/producto",
+              element:<ListProducto/>
+            },
+            {
+              path:"/dashboard",
+              element:<PrincipalChart/>
+            },
+            {
+              path:"/combo",
+              element:<ListCombo/>
+            },
+            {
+              path:"/combodetalle",
+              element:<ListComboDetalle/>
+            },
           ]
         }
       ]
@@ -75,10 +151,6 @@ const Routes=()=>{
       path:"/login",
       element:<Login/>
     },
-    {
-      path:"/cines/inicio",
-      element:<Inicio/>
-    }
   ]
   const router=createBrowserRouter([
     ...PublicRoutes,
