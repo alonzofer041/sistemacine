@@ -13,13 +13,13 @@ export const Header = ({
 	const [active, setActive] = useState(false);
 	const navigate=useNavigate();
 
-	const onDeleteProduct = product => {
+	const onDeleteProduct = Producto => {
 		const results = allProducts.filter(
-			item => item.id !== product.id
+			item => item.idproducto !== Producto.idproducto
 		);
 
-		setTotal(total - product.price * product.quantity);
-		setCountProducts(countProducts - product.quantity);
+		setTotal(total - Producto.valor * Producto.cantidad_default);
+		setCountProducts(countProducts - Producto.cantidad_default);
 		setAllProducts(results);
 	};
 
@@ -69,17 +69,17 @@ export const Header = ({
 					{allProducts.length ? (
 						<>
 							<div className='row-product'>
-								{allProducts.map(product => (
-									<div className='cart-product' key={product.id}>
+								{allProducts.map(Producto => (
+									<div className='cart-product' key={Producto.idproducto}>
 										<div className='info-cart-product'>
 											<span className='cantidad-producto-carrito'>
-												{product.quantity}
+												{Producto.cantidad_default}
 											</span>
 											<p className='titulo-producto-carrito'>
-												{product.nameProduct}
+												{Producto.nombre}
 											</p>
 											<span className='precio-producto-carrito'>
-												${product.price}
+												${Producto.valor}.00 MXN
 											</span>
 										</div>
 										<svg
@@ -89,7 +89,7 @@ export const Header = ({
 											strokeWidth='1.5'
 											stroke='currentColor'
 											className='icon-close'
-											onClick={() => onDeleteProduct(product)}
+											onClick={() => onDeleteProduct(Producto)}
 										>
 											<path
 												strokeLinecap='round'
@@ -103,7 +103,7 @@ export const Header = ({
 
 							<div className='cart-total'>
 								<h3>Total:</h3>
-								<span className='total-pagar'>${total}</span>
+								<span className='total-pagar'>${total}.00 MXN</span>
 							</div>
 
 							<button className='btn-clear-all' onClick={onCleanCart}>
