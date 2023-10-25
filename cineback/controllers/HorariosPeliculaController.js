@@ -26,9 +26,10 @@ const getHorarioPelicula=((req,res)=>{
 //@access public
 const updateHorarioPelicula=((req,res)=>{
     let HorarioPelicula=new HorarioPeliculaClass;
-    HorarioPelicula.nombre=req.body.nombre;
+    HorarioPelicula.idsala=req.body.idsala;
+    HorarioPelicula.hora=req.body.hora;
     HorarioPelicula.updated_at=new Date();
-    HorarioPelicula.idHorarioPelicula=req.params.id;
+    HorarioPelicula.idhorariopelicula=req.params.id;
     HorarioPelicula.actualizar(res);
 })
 

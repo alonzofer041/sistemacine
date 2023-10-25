@@ -1,34 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
-  Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Chip,
-  User,
-  Pagination,
-  Image
-} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Button, DropdownTrigger, Dropdown, DropdownMenu, DropdownItem, Chip, Pagination } from "@nextui-org/react";
 import {SearchIcon} from "./SearchIcon";
+import axios from "axios";
 import {ChevronDownIcon} from "./ChevronDownIcon";
 import {columns, users, statusOptions, languageOptions, typeOptions} from "./data";
 import {capitalize} from "./utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
+const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
 export default function Movies() {
+  const [PeliculaCategoriaList,setPeliculasCategoriaList]=useState([]);
+  const [PeliculaList,setPeliculaList]=useState([]);
+
+  useEffect(()=>{
+    Lista();
+  },[]);
+
+  useEffect(()=>{
+    ListaCategoria();
+  },[]);
+
+  function ListaCategoria(){
+    axios.get("/api/peliculacategoria"
+    ).then((res)=>{
+      let data=res.data;
+      setPeliculasCategoriaList(data);
+    });
+  }
+
+  function Lista(){
+    axios.get('/api/pelicula'
+
+      ).then((res)=>{
+          let data=res.data;
+          setPeliculaList(data);
+      })
+  }
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState("all");
+  const [visibleColumns, setVisibleColumns] = useState("all");
   const [sucursalFilter, setsucursalFilter] = React.useState("all");
   const [languageFilter, setLanguageFilter] = React.useState("all");
   const [typeFilter, setTypeFilter] = React.useState("all");
@@ -46,11 +58,12 @@ export default function Movies() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...PeliculaList];
+    let filteredCategoria = [...PeliculaCategoriaList];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+        user.titulo.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (sucursalFilter !== "all" && Array.from(sucursalFilter).length !== statusOptions.length) {
@@ -64,13 +77,13 @@ export default function Movies() {
         );
     }
     if (typeFilter !== "all" && Array.from(typeFilter).length !== typeOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(typeFilter).includes(user.type),
+      filteredCategoria = filteredCategoria.filter((user) =>
+        Array.from(typeFilter).includes(user.nombre),
       );
     }
 
     return filteredUsers;
-  }, [users, filterValue, sucursalFilter, languageFilter, typeFilter]);
+  }, [PeliculaList, PeliculaCategoriaList, filterValue, sucursalFilter, languageFilter, typeFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -91,34 +104,74 @@ export default function Movies() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  
+  
+
+  const renderCell = React.useCallback((item, columnKey) => {
+    const cellValue = item[columnKey];
 
     switch (columnKey) {
+      
       case "name":
         return (
-          <div>
-            <figure>
-                <img className="posters" src={user.avatar} />
-            </figure>
-            <div>
-					    <p className="titles">{user.name}</p>
-              
-				    </div>
+          
+          <div >
+            <img className="posters" src={url+item.imgportada} />
+                
+            <p className="titles">{item.titulo}</p>
+                
             <Button onClick={()=>{navigate("/cine/peliculas/entradas/")}} className="btn-cartelera">
               Conseguir entradas
             </Button>
-            </div>
+          </div>
         );
       case "detalles":
         return (
           <div>
-            {user.description}
+            Sinopsis: <br />
+            {item.sinopsis}
+            <div>
+              <br />
+              <div>
+                Duración:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.duracion}
+                </Chip>
+              </div>
+              <div>
+                Reparto:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.reparto}
+                </Chip>
+              </div>
+              <div>
+                Género:
+                  <Chip className="capitalize" size="sm" variant="flat">
+                    {item.categoria}
+                  </Chip>
+              </div>
+              <div>
+                Director:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.director}
+                </Chip>
+              </div>
+              <div>
+                Distriuidora:
+                <Chip className="capitalize" size="sm" variant="flat">
+                  {item.distribuidora}
+                </Chip>
+              </div>
+              
+            </div>
+          </div>
+          /*<div>
+            {item.sinopsis}
             <div>
               <div>
                 Idioma:
                 <Chip className="capitalize" size="sm" variant="flat">
-                  {user.language}
+                  {.language}
                 </Chip>
               </div>
               <div>
@@ -152,12 +205,14 @@ export default function Movies() {
                 </Chip>
               </div>
             </div>
-          </div>
+          </div>*/
         );
       default:
         return cellValue;
     }
   }, []);
+  
+  
 
   const onRowsPerPageChange = React.useCallback((e) => {
     setRowsPerPage(Number(e.target.value));
@@ -253,9 +308,9 @@ export default function Movies() {
                 selectionMode="multiple"
                 onSelectionChange={setTypeFilter}
               >
-                {typeOptions.map((type) => (
-                  <DropdownItem key={type.uid} className="capitalize">
-                    {capitalize(type.name)}
+                {PeliculaCategoriaList.map((type) => (
+                  <DropdownItem key={type.idpeliculacategoria} className="capitalize">
+                    {capitalize(type.nombre)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
@@ -263,7 +318,7 @@ export default function Movies() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">{users.length} resultados en total.</span>
+          <span className="text-default-400 text-small">{PeliculaList.length} resultados en total.</span>
           <label className="flex items-center text-default-400 text-small">
             Resultados por página:
             <select
@@ -286,7 +341,7 @@ export default function Movies() {
     typeFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    PeliculaList.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -340,7 +395,7 @@ export default function Movies() {
       </TableHeader>
       <TableBody emptyContent={"Ninguna película cumple con los filtros."} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.idpelicula}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}

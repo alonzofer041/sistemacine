@@ -12,6 +12,7 @@ const CombosDetallesRoutes=require("./routes/RutaCombosDetalles");
 const SalasRoutes=require("./routes/RutaSalas");
 const SucursalRoutes=require("./routes/RutaSucursal");
 const AsientosRoutes=require("./routes/RutaAsientos");
+
 const BannersRoutes=require("./routes/RutaBanners")
 const ProveedorRoutes = require("./routes/RutaProveedor");
 const ProductoRoutes = require("./routes/RutaProducto");
@@ -30,6 +31,7 @@ app.use(PeliculasRoutes);
 app.use(HorarioPeliculaRoutes);
 app.use(PeliculasCategoriaRoutes);
 app.use(ProductoCategoriaRoutes);
+
 app.use(CombosRoutes);
 app.use(CombosDetallesRoutes);
 app.use(SalasRoutes);
