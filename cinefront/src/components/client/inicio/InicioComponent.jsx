@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {Image, Button,Card, CardBody, Divider} from "@nextui-org/react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";

@@ -1,4 +1,7 @@
-import { data } from "./data";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+const url=import.meta.env.VITE_ASSET_URL+'/productos/';
 
 export const ProductList = ({
 	allProducts,
@@ -8,37 +11,49 @@ export const ProductList = ({
 	total,
 	setTotal,
 }) => {
-	const onAddProduct = product => {
-		if (allProducts.find(item => item.id === product.id)) {
+	const onAddProduct = Producto => {
+		if (allProducts.find(item => item.idproducto === Producto.idproducto)) {
 			const products = allProducts.map(item =>
-				item.id === product.id
-					? { ...item, quantity: item.quantity + 1 }
+				item.idproducto === Producto.idproducto
+					? { ...item, cantidad_default: item.cantidad_default + 1 }
 					: item
 			);
-			setTotal(total + product.price * product.quantity);
-			setCountProducts(countProducts + product.quantity);
+			setTotal(total + Producto.valor * Producto.cantidad_default);
+			setCountProducts(countProducts + Producto.cantidad_default);
 			return setAllProducts([...products]);
 		}
 
-		setTotal(total + product.price * product.quantity);
-		setCountProducts(countProducts + product.quantity);
-		setAllProducts([...allProducts, product]);
+		setTotal(total + Producto.valor * Producto.cantidad_default);
+		setCountProducts(countProducts + Producto.cantidad_default);
+		setAllProducts([...allProducts, Producto]);
 	};
+
+	const [ProductoList,setProductoList]=useState([]);
+	useEffect(()=>{
+		Lista();
+	  },[]);
+	  function Lista(){
+		axios.get('/api/producto'
+		  ).then((res)=>{
+			  let data=res.data;
+			  setProductoList(data);
+		  })
+	  }
 
 	return (
 		<div className='container-items'>
-			{data.map(product => (
-				<div className='item' key={product.id}>
+			{ProductoList.map(Producto => (
+				<div className="item" key={Producto.idproducto}>
 					<figure>
-						<img src={product.img} alt={product.nameProduct} />
+						<img src={url+Producto.imgproducto} alt={Producto.idproducto} />
 					</figure>
-					<div className='info-product'>
-						<h2>{product.nameProduct}</h2>
-						<p className='price'>${product.price}</p>
-						<button onClick={() => onAddProduct(product)}>
-							Añadir al carrito
-						</button>
-					</div>
+				<div className='info-product'>
+					<h2>{Producto.nombre}</h2>
+					<p className='price'>${Producto.valor}.00 MXN</p>
+					<button onClick={() => onAddProduct(Producto)}>
+						Añadir al carrito
+					</button>
+				</div>
 				</div>
 			))}
 		</div>

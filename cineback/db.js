@@ -4,6 +4,6 @@ const pool=createPool({
     user:'root',
     database:'sistemacine2',
     port:3306,
-    password:''
+    password:'root'
 })
 module.exports=pool;
