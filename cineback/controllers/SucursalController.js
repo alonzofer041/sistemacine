@@ -3,32 +3,32 @@ let SucursalClass = require("../models/Sucursal");
 //@desc crear sucursal
 //@route POST /api/sucursal
 //@access public
-const addSucursal=((req,res)=>{
+const addSucursal=(async (req,res)=>{
     let Sucursal=new SucursalClass;
-    Sucursal.idsucursal=1;
-    Sucursal.idempresa=1;
+    Sucursal.idempresa=req.body.idempresa;
     Sucursal.nombre=req.body.nombre;
     Sucursal.direccion=req.body.direccion;
     Sucursal.telefono=req.body.telefono;
     Sucursal.email=req.body.email;
     Sucursal.created_at=new Date();
-    Sucursal.insertar(res);
+    let respuesta=await Sucursal.insertar();
+    res.json(respuesta);
 })
 
 //@desc listar sucursal
 //@route GET /api/sucursal
 //@access public
-const getSucursal=((req,res)=>{
+const getSucursal=(async (req,res)=>{
     let Sucursal=new SucursalClass;
-    Sucursal.idsucursal=1;
-    Sucursal.idempresa=1;
-    Sucursal.listar(res);
+    Sucursal.idempresa=req.query.idempresa;
+    let respuesta=await Sucursal.listar();
+    res.json(respuesta);
 })
 
 //@desc actualizar sucursal
 //@route POST /api/sucursal/:id
 //@access public
-const updateSucursal=((req,res)=>{
+const updateSucursal=(async (req,res)=>{
     let Sucursal=new SucursalClass;
     Sucursal.nombre=req.body.nombre;
     Sucursal.direccion=req.body.direccion;
@@ -36,17 +36,19 @@ const updateSucursal=((req,res)=>{
     Sucursal.email=req.body.email;
     Sucursal.updated_at=new Date();
     Sucursal.idsucursal=req.params.id;
-    Sucursal.actualizar(res);
+    let respuesta=await Sucursal.actualizar();
+    res.json(respuesta);
 })
 
 //@desc borrar sucursal
 //@route DELETE /api/sucursal/:id
 //@access public
-const deleteSucursal=((req,res)=>{
+const deleteSucursal=(async (req,res)=>{
     let Sucursal=new SucursalClass;
     Sucursal.deleted_at=new Date();
     Sucursal.idsucursal=req.params.id;
-    Sucursal.eliminar(res);
+    let respuesta=await Sucursal.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={

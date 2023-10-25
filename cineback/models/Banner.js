@@ -40,14 +40,12 @@ class Banner{
             res.json(results);
         })
     }
-    listar(res){
-        pool.execute('SELECT * FROM `banners` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
+    async listar(){
+        const [rows]=await pool.execute('SELECT * FROM `banners` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
             this.idempresa,
             this.idsucursal
-        ],function (err,results,fields){
-            console.log(err);
-            res.json(results);
-        })
+        ])
+        return rows;
     }
 }
 module.exports=Banner

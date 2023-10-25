@@ -45,11 +45,12 @@ const addPelicula=((req,res)=>{
 //@desc listar pelicula
 //@route GET /api/pelicula
 //@access public
-const getPelicula=((req,res)=>{
+const getPelicula=(async (req,res)=>{
     let Pelicula=new PeliculaClass;
     Pelicula.idempresa=1;
     Pelicula.idsucursal=1;
-    Pelicula.listar(res);
+    let respuesta=await Pelicula.listar();
+    res.json(respuesta);
 })
 
 //@desc actualizar pelicula

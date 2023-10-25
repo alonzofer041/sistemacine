@@ -1,6 +1,8 @@
 const express=require("express");
 const cors = require('cors');
 const path=require('path');
+const UsuariosRoutes = require('./routes/RutaUsuarios');
+const EmpresasRoutes = require('./routes/RutaEmpresas');
 const PeliculasRoutes = require('./routes/RutaPeliculas');
 const HorarioPeliculaRoutes = require('./routes/RutaHorarioPelicula');
 const PeliculasCategoriaRoutes=require("./routes/RutaPeliculasCategoria");
@@ -22,6 +24,9 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'assets')))
 app.use(cors());
+
+app.use(UsuariosRoutes);
+app.use(EmpresasRoutes);
 app.use(PeliculasRoutes);
 app.use(HorarioPeliculaRoutes);
 app.use(PeliculasCategoriaRoutes);
