@@ -1,4 +1,5 @@
 let OrdenProductoClass=require("../models/OrdenProducto");
+let OrdenProductoDetalleClass=require("../models/OrdenProductoDetalle");
 
 //@desc crear producto
 //@route POST /api/ordenproducto
@@ -14,7 +15,21 @@ const addOrdenProducto=(async (req,res)=>{
     OrdenProducto.correocliente=req.body.correocliente;
     OrdenProducto.estatus="pagada";
     OrdenProducto.created_at=new Date();
-    console.log(req.body.ordenproductosdetalle);
     let respuesta=await OrdenProducto.insertar();
+
+    let DetallesOrden=req.body.ordenproductosdetalle;
+    DetallesOrden.forEach(async (DetalleOrden) => {
+        let OrdenProductoDetalle=new OrdenProductoDetalleClass;
+        OrdenProductoDetalle.idproducto=DetalleOrden.idproducto;
+        OrdenProductoDetalle.idordenproducto=respuesta.insertId;
+        OrdenProductoDetalle.idcombo=0;
+        OrdenProductoDetalle.cantidad=DetalleOrden.cantidad_default;
+        OrdenProductoDetalle.preciounit=DetalleOrden.valor;
+        OrdenProductoDetalle.valortotal=Number(DetalleOrden.valor)*Number(DetalleOrden.cantidad_default);
+        let respuestadetalle=await OrdenProductoDetalle.insertar();
+    });
+    // console.log(req.body.ordenproductosdetalle);
+
+    res.json(respuesta);
 })
 module.exports={addOrdenProducto}

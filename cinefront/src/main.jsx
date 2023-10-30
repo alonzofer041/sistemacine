@@ -12,6 +12,7 @@ import '../dist/output.css'
 import './custom.css'
 import axios from 'axios'
 import AuthProvider from './provider/AuthProvider'
+import { ToastContainer } from 'react-toastify'
 // const router=createBrowserRouter([
 //   {
 //     path:'/',
@@ -22,6 +23,7 @@ axios.defaults.baseURL="http://127.0.0.1:5001";
 ReactDOM.createRoot(document.getElementById('root')).render(
     <NextUIProvider>
       <main className='dark text-foreground'>
+        <ToastContainer autoClose={4000} />
         <AuthProvider>
           <Routes></Routes>
         </AuthProvider>

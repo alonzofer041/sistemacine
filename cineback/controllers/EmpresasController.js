@@ -1,4 +1,5 @@
 let EmpresaClass=require("../models/Empresa");
+const transporter=require("../mail");
 
 //@desc crear empresa
 //@route POST /api/empresa
@@ -57,4 +58,30 @@ const deleteEmpresa=(async (req,res)=>{
     res.json(respuesta);
 })
 
-module.exports={addEmpresa,getEmpresa,updateEmpresa,deleteEmpresa}
+//@desc correo de registro
+//@route POST /api/empresaRegistro
+//@access public
+const RegistroEmail=(async (req,res)=>{
+    let nombreempresa=req.body.nombre;
+    let nombresucursal=req.body.sucursal;
+    let idempresa=req.body.idempresa;
+    let idsucursal=req.body.idsucursal;
+    let email=req.body.email;
+    let destinatario=req.body.destinatario;
+    let url="127.0.0.1:5173/registro/"+idempresa+"/"+idsucursal;
+    await transporter.sendMail({
+        from:"cineflashmid@gmail.com",
+        to:email,
+        subject:"Registro de usuario",
+        template:"Registro",
+        context:{
+            nombre:destinatario,
+            nombrecine:nombreempresa,
+            nombresucursal:nombresucursal,
+            url:url
+        }
+    });
+    res.json({message:"ok"});
+})
+
+module.exports={addEmpresa,getEmpresa,updateEmpresa,deleteEmpresa,RegistroEmail}

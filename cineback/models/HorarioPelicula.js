@@ -9,43 +9,55 @@ class HorarioPelicula{
         this.updated_at='';
         this.deleted_at='';
     }
-    insertar(res){
-        pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?)',[
+    async insertar(){
+        let respuesta=await pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?)',[
             this.idpelicula,
             this.idsala,
             this.hora,
             this.created_at,
             null,
             null
-        ],function(err,results,fields){
-            res.json(err);
-        })
+        ]);
+        return respuesta;
     }
-    actualizar(res){
-        pool.query('UPDATE horariospelicula SET idsala=?,hora=?,updated_at=? WHERE idhorariopelicula=?',[
+    async actualizar(){
+        let respuesta=await pool.query('UPDATE horariospelicula SET idsala=?,hora=?,updated_at=? WHERE idhorariopelicula=?',[
             this.idsala,
             this.hora,
             this.updated_at,
             this.idhorariopelicula,
-        ],function(err,results,fields){
-            console.log(err);
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    eliminar(res){
-        pool.query('UPDATE horariospelicula SET deleted_at=? WHERE idhorariopelicula=?',[
+    async eliminar(){
+        let respuesta=await pool.query('UPDATE horariospelicula SET deleted_at=? WHERE idhorariopelicula=?',[
             this.deleted_at,
             this.idhorariopelicula
-        ],function(err,results,fields){
-            res.json(results); 
-        })
+        ]);
+        return respuesta;
     }
-    listar(res){
-        pool.execute('SELECT * FROM `horariospelicula` WHERE `idpelicula`=? AND deleted_at IS NULL',[
+    async listar(){
+        const [rows]=await pool.execute('SELECT * FROM `horariospelicula` WHERE `idpelicula`=? AND deleted_at IS NULL',[
             this.idpelicula
-        ],function (err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return rows;
+    }
+    async listarSalasDisponibles(){
+        let sql=`SELECT hp.idhorariopelicula,hp.idsala,s.nombre,s.numfilas FROM horariospelicula AS hp
+        JOIN salas AS s ON hp.idsala=s.idsala
+        WHERE hp.idpelicula=? AND hp.deleted_at IS NULL GROUP BY hp.idsala`
+        const [rows]=await pool.execute(sql,[
+            this.idpelicula
+        ]);
+        return rows;
+    }
+    
+    async listarHorariosxSala(){
+        const [rows]=await pool.query('SELECT * FROM horariospelicula WHERE idsala=? AND idpelicula=? AND deleted_at IS NULL',[
+            this.idsala,
+            this.idpelicula
+        ])
+        return rows;
     }
 }
 module.exports=HorarioPelicula

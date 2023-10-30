@@ -16,7 +16,7 @@ class OrdenProducto{
         let sql=`INSERT INTO ordenproductos 
         (idempresa,idsucursal,folio,nombrecliente,importe,totaliva,correocliente,estatus,created_at)
         VALUES (?,?,?,?,?,?,?,?,?)`;
-        const respuesta=await pool.query(sql,[
+        const [respuesta]=await pool.query(sql,[
             this.idempresa,
             this.idsucursal,
             this.folio,

@@ -16,7 +16,7 @@ const uploads=multer({storage:storage});
 //@desc crear pelicula
 //@route POST /api/pelicula
 //@access public
-const addPelicula=((req,res)=>{
+const addPelicula=(async(req,res)=>{
     let Pelicula=new PeliculaClass;
     // req.body=JSON.stringify(req.body);
     // console.log(req.body);
@@ -39,7 +39,8 @@ const addPelicula=((req,res)=>{
     Pelicula.created_at=new Date();
     Pelicula.fechaestreno=new Date();
 
-    Pelicula.insertar(res);
+    let respuesta=await Pelicula.insertar();
+    res.json(respuesta);
 })
 
 //@desc listar pelicula
@@ -56,7 +57,7 @@ const getPelicula=(async (req,res)=>{
 //@desc actualizar pelicula
 //@route POST /api/pelicula/:id
 //@access public
-const updatePelicula=((req,res)=>{
+const updatePelicula=(async(req,res)=>{
     let Pelicula=new PeliculaClass;
     Pelicula.idpelicula=req.params.id;
     Pelicula.idpeliculacategoria=req.body.idpeliculacategoria;
@@ -71,17 +72,19 @@ const updatePelicula=((req,res)=>{
     Pelicula.distribuidora=req.body.distribuidora;
     Pelicula.imgportada=req.body.imgportada;
     Pelicula.updated_at=new Date();
-    Pelicula.actualizar(res);
+    let respuesta=await Pelicula.actualizar();
+    res.json(respuesta);
 })
 
 //@desc borrar pelicula
 //@route DELETE /api/pelicula/:id
 //@access public
-const deletePelicula=((req,res)=>{
+const deletePelicula=(async(req,res)=>{
     let Pelicula=new PeliculaClass;
     Pelicula.idpelicula=req.params.id;
     Pelicula.deleted_at=new Date();
-    Pelicula.eliminar(res);
+    let respuesta=await Pelicula.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={addPelicula,getPelicula,updatePelicula,deletePelicula,uploads}

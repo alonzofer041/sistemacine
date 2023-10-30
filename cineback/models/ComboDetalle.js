@@ -11,8 +11,8 @@ class CombosDetalle{
         this.updated_at='';
         this.deleted_at='';
     }
-    insertar(res){
-        pool.query('INSERT INTO combosdetalle (idcombo,idproducto,cantidad,valor,nombre,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
+    async insertar(){
+        let respuesta=await pool.query('INSERT INTO combosdetalle (idcombo,idproducto,cantidad,valor,nombre,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
             this.idcombo,
             this.idproducto,
             this.cantidad,
@@ -21,12 +21,11 @@ class CombosDetalle{
             this.created_at,
             null,
             null
-        ],function(err,results,fields){
-            res.json(err);
-        })
+        ]);
+        return respuesta;
     }
-    actualizar(res){
-        pool.query('UPDATE combosdetalle SET idcombo=?,idproducto=?,cantidad=?,valor=?,nombre=?,updated_at=? WHERE idcombodetalle=?',[
+    async actualizar(){
+        let respuesta=await pool.query('UPDATE combosdetalle SET idcombo=?,idproducto=?,cantidad=?,valor=?,nombre=?,updated_at=? WHERE idcombodetalle=?',[
             this.idcombo,
             this.idproducto,
             this.cantidad,
@@ -34,25 +33,21 @@ class CombosDetalle{
             this.nombre,
             this.updated_at,
             this.idcombodetalle,
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta
     }
-    eliminar(res){
-        pool.query('UPDATE combosdetalle SET deleted_at=? WHERE idcombodetalle=?',[
+    async eliminar(){
+        let respuesta=await pool.query('UPDATE combosdetalle SET deleted_at=? WHERE idcombodetalle=?',[
             this.deleted_at,
             this.idcombodetalle
-        ],function(err,results,fields){
-            res.json(results); 
-        })
+        ]);
+        return respuesta
     }
-    listar(res){
-        pool.execute('SELECT * FROM `combosdetalle` WHERE `idcombo`=?  AND deleted_at IS NULL',[
+    async listar(){
+        const [rows]=await pool.execute('SELECT * FROM `combosdetalle` WHERE `idcombo`=?  AND deleted_at IS NULL',[
             this.idcombo,
-        ],function (err,results,fields){
-            console.log(err)
-            res.json(results);
-        })
+        ]);
+        return rows;
     }
 }
 module.exports=CombosDetalle

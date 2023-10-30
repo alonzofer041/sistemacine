@@ -19,8 +19,8 @@ class Pelicula{
         this.updated_at='';
         this.deleted_at='';
     }
-    insertar(res){
-        pool.query('INSERT INTO peliculas (idempresa,idsucursal,idpeliculacategoria,titulo,sinopsis,fechaestreno,aniorealizacion,director,reparto,duracion,productora,distribuidora,imgportada,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[
+    async insertar(){
+        let respuesta=await pool.query('INSERT INTO peliculas (idempresa,idsucursal,idpeliculacategoria,titulo,sinopsis,fechaestreno,aniorealizacion,director,reparto,duracion,productora,distribuidora,imgportada,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[
             this.idempresa,
             this.idsucursal,
             this.idpeliculacategoria,
@@ -37,12 +37,11 @@ class Pelicula{
             this.created_at,
             null,
             null
-        ],function(err,results,fields){
-            res.json(err);
-        })
+        ]);
+        return respuesta;
     }
-    actualizar(res){
-        pool.query('UPDATE peliculas SET idpeliculacategoria=?,titulo=?,sinopsis=?,aniorealizacion=?,director=?,reparto=?,duracion=?,productora=?,distribuidora=?,imgportada=? ,updated_at=? WHERE idpelicula=?',[
+    async actualizar(){
+        let respuesta=await pool.query('UPDATE peliculas SET idpeliculacategoria=?,titulo=?,sinopsis=?,aniorealizacion=?,director=?,reparto=?,duracion=?,productora=?,distribuidora=?,imgportada=? ,updated_at=? WHERE idpelicula=?',[
             this.idpeliculacategoria,
             this.titulo,
             this.sinopsis,
@@ -56,19 +55,17 @@ class Pelicula{
             this.imgportada,
             this.updated_at,
             this.idpelicula
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    eliminar(res){
-        pool.query('UPDATE peliculas SET deleted_at=? WHERE idpelicula=?',[
+    async eliminar(){
+        let respuesta=await pool.query('UPDATE peliculas SET deleted_at=? WHERE idpelicula=?',[
             this.deleted_at,
             this.idpelicula
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    async listar(res){
+    async listar(){
         let sql=`SELECT *, pc.nombre AS categoria FROM peliculas AS p
         JOIN peliculascategoria AS pc ON p.idpeliculacategoria=pc.idpeliculacategoria
         WHERE p.idempresa=? AND p.idsucursal=? AND p.deleted_at IS NULL`

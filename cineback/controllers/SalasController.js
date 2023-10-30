@@ -3,46 +3,52 @@ let SalasClass = require("../models/Salas");
 //@desc crear sala
 //@route POST /api/salas
 //@access public
-const addSalas=((req,res)=>{
+const addSalas=(async(req,res)=>{
     let Salas=new SalasClass;
     Salas.idempresa=1;
     Salas.idsucursal=1;
     Salas.nombre=req.body.nombre;
     Salas.ubicacion=req.body.ubicacion;
+    Salas.numfilas=req.body.numfilas;
     Salas.created_at=new Date();
-    Salas.insertar(res);
+    let respuesta=await Salas.insertar();
+    res.json(respuesta);
 })
 
 //@desc listar salas
 //@route GET /api/salas
 //@access public
-const getSalas=((req,res)=>{
+const getSalas=(async(req,res)=>{
     let Salas=new SalasClass;
     Salas.idempresa=1;
     Salas.idsucursal=1;
-    Salas.listar(res);
+    let respuesta=await Salas.listar();
+    res.json(respuesta);
 })
 
 //@desc actualizar salas
 //@route POST /api/salas/:id
 //@access public
-const updateSalas=((req,res)=>{
+const updateSalas=(async(req,res)=>{
     let Salas=new SalasClass;
     Salas.nombre=req.body.nombre;
     Salas.ubicacion=req.body.ubicacion;
+    Salas.numfilas=req.body.numfilas;
     Salas.updated_at=new Date();
     Salas.idsala=req.params.id;
-    Salas.actualizar(res);
+    let respuesta=await Salas.actualizar();
+    res.json(respuesta);
 })
 
 //@desc borrar salas
 //@route DELETE /api/salas/:id
 //@access public
-const deleteSalas=((req,res)=>{
+const deleteSalas=(async(req,res)=>{
     let Salas=new SalasClass;
     Salas.deleted_at=new Date();
     Salas.idsala=req.params.id;
-    Salas.eliminar(res);
+    let respuesta=await Salas.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={

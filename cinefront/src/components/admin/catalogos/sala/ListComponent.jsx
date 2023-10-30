@@ -22,7 +22,8 @@ export default function ListComponent(){
     const [Sala,setSala]=useState({
         idsala:0,
         nombre:"",
-        ubicacion:""
+        ubicacion:"",
+        numfilas:0
     });
     const [SalasList,setSalasList]=useState([
         
@@ -36,7 +37,7 @@ export default function ListComponent(){
         });
     }
     function Limpiar(){
-        setSala({...Sala,idsala:0,nombre:"",ubicacion:""});
+        setSala({...Sala,idsala:0,nombre:"",ubicacion:"",numfilas:0});
     }
     function Eliminar(index){
         setSala({...Sala,idsala:index});
@@ -52,14 +53,18 @@ export default function ListComponent(){
     }
     function Editar(index){
         let indexSala=SalasList.findIndex((element)=>element.idsala==index);
-        setSala({...Sala,idsala:index,nombre:SalasList[indexSala].nombre,ubicacion:SalasList[indexSala].ubicacion});
+        setSala({...Sala,idsala:index,
+            nombre:SalasList[indexSala].nombre,
+            ubicacion:SalasList[indexSala].ubicacion,
+            numfilas:SalasList[indexSala].numfilas});
         onOpen();
     }
     function Guardar(){
         var obj={
             idsala:Sala.idsala,
             nombre:Sala.nombre,
-            ubicacion:Sala.ubicacion
+            ubicacion:Sala.ubicacion,
+            numfilas:Sala.numfilas
         };
         if (obj.idsala==0) {
             axios.post("/api/salas",obj).then((res)=>{Lista()});   
@@ -68,8 +73,8 @@ export default function ListComponent(){
             axios.post("/api/salas/"+Sala.idsala,obj).then((res)=>Lista());
         }
     }
-    function Navegar(idsala){
-        navigate('/asientos',{state:{idsala:idsala}});
+    function Navegar(idsala,numfilas){
+        navigate('/asientos',{state:{idsala:idsala,numfilas:numfilas}});
     }
 
 
@@ -87,6 +92,7 @@ export default function ListComponent(){
                     <TableColumn>#</TableColumn>
                     <TableColumn>Nombre</TableColumn>
                     <TableColumn>Ubicación</TableColumn>
+                    <TableColumn>Número de Filas</TableColumn>
                     <TableColumn>Acciones</TableColumn>
                 </TableHeader>
             }
@@ -97,6 +103,7 @@ export default function ListComponent(){
                             <TableCell>{item.idsala}</TableCell>
                             <TableCell>{item.nombre}</TableCell>
                             <TableCell>{item.ubicacion}</TableCell>
+                            <TableCell>{item.numfilas}</TableCell>
                             <TableCell>
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
@@ -106,7 +113,7 @@ export default function ListComponent(){
                                     Id={item.idsala}
                                         BotonesAdicionales={
                                         <>
-                                           <Button variant="light" onClick={()=>Navegar(item.idsala)} className="ml-2">Asignar asientos</Button>    
+                                           <Button variant="light" onClick={()=>Navegar(item.idsala,item.numfilas)} className="ml-2">Asignar asientos</Button>    
                                         </>}
                                     ></BtnAccionComponent>
                             </TableCell>

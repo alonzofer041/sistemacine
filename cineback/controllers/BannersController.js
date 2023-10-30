@@ -17,14 +17,15 @@ const uploads=multer({storage:storage});
 //@desc crear banner
 //@route POST /api/banner
 //@access public
-const addBanner=((req,res)=>{
+const addBanner=(async (req,res)=>{
     let Banner=new BannerClass;
     uploads.single('files');
     Banner.idempresa=1;
     Banner.idsucursal=1;
     Banner.imgbanner=filename;
     Banner.created_at=new Date();
-    Banner.insertar(res);
+    let respuesta=await Banner.insertar(res);
+    res.json(respuesta);
 });
 
 //@desc listar banner
@@ -43,23 +44,25 @@ const getBanner=(async (req,res)=>{
 //@desc actualizar banner
 //@route POST /api/banner/:id
 //@access public
-const updateBanner=((req,res)=>{
+const updateBanner=(async (req,res)=>{
     let Banner=new BannerClass;
     uploads.single('files');
     Banner.imgbanner=filename;
     Banner.idbanner=req.params.id;
     Banner.updated_at=new Date();
-    Banner.actualizar(res);
+    let respuesta=await Banner.actualizar();
+    res.json(respuesta);
 });
 
 //@desc borrar banner
 //@route DELETE /api/banner/:id
 //@access public
-const deleteBanner=((req,res)=>{
+const deleteBanner=(async(req,res)=>{
     let Banner=new BannerClass;
     Banner.deleted_at=new Date();
     Banner.idbanner=req.params.id;
-    Banner.eliminar(res);
+    let respuesta=await Banner.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={addBanner,getBanner,updateBanner,deleteBanner,uploads}

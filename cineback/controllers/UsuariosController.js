@@ -10,7 +10,7 @@ const login=(async (req,res)=>{
     Usuario.password=req.body.password;
     let Respuesta=await Usuario.login(res);
     console.log(Respuesta);
-    const token=jwt.sign({Usuario:Respuesta[0]},"jwtSecretKey",{expiresIn:300});
+    const token=jwt.sign({Usuario:Respuesta[0]},"jwtSecretKey",{expiresIn:10000});
     res.json({Login:true,token});
 });
 

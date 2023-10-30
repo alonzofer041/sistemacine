@@ -3,44 +3,48 @@ let PeliculaCategoriaClass = require("../models/PeliculaCategoria");
 //@desc crear categoria pelicula
 //@route POST /api/peliculacategoria
 //@access public
-const addPeliculaCategoria=((req,res)=>{
+const addPeliculaCategoria=(async (req,res)=>{
     let PeliculaCategoria=new PeliculaCategoriaClass;
     PeliculaCategoria.idempresa=1;
     PeliculaCategoria.idsucursal=1;
     PeliculaCategoria.nombre=req.body.nombre;
     PeliculaCategoria.created_at=new Date();
-    PeliculaCategoria.insertar(res);
+    let respuesta=await PeliculaCategoria.insertar();
+    res.json(respuesta);
 })
 
 //@desc listar categoria pelicula
 //@route GET /api/peliculacategoria
 //@access public
-const getPeliculaCategoria=((req,res)=>{
+const getPeliculaCategoria=(async (req,res)=>{
     let PeliculaCategoria=new PeliculaCategoriaClass;
     PeliculaCategoria.idempresa=1;
     PeliculaCategoria.idsucursal=1;
-    PeliculaCategoria.listar(res);
+    let respuesta=await PeliculaCategoria.listar();
+    res.json(respuesta);
 })
 
 //@desc actualizar categoria pelicula
 //@route POST /api/peliculacategoria/:id
 //@access public
-const updatePeliculaCategoria=((req,res)=>{
+const updatePeliculaCategoria=(async(req,res)=>{
     let PeliculaCategoria=new PeliculaCategoriaClass;
     PeliculaCategoria.nombre=req.body.nombre;
     PeliculaCategoria.updated_at=new Date();
     PeliculaCategoria.idpeliculacategoria=req.params.id;
-    PeliculaCategoria.actualizar(res);
+    let respuesta=await PeliculaCategoria.actualizar();
+    res.json(respuesta);
 })
 
 //@desc borrar categoria pelicula
 //@route DELETE /api/peliculacategoria/:id
 //@access public
-const deletePeliculaCategoria=((req,res)=>{
+const deletePeliculaCategoria=(async (req,res)=>{
     let PeliculaCategoria=new PeliculaCategoriaClass;
     PeliculaCategoria.deleted_at=new Date();
     PeliculaCategoria.idpeliculacategoria=req.params.id;
-    PeliculaCategoria.eliminar(res);
+    let respuesta=PeliculaCategoria.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={

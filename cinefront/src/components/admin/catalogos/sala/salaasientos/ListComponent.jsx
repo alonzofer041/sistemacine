@@ -9,8 +9,9 @@ import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 
 export default function ListComponent(){
-    const location=useLocation();//ojito
-    const idsala=location.state?.idsala
+    const location=useLocation();
+    const idsala=location.state?.idsala;
+    const numfilas=location.state?.numfilas;
     const [AsientosList,setAsientosList]=useState([ 
         
     ]);
@@ -119,7 +120,7 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={Asientos.idasiento==0 ? "Agregar Asiento" : "Editar Asiento"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Asientos={Asientos} setAsientos={setAsientos}/>}></Modal>
+            CuerpoFormulario={<FormComponent Asientos={Asientos} setAsientos={setAsientos} NumFilas={numfilas}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

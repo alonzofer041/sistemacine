@@ -9,45 +9,38 @@ class ProductoCategoria{
         this.updated_at='';
         this.deleted_at='';
     }
-    insertar(res){
-        pool.query('INSERT INTO productocategoria (idempresa,idsucursal,nombre,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?)',[
+    async insertar(){
+        let respuesta=await pool.query('INSERT INTO productocategoria (idempresa,idsucursal,nombre,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?)',[
             this.idempresa,
             this.idsucursal,
             this.nombre,
             this.created_at,
             null,
             null
-        ],function(err,results,fields){
-            console.log(err);
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    actualizar(res){
-        pool.query('UPDATE productocategoria SET nombre=? ,updated_at=? WHERE idproductocategoria=?',[
+    async actualizar(){
+        let respuesta=await pool.query('UPDATE productocategoria SET nombre=? ,updated_at=? WHERE idproductocategoria=?',[
             this.nombre,
             this.updated_at,
             this.idproductocategoria
-        ],function(err,results,fields){
-            // console.log(err);
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    eliminar(res){
-        pool.query('UPDATE productocategoria SET deleted_at=? WHERE idproductocategoria=?',[
+    async eliminar(){
+        let respuesta=await pool.query('UPDATE productocategoria SET deleted_at=? WHERE idproductocategoria=?',[
             this.deleted_at,
             this.idproductocategoria
-        ],function(err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    listar(res){
-        pool.execute('SELECT * FROM `productocategoria` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
+    async listar(res){
+        const [rows]=await pool.execute('SELECT * FROM `productocategoria` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
             this.idempresa,
             this.idsucursal
-        ],function (err,results,fields){
-            console.log(err);
-            res.json(results);
-        })
+        ])
+        return rows;
     }
 }
 module.exports=ProductoCategoria

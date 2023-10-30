@@ -28,6 +28,7 @@ import Register from "../components/client/register/RegisterComponent";
 import Movies from "../components/client/movies/MoviesComponent";
 import GetTickets from "../components/client/moviesprocess/ProcessComponent";
 import { ProtectedRootRoute } from "./ProtectedRootRoute";
+import CarteleraComponent from "../components/client/cartelera/CarteleraComponent";
 
 const Routes=()=>{
   const {Token} = useAuth();
@@ -48,11 +49,11 @@ const Routes=()=>{
           element:<Pago/>
         },
         {
-          path:"cine/cartelera",
-          element:<Movies/>
+          path:"/cine/cartelera",
+          element:<CarteleraComponent/>
         },
         {
-          path:"cine/peliculas/entradas",
+          path:"/cine/peliculas/entradas",
           element:<GetTickets/>
         },
       ]

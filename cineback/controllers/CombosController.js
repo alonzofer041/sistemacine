@@ -16,7 +16,7 @@ const uploads=multer({storage:storage});
 //@desc crear combo
 //@route POST /api/combo
 //@access public
-const addCombo=((req,res)=>{
+const addCombo=(async (req,res)=>{
     let Combo=new ComboClass;
     // req.body=JSON.stringify(req.body);
     // console.log(req.body);
@@ -32,23 +32,25 @@ const addCombo=((req,res)=>{
     Combo.created_at=new Date();
     Combo.fechaestreno=new Date();
 
-    Combo.insertar(res);
+    let respuesta=Combo.insertar();
+    res.json(respuesta);
 })
 
 //@desc listar combo
 //@route GET /api/combo
 //@access public
-const getCombo=((req,res)=>{
+const getCombo=(async (req,res)=>{
     let Combo=new ComboClass;
     Combo.idempresa=1;
     Combo.idsucursal=1;
-    Combo.listar(res);
+    let respuesta=await Combo.listar();
+    res.json(respuesta);
 })
 
 //@desc actualizar combo
 //@route POST /api/combo/:id
 //@access public
-const updateCombo=((req,res)=>{
+const updateCombo=(async (req,res)=>{
     let Combo=new ComboClass;
     Combo.idcombo=req.params.id;
     Combo.idempresa=req.body.empresa;
@@ -57,17 +59,19 @@ const updateCombo=((req,res)=>{
     Combo.valor=req.body.valor;
     Combo.imgcombo=filename;
     Combo.updated_at=new Date();
-    Combo.actualizar(res);
+    let respuesta=await Combo.actualizar();
+    res.json(respuesta);
 })
 
 //@desc borrar combo
 //@route DELETE /api/combo/:id
 //@access public
-const deleteCombo=((req,res)=>{
+const deleteCombo=(async (req,res)=>{
     let Combo=new ComboClass;
     Combo.idcombo=req.params.id;
     Combo.deleted_at=new Date();
-    Combo.eliminar(res);
+    let respuesta=await Combo.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={addCombo,getCombo,updateCombo,deleteCombo,uploads}

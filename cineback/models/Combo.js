@@ -11,8 +11,8 @@ class Combo{
         this.updated_at='';
         this.deleted_at='';
     }
-    insertar(res){
-        pool.query('INSERT INTO combos (idempresa,idsucursal,nombre,valor,imgcombo,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
+    async insertar(){
+        let respuesta=await pool.query('INSERT INTO combos (idempresa,idsucursal,nombre,valor,imgcombo,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
             this.idempresa,
             this.idsucursal,
             this.nombre,
@@ -21,37 +21,32 @@ class Combo{
             this.created_at,
             null,
             null
-        ],function(err,results,fields){
-            res.json(err);
-        })
+        ]);
+        return respuesta;
     }
-    actualizar(res){
-        pool.query('UPDATE combos SET nombre=?,valor=?,imgcombo=?,updated_at=? WHERE idcombo=?',[
+    async actualizar(){
+        let respuesta=await pool.query('UPDATE combos SET nombre=?,valor=?,imgcombo=?,updated_at=? WHERE idcombo=?',[
             this.nombre,
             this.valor,
             this.imgcombo,
             this.updated_at,
             this.idcombo,
-        ],function(err,results,fields){
-            console.log(err);
-            res.json(results);
-        })
+        ]);
+        return respuesta;
     }
-    eliminar(res){
-        pool.query('UPDATE combos SET deleted_at=? WHERE idcombo=?',[
+    async eliminar(){
+        let respuesta=await pool.query('UPDATE combos SET deleted_at=? WHERE idcombo=?',[
             this.deleted_at,
             this.idcombo
-        ],function(err,results,fields){
-            res.json(results); 
-        })
+        ]);
+        return respuesta;
     }
-    listar(res){
-        pool.execute('SELECT * FROM `combos` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
+    async listar(){
+        const [rows]=await pool.execute('SELECT * FROM `combos` WHERE `idempresa`=? AND `idsucursal`=? AND deleted_at IS NULL',[
             this.idempresa,
             this.idsucursal
-        ],function (err,results,fields){
-            res.json(results);
-        })
+        ]);
+        return rows;
     }
 }
 module.exports=Combo

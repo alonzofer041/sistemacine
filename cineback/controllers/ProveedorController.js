@@ -4,7 +4,7 @@ let ProveedorClass=require("../models/Proveedor");
 //@desc crear proveedor
 //@route POST /api/proveedor
 //@access public
-const addProveedor=((req,res)=>{
+const addProveedor=(async(req,res)=>{
     let Proveedor=new ProveedorClass;
     Proveedor.idempresa=1;
     Proveedor.idsucursal=1;
@@ -18,23 +18,25 @@ const addProveedor=((req,res)=>{
     Proveedor.estado=req.body.estado;
     Proveedor.ciudad=req.body.ciudad;
     Proveedor.created_at=new Date();
-    Proveedor.insertar(res);
+    let respuesta=await Proveedor.insertar();
+    res.json(respuesta);
 })
 
 //@desc listar proveedor
 //@route GET /api/proveedor
 //@access public
-const getProveedor=((req,res)=>{
+const getProveedor=(async (req,res)=>{
     let Proveedor=new ProveedorClass;
     Proveedor.idempresa=1;
     Proveedor.idsucursal=1;
-    Proveedor.listar(res);
+    let respuesta=await Proveedor.listar(res);
+    res.json(respuesta);
 })
 
 //@desc actualizar proveedor
 //@route POST /api/proveedor/:id
 //@access public
-const updateProveedor=((req,res)=>{
+const updateProveedor=(async(req,res)=>{
     let Proveedor=new ProveedorClass;
     Proveedor.nombrecomercial=req.body.nombrecomercial;
     Proveedor.razonsocial=req.body.razonsocial;
@@ -47,17 +49,19 @@ const updateProveedor=((req,res)=>{
     Proveedor.ciudad=req.body.ciudad;
     Proveedor.updated_at=new Date();
     Proveedor.idproveedor=req.params.id;
-    Proveedor.actualizar(res);
+    let respuesta=await Proveedor.actualizar();
+    res.json(respuesta);
 })
 
 //@desc borrar proveedor
 //@route DELETE /api/proveedor/:id
 //@access public
-const deleteProveedor=((req,res)=>{
+const deleteProveedor=(async(req,res)=>{
     let Proveedor=new ProveedorClass;
     Proveedor.idproveedor=req.params.id;
     Proveedor.deleted_at=new Date();
-    Proveedor.eliminar(res);
+    let respuesta=await Proveedor.eliminar();
+    res.json(respuesta);
 })
 
 module.exports={addProveedor,getProveedor,updateProveedor,deleteProveedor}
