@@ -12,6 +12,8 @@ import '../dist/output.css'
 import './custom.css'
 import axios from 'axios'
 import AuthProvider from './provider/AuthProvider'
+import {EmpresaProvider} from './provider/EmpresaProvider'
+import {SucursalProvider} from './provider/SucursalProvider'
 import { ToastContainer } from 'react-toastify'
 // const router=createBrowserRouter([
 //   {
@@ -25,7 +27,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <main className='dark text-foreground'>
         <ToastContainer autoClose={4000} />
         <AuthProvider>
-          <Routes></Routes>
+          <EmpresaProvider>
+            <SucursalProvider>
+              <Routes></Routes>
+            </SucursalProvider>
+          </EmpresaProvider>
         </AuthProvider>
       {/* <RouterProvider router={routerApp}></RouterProvider> */}
       </main>

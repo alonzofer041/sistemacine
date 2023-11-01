@@ -12,7 +12,7 @@ export default function ListComponent(){
      // SWAL
      const [swalProps, setSwalProps] = useState({});
     
-     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
      // USER STATE
  
      // FILTROS
@@ -85,6 +85,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
+        Limpiar();
         let indexProductoCategoria=ProductoCategoriaList.findIndex((element)=>element.idproductocategoria==index);
         setProductoCategoria({...ProductoCategoria,idproductocategoria:index,nombre:ProductoCategoriaList[indexProductoCategoria].nombre});
         onOpen();
@@ -95,10 +96,16 @@ export default function ListComponent(){
             nombre:ProductoCategoria.nombre
         };
         if (obj.idproductocategoria==0) {
-            axios.post("/api/productocategoria",obj).then((res)=>{Lista()});   
+            axios.post("/api/productocategoria",obj).then((res)=>{
+                Lista();
+                onClose();
+            });   
         }
         else{
-            axios.post("/api/productocategoria/"+ProductoCategoria.idproductocategoria,obj).then((res)=>Lista());
+            axios.post("/api/productocategoria/"+ProductoCategoria.idproductocategoria,obj).then((res)=>{
+                Lista();
+                onClose();
+            });
         }
     }
     return(

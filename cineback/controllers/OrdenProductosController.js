@@ -6,8 +6,8 @@ let OrdenProductoDetalleClass=require("../models/OrdenProductoDetalle");
 //@access public
 const addOrdenProducto=(async (req,res)=>{
     let OrdenProducto=new OrdenProductoClass;
-    OrdenProducto.idempresa=1;
-    OrdenProducto.idsucursal=1;
+    OrdenProducto.idempresa=req.body.idempresa;
+    OrdenProducto.idsucursal=req.body.idsucursal;
     OrdenProducto.folio='ORD1';
     OrdenProducto.nombrecliente=req.body.nombrecliente;
     OrdenProducto.importe=Number(req.body.importe);

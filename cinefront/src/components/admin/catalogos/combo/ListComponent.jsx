@@ -67,7 +67,7 @@ export default function ListComponent(){
     function Navegar(idcombo,nombre){
         navigate('/combodetalle',{state:{idcombo:idcombo,nombre:nombre,}});
     }
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     function Guardar(){
         var obj={
             idcombo:Combo.idcombo,
@@ -82,14 +82,20 @@ export default function ListComponent(){
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
-            }).then((res)=>{Lista()});   
+            }).then((res)=>{
+                Lista();
+                onClose();
+            });   
         }
         else{
             axios.post('/api/combo/'+Combo.idcombo,obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
-            }).then((res)=>{Lista()});
+            }).then((res)=>{
+                Lista();
+                onClose();
+            });
         }
     }
     return (

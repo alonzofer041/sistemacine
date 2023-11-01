@@ -5,6 +5,7 @@ export default function ModalComponent({
     isOpen,
     onOpenChange,
     onOpen,
+    onClose,
     IdModal,
     Titulo,
     EventoGuardar,
@@ -26,7 +27,7 @@ export default function ModalComponent({
                                     <Button className="btn-modal" color="danger" variant="light" onPress={onClose}>
                                       Cerrar
                                     </Button>
-                                    <Button className="btn-modal" onClick={EventoGuardar} color="primary" onPress={onClose}>
+                                    <Button className="btn-modal" onClick={EventoGuardar} color="primary">
                                       Guardar
                                     </Button>
                                 </ModalFooter>

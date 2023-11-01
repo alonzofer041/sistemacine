@@ -18,10 +18,12 @@ const uploads=multer({storage:storage});
 //@route POST /api/banner
 //@access public
 const addBanner=(async (req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let Banner=new BannerClass;
     uploads.single('files');
-    Banner.idempresa=1;
-    Banner.idsucursal=1;
+    Banner.idempresa=decoded.Usuario.idempresa;
+    Banner.idsucursal=decoded.Usuario.idsucursal;
     Banner.imgbanner=filename;
     Banner.created_at=new Date();
     let respuesta=await Banner.insertar(res);
@@ -32,11 +34,22 @@ const addBanner=(async (req,res)=>{
 //@route GET /api/banner
 //@access public
 const getBanner=(async (req,res)=>{
-    const token=req.headers.authorization
-    const decoded=jwt.verify(token,"jwtSecretKey");
+    let idempresa=0;
+    let idsucursal=0;
+    if (req.query.origen=='cliente') {
+        idempresa=req.query.idempresa;
+        idsucursal=req.query.idsucursal;
+    }
+    else{
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
+        idempresa=decoded.Usuario.idempresa;
+        idsucursal=decoded.Usuario.idsucursal;
+    }
+
     let Banner=new BannerClass;
-    Banner.idempresa=decoded.Usuario.idempresa;
-    Banner.idsucursal=decoded.Usuario.idsucursal;
+    Banner.idempresa=idempresa;
+    Banner.idsucursal=idsucursal;
     let rows=await Banner.listar();
     res.json(rows);
 });

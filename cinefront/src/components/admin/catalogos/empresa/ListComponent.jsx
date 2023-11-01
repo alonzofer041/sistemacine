@@ -7,13 +7,14 @@ import FormComponent from "./FormComponent";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
+import { MensajeAdvertencia } from "../../../../helpers/functions";
 
 export default function ListComponent(){
     const navigate=useNavigate();
      // SWAL
      const [swalProps, setSwalProps] = useState({});
     
-     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
      // USER STATE
  
      // FILTROS
@@ -24,6 +25,10 @@ export default function ListComponent(){
          TotalPaginas:1
      });
  
+     const [File,setFile]=useState(null);
+
+     const [ErrorValidacion,setErrorValidacion]=useState([]);
+
      const [Empresa,setEmpresa]=useState({
          idempresa:0,
          nombrecomercial:"",
@@ -34,6 +39,7 @@ export default function ListComponent(){
          email:"",
          estado:"",
          ciudad:"",
+         imgempresa:""
      });
      const [EmpresaList,setEmpresaList]=useState([
         
@@ -78,6 +84,8 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setFile(null);
+        setErrorValidacion([]);
         setEmpresa({...Empresa,
             idempresa:0,
             nombrecomercial:"",
@@ -88,6 +96,7 @@ export default function ListComponent(){
             email:"",
             estado:"",
             ciudad:"",
+            imgempresa:""
         });
     }
     function Eliminar(index){
@@ -103,6 +112,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
+        Limpiar();
         let indexEmpresa=EmpresaList.findIndex((element)=>element.idempresa==index);
         setEmpresa(
             {...Empresa,
@@ -115,11 +125,16 @@ export default function ListComponent(){
                 email:EmpresaList[indexEmpresa].email,
                 estado:EmpresaList[indexEmpresa].estado,
                 ciudad:EmpresaList[indexEmpresa].ciudad,
+                imgempresa:EmpresaList[indexEmpresa].imgempresa
             }
         );
         onOpen();
     }
     function Guardar(){
+        if (Object.is(File,null)) {
+            MensajeAdvertencia("Debe Seleccionar una Imagen");
+            return false;
+        }
         var obj={
             idempresa:Empresa.idempresa,
             nombrecomercial:Empresa.nombrecomercial,
@@ -129,13 +144,32 @@ export default function ListComponent(){
             telefono:Empresa.telefono,
             email:Empresa.email,
             estado:Empresa.estado,
-            ciudad:Empresa.ciudad
+            ciudad:Empresa.ciudad,
+            files:File
         };
         if (obj.idempresa==0) {
-            axios.post("/api/empresa",obj).then((res)=>{Lista()});   
+            axios.post("/api/empresa",obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });   
         }
         else{
-            axios.post("/api/empresa/"+Empresa.idempresa,obj).then((res)=>Lista());
+            axios.post("/api/empresa/"+Empresa.idempresa,obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
     }
     function NavegarSucursal(idempresa,nombrecomercial){
@@ -200,8 +234,8 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Size={"3xl"}
             Titulo={Empresa.idempresa==0 ? "Agregar Empresa" : "Editar Empresa"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Empresa={Empresa} setEmpresa={setEmpresa}/>}></Modal>
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
+            CuerpoFormulario={<FormComponent Empresa={Empresa} setEmpresa={setEmpresa} File={File} setFile={setFile} Errores={ErrorValidacion}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

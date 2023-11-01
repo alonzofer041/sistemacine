@@ -29,15 +29,24 @@ import Movies from "../components/client/movies/MoviesComponent";
 import GetTickets from "../components/client/moviesprocess/ProcessComponent";
 import { ProtectedRootRoute } from "./ProtectedRootRoute";
 import CarteleraComponent from "../components/client/cartelera/CarteleraComponent";
+import ListaEmpresas from "../components/client";
 
 const Routes=()=>{
   const {Token} = useAuth();
   const PublicRoutes=([
     {
+      path:"/cines/",
+      element:<ListaEmpresas/>
+    },
+    {
+      path:"/login",
+      element:<Login/>
+    },
+    {
       element:<NavBarComponent/>,
       children:[
         {
-          path:"/cines/inicio",
+          path:"/cine/inicio",
           element:<Inicio/>
         },
         {
@@ -148,10 +157,7 @@ const Routes=()=>{
     }
   ]);
   const RoutesForNotAuthenticatedOnly=[
-    {
-      path:"/login",
-      element:<Login/>
-    },
+
   ]
   const router=createBrowserRouter([
     ...PublicRoutes,

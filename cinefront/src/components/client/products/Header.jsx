@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button,useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import ModalComponent from '../../base/ModalComponent';
 import Pago from '../payment/PaymentComponent';
 import axios from "axios";
+import { EmpresaContext } from '../../../provider/EmpresaProvider';
+import { SucursalContext } from '../../../provider/SucursalProvider';
 
 export const Header = ({
 	allProducts,
@@ -20,6 +22,8 @@ export const Header = ({
 		nombrecliente:'',
 		correocliente:''
 	})
+	const {Empresa,setEmpresa}=useContext(EmpresaContext);
+	const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
 	const navigate=useNavigate();
 
 	const onDeleteProduct = Producto => {
@@ -44,6 +48,8 @@ export const Header = ({
 	};
 	const GuardarOrden=()=>{
 		let obj={
+			idempresa:Empresa.idempresa,
+			idsucursal:IdSucursal,
 			nombrecliente:OrdenProductos.nombrecliente,
 			importe:total,
 			correocliente:OrdenProductos.correocliente,

@@ -1,3 +1,4 @@
+const jwt=require("jsonwebtoken");
 let PeliculaClass=require("../models/Pelicula");
 const multer=require('multer');
 
@@ -17,6 +18,8 @@ const uploads=multer({storage:storage});
 //@route POST /api/pelicula
 //@access public
 const addPelicula=(async(req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let Pelicula=new PeliculaClass;
     // req.body=JSON.stringify(req.body);
     // console.log(req.body);
@@ -24,8 +27,8 @@ const addPelicula=(async(req,res)=>{
     uploads.single('files');
     // SUBIDA EN BD
     Pelicula.idpeliculacategoria=req.body.idpeliculacategoria;
-    Pelicula.idempresa=1;
-    Pelicula.idsucursal=1;
+    Pelicula.idempresa=decoded.Usuario.idempresa;
+    Pelicula.idsucursal=decoded.Usuario.idsucursal;
     Pelicula.titulo=req.body.titulo;
     Pelicula.sinopsis=req.body.sinopsis;
     Pelicula.fechaestreno=req.body.fechaestreno;
@@ -47,9 +50,22 @@ const addPelicula=(async(req,res)=>{
 //@route GET /api/pelicula
 //@access public
 const getPelicula=(async (req,res)=>{
+    let idempresa=0;
+    let idsucursal=0;
+    if (req.query.origen=='cliente') {
+        idempresa=req.query.idempresa;
+        idsucursal=req.query.idsucursal;
+    }
+    else{
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
+        idempresa=decoded.Usuario.idempresa;
+        idsucursal=decoded.Usuario.idsucursal;
+    }
+
     let Pelicula=new PeliculaClass;
-    Pelicula.idempresa=1;
-    Pelicula.idsucursal=1;
+    Pelicula.idempresa=idempresa;
+    Pelicula.idsucursal=idsucursal;
     let respuesta=await Pelicula.listar();
     res.json(respuesta);
 })

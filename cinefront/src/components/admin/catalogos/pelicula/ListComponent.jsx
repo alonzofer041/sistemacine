@@ -17,7 +17,7 @@ export default function ListComponent(){
     // SWAL
     const [swalProps, setSwalProps] = useState({});
     
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
     const navigate=useNavigate();
     const [Pelicula,setPelicula]=useState({
@@ -41,7 +41,11 @@ export default function ListComponent(){
     // ESTADO DE ARCHIVO
     const [File,setFile]=useState({});
     function Lista(){
-        axios.get('/api/pelicula'
+        axios.get('/api/pelicula',{
+            params:{
+                origen:'admin'
+            }
+        }
         ).then((res)=>{
             let data=res.data;
             setPeliculaList(data);
@@ -77,6 +81,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
+        Limpiar();
         let indexPelicula=PeliculaList.find((element)=>element.idpelicula=index);
         setPelicula({
             ...Pelicula,
@@ -115,7 +120,10 @@ export default function ListComponent(){
             headers:{
                 "Content-Type":"multipart/form-data"
             }
-        }).then((res)=>{Lista()});
+        }).then((res)=>{
+            Lista();
+            onClose();
+        });
         // let formData=new FormData();
         // formData.set("idpeliculacategoria",Pelicula.idpeliculacategoria);
         // formData.set("titulo",Pelicula.titulo);

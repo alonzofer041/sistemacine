@@ -30,7 +30,7 @@ export default function ListComponent(){
     });
 
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     function Lista(){
         axios.get("/api/horariopelicula",
         {params:{
@@ -65,10 +65,16 @@ export default function ListComponent(){
             hora:PeliculaHorario.hora
         }
         if (obj.idhorariopelicula==0) {
-            axios.post("/api/horariopelicula",obj).then((res)=>{Lista()});   
+            axios.post("/api/horariopelicula",obj).then((res)=>{
+                Lista();
+                onClose();
+            });   
         }
         else{
-            axios.post("/api/horariopelicula/"+PeliculaHorario.idhorariopelicula,obj).then((res)=>Lista());
+            axios.post("/api/horariopelicula/"+PeliculaHorario.idhorariopelicula,obj).then((res)=>{
+                Lista();
+                onClose();
+            });
         }
     }
     function Editar(index){

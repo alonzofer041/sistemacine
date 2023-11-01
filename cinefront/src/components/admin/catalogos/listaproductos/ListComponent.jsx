@@ -17,7 +17,7 @@ export default function ListComponent(){
     },[]);
      // SWAL
     const [swalProps, setSwalProps] = useState({});
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
     const navigate=useNavigate();
     const [Producto,setProducto]=useState({
@@ -34,7 +34,11 @@ export default function ListComponent(){
     // ESTADO DE ARCHIVO
     const [File,setFile]=useState({});
     function Lista(){
-        axios.get('/api/producto'
+        axios.get('/api/producto',{
+            params:{
+                origen:'admin'
+            }
+        }
         ).then((res)=>{
             let data=res.data;
             setProductoList(data);
@@ -68,6 +72,7 @@ export default function ListComponent(){
     }
 
     function Editar(index){
+        Limpiar();
         let indexProducto=ProductoList.findIndex((element)=>element.idproducto==index);
         setProducto({
             ...Producto,
@@ -94,12 +99,18 @@ export default function ListComponent(){
         if (obj.idproducto==0) {
             axios.post("/api/producto",obj,{headers:{
                 "Content-Type":"multipart/form-data"
-            }}).then((res)=>{Lista()});   
+            }}).then((res)=>{
+                Lista();
+                onClose();
+            });   
         }
         else{
             axios.post("/api/producto/"+Producto.idproducto,obj,{headers:{
                 "Content-Type":"multipart/form-data"
-            }}).then((res)=>Lista());
+            }}).then((res)=>{
+                Lista();
+                onClose();
+            });
         }
     }
     return(

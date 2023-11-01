@@ -22,7 +22,7 @@ export default function ListComponent(){
     // SWAL
     const [swalProps, setSwalProps] = useState({});
     
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
     // const {isOpen2, onOpen2, onOpenChange2} = useDisclosure();
     // USER STATE
     const [Sucursal,setSucursal]=useState({
@@ -33,6 +33,7 @@ export default function ListComponent(){
         telefono:"",
         email:""
     });
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
     const [SucursalList,setSucursalList]=useState([
         
     ]);
@@ -55,6 +56,7 @@ export default function ListComponent(){
         });
     }
     function Limpiar(){
+        setErrorValidacion([]);
         setNombreModal("Catalogo");
         setSucursal({...Sucursal,idsucursal:0,idempresa:0,nombre:"",direccion:"",telefono:"",email:""});
     }
@@ -71,6 +73,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
+        Limpiar();
         let indexSucursal=SucursalList.findIndex((element)=>element.idsucursal==index);
         setSucursal({...Sucursal,idsucursal:index,
             nombre:SucursalList[indexSucursal].nombre,
@@ -90,10 +93,22 @@ export default function ListComponent(){
             email:Sucursal.email
         };
         if (obj.idsucursal==0) {
-            axios.post("/api/sucursal",obj).then((res)=>{Lista()});   
+            axios.post("/api/sucursal",obj
+            ).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });   
         }
         else{
-            axios.post("/api/sucursal/"+Sucursal.idsucursal,obj).then((res)=>Lista());
+            axios.post("/api/sucursal/"+Sucursal.idsucursal,obj
+            ).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });;
         }
     }
     function AbrirModalCorreo(index){
@@ -165,10 +180,10 @@ export default function ListComponent(){
             <Modal 
             EventoGuardar={NombreModal=="Catalogo" ? Guardar : EnviarCorreoRegistro}
             Titulo={NombreModal=="Catalogo" ? (Sucursal.idsucursal==0 ? "Agregar Sala" : "Editar Sala") : "Enviar Correo de Registro de Usuario"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
             CuerpoFormulario={
                 NombreModal=="Catalogo" ?
-                (<FormComponent Sucursal={Sucursal} setSucursal={setSucursal}/>) :
+                (<FormComponent Sucursal={Sucursal} setSucursal={setSucursal} Errores={ErrorValidacion}/>) :
                 (<FormCorreoComponent DatosCorreo={DatosCorreo} setDatosCorreo={setDatosCorreo}/>)
             }></Modal>
 

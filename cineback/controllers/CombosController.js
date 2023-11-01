@@ -1,3 +1,4 @@
+const jwt=require("jsonwebtoken");
 let ComboClass=require("../models/Combo");
 const multer=require('multer');
 
@@ -17,6 +18,8 @@ const uploads=multer({storage:storage});
 //@route POST /api/combo
 //@access public
 const addCombo=(async (req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let Combo=new ComboClass;
     // req.body=JSON.stringify(req.body);
     // console.log(req.body);
@@ -24,8 +27,8 @@ const addCombo=(async (req,res)=>{
     uploads.single('files');
     // SUBIDA EN BD
     Combo.idcombo=req.body.idcombo;
-    Combo.idempresa=1;
-    Combo.idsucursal=1;
+    Combo.idempresa=decoded.Usuario.idempresa;
+    Combo.idsucursal=decoded.Usuario.idsucursal;
     Combo.nombre=req.body.nombre;
     Combo.valor=req.body.valor;
     Combo.imgcombo=filename;
@@ -40,9 +43,11 @@ const addCombo=(async (req,res)=>{
 //@route GET /api/combo
 //@access public
 const getCombo=(async (req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let Combo=new ComboClass;
-    Combo.idempresa=1;
-    Combo.idsucursal=1;
+    Combo.idempresa=decoded.Usuario.idempresa;
+    Combo.idsucursal=decoded.Usuario.idsucursal;
     let respuesta=await Combo.listar();
     res.json(respuesta);
 })

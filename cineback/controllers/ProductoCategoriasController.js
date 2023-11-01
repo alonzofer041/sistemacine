@@ -1,12 +1,15 @@
+const jwt=require("jsonwebtoken");
 let ProductoCategoriaClass=require('../models/ProductoCategoria');
 
 //@desc crear producto categoria
 //@route POST /api/productocategoria
 //@access public
 const addProductoCategoria=(async(req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let ProductoCategoria=new ProductoCategoriaClass;
-    ProductoCategoria.idempresa=1;
-    ProductoCategoria.idsucursal=1;
+    ProductoCategoria.idempresa=decoded.Usuario.idempresa;
+    ProductoCategoria.idsucursal=decoded.Usuario.idsucursal;
     ProductoCategoria.nombre=req.body.nombre;
     ProductoCategoria.created_at=new Date();
     let respuesta=await ProductoCategoria.insertar();
@@ -17,9 +20,11 @@ const addProductoCategoria=(async(req,res)=>{
 //@route GET /api/productocategoria
 //@access public
 const getProductoCategoria=(async (req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let ProductoCategoria=new ProductoCategoriaClass;
-    ProductoCategoria.idempresa=1;
-    ProductoCategoria.idsucursal=1;
+    ProductoCategoria.idempresa=decoded.Usuario.idempresa;
+    ProductoCategoria.idsucursal=decoded.Usuario.idsucursal;
     let respuesta=await ProductoCategoria.listar(res);
     res.json(respuesta);
 });

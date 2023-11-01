@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { EmpresaContext } from "../../../provider/EmpresaProvider";
+import { SucursalContext } from "../../../provider/SucursalProvider";
 
 const url=import.meta.env.VITE_ASSET_URL+'/productos/';
 
@@ -29,12 +31,20 @@ export const ProductList = ({
 	};
 
 	const [ProductoList,setProductoList]=useState([]);
+	const {Empresa,setEmpresa}=useContext(EmpresaContext);
+	const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
 
 	useEffect(()=>{
 		Lista();
-	  },[]);
+	  },[IdSucursal]);
 	  function Lista(){
-		axios.get('/api/producto'
+		axios.get('/api/producto',{
+			params:{
+				origen:'cliente',
+				idempresa:Empresa.idempresa,
+				idsucursal:IdSucursal
+			}
+		}
 		  ).then((res)=>{
 				res.data.forEach(element => {
 					element.cantidad_default=1;

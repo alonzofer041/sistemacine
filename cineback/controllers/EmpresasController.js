@@ -1,22 +1,63 @@
 let EmpresaClass=require("../models/Empresa");
 const transporter=require("../mail");
+const multer=require('multer');
+const validator = require("../helpers/validate");
+
+let filename="";
+const storage=multer.diskStorage({
+    destination:function(req,file,callback){
+        callback(null,__dirname+'/../assets/files/empresas');
+    },
+    filename:function(req,file,callback){
+        filename=new Date().getTime()+'_'+file.originalname;
+        callback(null,filename);
+    }
+})
+const uploads=multer({storage:storage});
+
 
 //@desc crear empresa
 //@route POST /api/empresa
 //@access public
 const addEmpresa=(async (req,res)=>{
-    let Empresa=new EmpresaClass;
-    Empresa.nombrecomercial=req.body.nombrecomercial;
-    Empresa.razonsocial=req.body.razonsocial;
-    Empresa.rfc=req.body.rfc;
-    Empresa.direccion=req.body.direccion;
-    Empresa.telefono=req.body.telefono;
-    Empresa.email=req.body.email;
-    Empresa.estado=req.body.estado;
-    Empresa.ciudad=req.body.ciudad;
-    Empresa.created_at=new Date();
-    let respuesta=await Empresa.insertar();
-    res.json(respuesta);
+    const ValidationRule={
+        "nombrecomercial":"required|string",
+        "razonsocial":"required|string",
+        "rfc":"required|string",
+        "direccion":"required|string",
+        "telefono":"required|string",
+        "email":"required|string",
+        "estado":"required|string",
+        "ciudad":"required|string",
+    };
+    const Messages={
+        required:{
+            string:"El Campo es Requerido"
+        }
+    }
+    let estatus=false;
+    await validator(req.body,ValidationRule,Messages,(err,status)=>{
+        if (!status) {
+            res.status(412).send({errors:err});
+        }
+        estatus=status
+    })
+    if (estatus) {
+        uploads.single('files');
+        let Empresa=new EmpresaClass;
+        Empresa.nombrecomercial=req.body.nombrecomercial;
+        Empresa.razonsocial=req.body.razonsocial;
+        Empresa.rfc=req.body.rfc;
+        Empresa.direccion=req.body.direccion;
+        Empresa.telefono=req.body.telefono;
+        Empresa.email=req.body.email;
+        Empresa.estado=req.body.estado;
+        Empresa.ciudad=req.body.ciudad;
+        Empresa.imgempresa=filename;
+        Empresa.created_at=new Date();
+        let respuesta=await Empresa.insertar();
+        res.status(200).send({respuesta:respuesta});
+    }
 });
 
 //@desc listar empresa
@@ -32,19 +73,46 @@ const getEmpresa=(async (req,res)=>{
 //@route POST /api/empresa/:id
 //@access public
 const updateEmpresa=(async (req,res)=>{
-    let Empresa=new EmpresaClass;
-    Empresa.nombrecomercial=req.body.nombrecomercial;
-    Empresa.razonsocial=req.body.razonsocial;
-    Empresa.rfc=req.body.rfc;
-    Empresa.direccion=req.body.direccion;
-    Empresa.telefono=req.body.telefono;
-    Empresa.email=req.body.email;
-    Empresa.estado=req.body.estado;
-    Empresa.ciudad=req.body.ciudad;
-    Empresa.updated_at=new Date();
-    Empresa.idempresa=req.params.id;
-    let respuesta=await Empresa.actualizar();
-    res.json(respuesta);
+    const ValidationRule={
+        "nombrecomercial":"required|string",
+        "razonsocial":"required|string",
+        "rfc":"required|string",
+        "direccion":"required|string",
+        "telefono":"required|string",
+        "email":"required|string",
+        "estado":"required|string",
+        "ciudad":"required|string",
+    };
+    const Messages={
+        required:{
+            string:"El Campo es Requerido"
+        }
+    }
+    let estatus=false;
+    await validator(req.body,ValidationRule,Messages,(err,status)=>{
+        if (!status) {
+            res.status(412).send({errors:err});
+        }
+        estatus=status
+    })
+    if (estatus) {
+        let Empresa=new EmpresaClass;
+        uploads.single('files');
+        Empresa.nombrecomercial=req.body.nombrecomercial;
+        Empresa.razonsocial=req.body.razonsocial;
+        Empresa.rfc=req.body.rfc;
+        Empresa.direccion=req.body.direccion;
+        Empresa.telefono=req.body.telefono;
+        Empresa.email=req.body.email;
+        Empresa.estado=req.body.estado;
+        Empresa.ciudad=req.body.ciudad;
+        Empresa.imgempresa=filename;
+        Empresa.updated_at=new Date();
+        Empresa.idempresa=req.params.id;
+        let respuesta=await Empresa.actualizar();
+        res.status(200).send({respuesta:respuesta});
+    }
+    
 });
 
 //@desc borrar empresa
@@ -84,4 +152,4 @@ const RegistroEmail=(async (req,res)=>{
     res.json({message:"ok"});
 })
 
-module.exports={addEmpresa,getEmpresa,updateEmpresa,deleteEmpresa,RegistroEmail}
+module.exports={addEmpresa,getEmpresa,updateEmpresa,deleteEmpresa,RegistroEmail,uploads}

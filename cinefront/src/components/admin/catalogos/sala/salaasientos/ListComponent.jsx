@@ -21,7 +21,7 @@ export default function ListComponent(){
     // SWAL
     const [swalProps, setSwalProps] = useState({});
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     // USER STATE
     const [Asientos,setAsientos]=useState({
         idasiento:0,
@@ -71,10 +71,17 @@ export default function ListComponent(){
             fila:Asientos.fila
         };
         if (obj.idasiento==0) {
-            axios.post("/api/asientos",obj).then((res)=>{Lista()});   
+            axios.post("/api/asientos",obj
+            ).then((res)=>{
+                Lista();
+                onClose();
+            });   
         }
         else{
-            axios.post("/api/asientos/"+Asientos.idasiento,obj).then((res)=>Lista());
+            axios.post("/api/asientos/"+Asientos.idasiento,obj).then((res)=>{
+                Lista();
+                onClose();
+            });
         }
     }
 

@@ -56,9 +56,21 @@ const addProducto=(async (req,res)=>{
 //@route GET /api/producto
 //@access public
 const getProducto=(async (req,res)=>{
+    let idempresa=0;
+    let idsucursal=0;
+    if (req.query.origen=='cliente') {
+        idempresa=req.query.idempresa;
+        idsucursal=req.query.idsucursal;
+    }
+    else{
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
+        idempresa=decoded.Usuario.idempresa;
+        idsucursal=decoded.Usuario.idsucursal;
+    }
     let Producto=new ProductoClass;
-    Producto.idempresa=1;
-    Producto.idsucursal=1;
+    Producto.idempresa=idempresa;
+    Producto.idsucursal=idsucursal;
     let respuesta=await Producto.listar();
     res.json(respuesta);
 })

@@ -11,7 +11,7 @@ export default function ListComponent(){
     // SWAL
     const [swalProps, setSwalProps] = useState({});
     
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     // USER STATE
 
     // FILTROS
@@ -29,6 +29,7 @@ export default function ListComponent(){
     const [PeliculasCategoriaList,setPeliculasCategoriaList]=useState([
         {idpeliculacategoria:0,nombre:''}
     ]);
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     useEffect(()=>{
         Lista();
@@ -71,6 +72,7 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setErrorValidacion([]);
         setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:0,nombre:""});
     }
     function Eliminar(index){
@@ -86,6 +88,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
+        Limpiar();
         let indexPeliculaCategoria=PeliculasCategoriaList.findIndex((element)=>element.idpeliculacategoria==index);
         setPeliculaCategoria({...PeliculaCategoria,idpeliculacategoria:index,nombre:PeliculasCategoriaList[indexPeliculaCategoria].nombre});
         onOpen();
@@ -96,10 +99,20 @@ export default function ListComponent(){
             nombre:PeliculaCategoria.nombre
         };
         if (obj.idpeliculacategoria==0) {
-            axios.post("/api/peliculacategoria",obj).then((res)=>{Lista()});   
+            axios.post("/api/peliculacategoria",obj).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });   
         }
         else{
-            axios.post("/api/peliculacategoria/"+PeliculaCategoria.idpeliculacategoria,obj).then((res)=>Lista());
+            axios.post("/api/peliculacategoria/"+PeliculaCategoria.idpeliculacategoria,obj).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
     }
 
@@ -147,8 +160,8 @@ export default function ListComponent(){
             <Modal 
             EventoGuardar={Guardar}
             Titulo={PeliculaCategoria.idpeliculacategoria==0 ? "Agregar Género" : "Editar Género"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent PeliculaCategoria={PeliculaCategoria} setPeliculaCategoria={setPeliculaCategoria}/>}></Modal>
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
+            CuerpoFormulario={<FormComponent PeliculaCategoria={PeliculaCategoria} setPeliculaCategoria={setPeliculaCategoria} Errores={ErrorValidacion}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

@@ -17,7 +17,7 @@ export default function ListComponent(){
 
     const [swalProps, setSwalProps] = useState({});
     
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
     
     const [Banner,setBanner]=useState({
         idbanner:0,
@@ -67,14 +67,14 @@ export default function ListComponent(){
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
-            }).then((res)=>{Lista()});   
+            }).then((res)=>{Lista();onClose();});   
         }
         else{
             axios.post('/api/banner/'+Banner.idbanner,obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
-            }).then((res)=>{Lista()});
+            }).then((res)=>{Lista();onClose();});
         }
     }
     return(
@@ -118,7 +118,7 @@ export default function ListComponent(){
             Size="xl"
             EventoGuardar={Guardar}
             Titulo={Banner.idbanner==0 ? "Agregar Imagen" : "Editar Imagen"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
             CuerpoFormulario={<FormComponent Banner={Banner} setBanner={setBanner} File={File} setFile={setFile}/>}></Modal>
 
             <SweetAlert2 {...swalProps}

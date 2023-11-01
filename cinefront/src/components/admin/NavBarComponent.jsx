@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import LogoCine from "../../assets/logo.png";
+import { EmpresaContext } from "../../provider/EmpresaProvider";
+import { SucursalContext } from "../../provider/SucursalProvider";
 
 import {Navbar, 
     NavbarBrand, 
@@ -11,8 +13,11 @@ import {Navbar,
     NavbarMenuItem,
     Link,
     Divider,
-    Button} from "@nextui-org/react";
+    Button,
+    Select,
+    SelectItem} from "@nextui-org/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 
 export default function NavBarComponent() {
@@ -20,9 +25,30 @@ export default function NavBarComponent() {
   const location=useLocation();
   const pathname=location.pathname;
   const index=pathname.indexOf("cine");
+  const {Empresa,setEmpresa}=useContext(EmpresaContext);
+  const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
+  const [Sucursales,setSucursales]=useState([]);
 
+  useEffect(()=>{
+    if (index!=-1) {
+      ListarSucursales();
+    }
+  },[])
   function Navegar(url){
     navigate(url);
+  }
+  function ListarSucursales(){
+    axios.get("/api/sucursal",{
+      params:{
+        idempresa:Empresa.idempresa
+      }
+    }).then((res)=>{
+      let data=res.data;
+      setSucursales(data);
+    })
+  }
+  function handleIdSucursal(e){
+    setIdSucursal(e.target.value);
   }
   
   return (
@@ -85,6 +111,19 @@ export default function NavBarComponent() {
             Sign Up
           </Button> */}
         </NavbarItem>
+      </NavbarContent>
+      {index!=-1?(
+        <NavbarContent>
+          <Link color="foreground">{Empresa.nombrecomercial}</Link>
+          <Select size="sm" variant="underlined" className="max-w-xs" placeholder="selecciona una sucursal" onChange={handleIdSucursal}>
+            {Sucursales.map((Sucursal)=>(
+              <SelectItem key={Sucursal.idsucursal} value={Sucursal.idsucursal}>{Sucursal.nombre}</SelectItem>
+            ))}
+          </Select>
+        </NavbarContent>
+      ):null}
+      <NavbarContent>
+
       </NavbarContent>
     </Navbar>
     

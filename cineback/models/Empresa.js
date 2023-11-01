@@ -10,12 +10,13 @@ class Empresa{
         this.email='';
         this.estado='';
         this.ciudad='';
+        this.imgempresa='';
         this.created_at='';
         this.updated_at='';
         this.deleted_at='';
     }
     async insertar(){
-        const respuesta=await pool.query('INSERT INTO empresa (nombrecomercial,razonsocial,rfc,direccion,telefono,email,estado,ciudad,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)',[
+        const respuesta=await pool.query('INSERT INTO empresa (nombrecomercial,razonsocial,rfc,direccion,telefono,email,estado,ciudad,imgempresa,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',[
             this.nombrecomercial,
             this.razonsocial,
             this.rfc,
@@ -24,6 +25,7 @@ class Empresa{
             this.email,
             this.estado,
             this.ciudad,
+            this.imgempresa,
             this.created_at,
             null,
             null
@@ -31,7 +33,7 @@ class Empresa{
         return respuesta;
     }
     async actualizar(){
-        const respuesta=await pool.query('UPDATE empresa SET nombrecomercial=?, razonsocial=?, rfc=?, direccion=?, telefono=?, email=?, estado=?, ciudad=?, updated_at=? WHERE idempresa=?',[
+        const respuesta=await pool.query('UPDATE empresa SET nombrecomercial=?, razonsocial=?, rfc=?, direccion=?, telefono=?, email=?, estado=?, ciudad=?, imgempresa=?, updated_at=? WHERE idempresa=?',[
             this.nombrecomercial,
             this.razonsocial,
             this.rfc,
@@ -40,6 +42,7 @@ class Empresa{
             this.email,
             this.estado,
             this.ciudad,
+            this.imgempresa,
             this.updated_at,
             this.idempresa
         ]);

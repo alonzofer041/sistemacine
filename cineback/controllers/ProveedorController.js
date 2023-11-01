@@ -1,13 +1,15 @@
 let ProveedorClass=require("../models/Proveedor");
-
+const jwt=require("jsonwebtoken");
 
 //@desc crear proveedor
 //@route POST /api/proveedor
 //@access public
 const addProveedor=(async(req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let Proveedor=new ProveedorClass;
-    Proveedor.idempresa=1;
-    Proveedor.idsucursal=1;
+    Proveedor.idempresa=decoded.Usuario.idempresa;
+    Proveedor.idsucursal=decoded.Usuario.idsucursal;
     Proveedor.nombrecomercial=req.body.nombrecomercial;
     Proveedor.razonsocial=req.body.razonsocial;
     Proveedor.fechaestreno=req.body.fechaestreno;
@@ -26,9 +28,11 @@ const addProveedor=(async(req,res)=>{
 //@route GET /api/proveedor
 //@access public
 const getProveedor=(async (req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
     let Proveedor=new ProveedorClass;
-    Proveedor.idempresa=1;
-    Proveedor.idsucursal=1;
+    Proveedor.idempresa=decoded.Usuario.idempresa;
+    Proveedor.idsucursal=decoded.Usuario.idsucursal;
     let respuesta=await Proveedor.listar(res);
     res.json(respuesta);
 })

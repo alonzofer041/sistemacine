@@ -1,7 +1,10 @@
 import { Input } from "@nextui-org/react";
 import React, { useState } from "react";
+import { ImagePreview } from "../../../../helpers/functions";
+import { FaUpload } from "react-icons/fa";
+const url=import.meta.env.VITE_ASSET_URL+'/empresas/';
 
-export default function FormComponent({Empresa,setEmpresa}){
+export default function FormComponent({Empresa,setEmpresa,File,setFile,Errores}){
     function handleNombreComercial(e){
         setEmpresa({...Empresa,nombrecomercial:e.target.value});
     }
@@ -26,26 +29,73 @@ export default function FormComponent({Empresa,setEmpresa}){
     function handleCiudad(e){
         setEmpresa({...Empresa,ciudad:e.target.value});
     }
+    function handleFile(e){
+        if(ImagePreview(e)){
+            let value=e.target.files;
+            setFile(value[0]);
+        }
+    }
+
     return (
         <div className="container">
-            <div className="grid grid-cols-2">
-                <Input name="nombrecomercial" label="Nombre Comercial" value={Empresa.nombrecomercial} onChange={handleNombreComercial}></Input>
-                <Input name="razonsocial" label="Razón Social" value={Empresa.razonsocial} onChange={handleRazonSocial}></Input>
+            <div className="grid grid-cols-12 mb-3">
+                <div className="previaimagen col-span-4">
+                    <div className="contenedorinputimagen">
+                        <input id="file" type="file" name="files"  onChange={handleFile}/>
+                        <label htmlFor="file">
+                            <FaUpload className="iconoupload"/>
+                        </label>
+                    </div>
+                    <div className="contenedorimagenprevia">
+                        <div id="ImagePreview" style={{backgroundImage:"url('"+url+Empresa.imgempresa+"')"}}></div>
+                    </div>
+                </div>
+                <div className="col-span-8">
+                    <div className="mb-2">
+                        <Input name="nombrecomercial" label="Nombre Comercial*" value={Empresa.nombrecomercial} onChange={handleNombreComercial}></Input>
+                        {!Object.is(Errores.nombrecomercial,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombrecomercial[0]}</label> : null}
+                    </div>
+                    <div className="mb-2">
+                        <Input name="razonsocial" label="Razón Social*" value={Empresa.razonsocial} onChange={handleRazonSocial}></Input>
+                        {!Object.is(Errores.razonsocial,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.razonsocial[0]}</label> : null}
+                    </div>
+                    <div>
+                        <Input name="rfc" label="RFC*" value={Empresa.rfc} onChange={handleRfc}></Input>
+                        {!Object.is(Errores.rfc,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.rfc[0]}</label> : null}
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+            <div className="grid grid-cols-2 mb-2">
+                <div>
+                    <Input name="direccion" label="Dirección*" value={Empresa.direccion} onChange={handleDireccion}></Input>
+                    {!Object.is(Errores.direccion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.direccion[0]}</label> : null}
+                </div>
+                <div>
+                    <Input className="ml-2" name="telefono" label="Teléfono*" value={Empresa.telefono} onChange={handleTelefono}></Input>
+                    {!Object.is(Errores.telefono,undefined) ? <label className="mensajeerrorvalidacion ml-2" htmlFor="">{Errores.telefono[0]}</label> : null}
+                </div>
+                
+            </div>
+
+            <div className="grid grid-cols-2 mb-2">
+                <div>
+                    <Input name="email" label="Email*" value={Empresa.email} onChange={handleEmail}></Input>
+                    {!Object.is(Errores.email,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.email[0]}</label> : null}
+                </div>
+                <div>
+                    <Input className="ml-2" name="estado" label="Estado*" value={Empresa.estado} onChange={handleEstado}></Input>
+                    {!Object.is(Errores.estado,undefined) ? <label className="mensajeerrorvalidacion ml-2" htmlFor="">{Errores.estado[0]}</label> : null}
+                </div>
             </div>
 
             <div className="grid grid-cols-2">
-                <Input name="rfc" label="RFC" value={Empresa.rfc} onChange={handleRfc}></Input>
-                <Input name="direccion" label="Dirección" value={Empresa.direccion} onChange={handleDireccion}></Input>
-            </div>
-
-            <div className="grid grid-cols-2">
-                <Input name="telefono" label="Teléfono" value={Empresa.telefono} onChange={handleTelefono}></Input>
-                <Input name="email" label="Email" value={Empresa.email} onChange={handleEmail}></Input>
-            </div>
-
-            <div className="grid grid-cols-2">
-                <Input name="estado" label="Estado" value={Empresa.estado} onChange={handleEstado}></Input>
-                <Input name="ciudad" label="Ciudad" value={Empresa.ciudad} onChange={handleCiudad}></Input>
+                <div>
+                    <Input name="ciudad" label="Ciudad*" value={Empresa.ciudad} onChange={handleCiudad}></Input>
+                    {!Object.is(Errores.ciudad,undefined) ? <label className="mensajeerrorvalidacion ml-2" htmlFor="">{Errores.ciudad[0]}</label> : null}
+                </div>
             </div>
         </div>
         

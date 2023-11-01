@@ -16,7 +16,7 @@ export default function ListComponent(){
     // SWAL
     const [swalProps, setSwalProps] = useState({});
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     
     // USER STATE
     const [Proveedor,setProveedor]=useState({
@@ -80,6 +80,7 @@ export default function ListComponent(){
     }
 
     function Editar(index){
+        Limpiar();
         let indexProveedor=ProveedorList.findIndex((element)=>element.idproveedor==index);
         setProveedor({
             ...Proveedor,
@@ -109,10 +110,16 @@ export default function ListComponent(){
             ciudad:Proveedor.ciudad
         };
         if (obj.idproveedor==0) {
-            axios.post("/api/proveedor",obj).then((res)=>{Lista()});   
+            axios.post("/api/proveedor",obj).then((res)=>{
+                Lista();
+                onClose();
+            });   
         }
         else{
-            axios.post("/api/proveedor/"+Proveedor.idproveedor,obj).then((res)=>Lista());
+            axios.post("/api/proveedor/"+Proveedor.idproveedor,obj).then((res)=>{
+                Lista();
+                onClose();
+            });
         }
     }
     return(

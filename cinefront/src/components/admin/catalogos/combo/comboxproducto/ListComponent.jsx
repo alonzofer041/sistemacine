@@ -63,7 +63,7 @@ export default function ListComponent(){
         });
         onOpen();
     }
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
     function Guardar(){
         var obj={
             idcombodetalle:ComboDetalle.idcombodetalle,
@@ -73,7 +73,10 @@ export default function ListComponent(){
             valor:ComboDetalle.valor
         }
         axios.post('/api/combodetalle',obj,
-        ).then((res)=>{Lista()});
+        ).then((res)=>{
+            Lista();
+            onClose();
+        });
         // let formData=new FormData();
         // formData.set("idcombodetalle",comboDetalle.idcombodetalle);
         // formData.set("idcombo",comboDetalle.nombre);
