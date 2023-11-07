@@ -8,6 +8,7 @@ const addHorarioPelicula=(async (req,res)=>{
     HorarioPelicula.idpelicula=req.body.idpelicula;
     HorarioPelicula.idsala=req.body.idsala;
     HorarioPelicula.hora=req.body.hora;
+    HorarioPelicula.fecha=req.body.fecha;
     HorarioPelicula.created_at=new Date();
     let respuesta=await HorarioPelicula.insertar();
     res.json(respuesta);

@@ -7,6 +7,7 @@ import FormComponent from "./FormComponent";
 import BtnAccionComponent from "../../../../base/BtnAccionComponent";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
+import { FormatearFecha } from "../../../../../helpers/functions";
 
 export default function ListComponent(){
     const location=useLocation();
@@ -27,6 +28,7 @@ export default function ListComponent(){
         titulo: '',
         idsala:0,
         hora: '',
+        fecha:''
     });
 
 
@@ -62,7 +64,8 @@ export default function ListComponent(){
             idhorariopelicula:PeliculaHorario.idhorariopelicula,
             idpelicula:idpelicula,
             idsala:PeliculaHorario.idsala,
-            hora:PeliculaHorario.hora
+            hora:PeliculaHorario.hora,
+            fecha:PeliculaHorario.fecha
         }
         if (obj.idhorariopelicula==0) {
             axios.post("/api/horariopelicula",obj).then((res)=>{
@@ -101,6 +104,7 @@ export default function ListComponent(){
                         <TableColumn>#</TableColumn>
                         <TableColumn>Titulo</TableColumn>
                         <TableColumn>Sala</TableColumn>
+                        <TableColumn>Fecha</TableColumn>
                         <TableColumn>Horario</TableColumn>
                         <TableColumn>Acciones</TableColumn>
                    </TableHeader> 
@@ -112,6 +116,7 @@ export default function ListComponent(){
                                 <TableCell>{item.idhorariopelicula}</TableCell>
                                 <TableCell>{titulo}</TableCell>
                                 <TableCell>{item.idsala}</TableCell>
+                                <TableCell>{FormatearFecha(item.fecha)}</TableCell>
                                 <TableCell>{item.hora}</TableCell>
                                 <TableCell>
                                     <BtnAccionComponent MostrarBtnEditar={true} MostrarBtnEliminar={true}  
