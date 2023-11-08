@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {Image, Button,Card, CardBody, Divider} from "@nextui-org/react";
+import {Image, Button,Card, CardBody, Divider, CardHeader} from "@nextui-org/react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {Carousel} from "react-responsive-carousel";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
@@ -14,15 +14,18 @@ import { SucursalContext } from "../../../provider/SucursalProvider";
 // initTE({ Carousel });
 
 const url=import.meta.env.VITE_ASSET_URL+'/banners/';
+const urlpelicula=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
 export default function Inicio() {
   const navigate=useNavigate();
   const [BannerList,setBannerList]=useState([]);
   const {Empresa,setEmpresa}=useContext(EmpresaContext);
   const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
+  const [PeliculasEstreno,setPeliculasEstreno]=useState([]);
 
   useEffect(()=>{
     Lista();
+    UltimosEstrenos();
   },[IdSucursal]);
 
   function Lista(){
@@ -39,6 +42,23 @@ export default function Inicio() {
           // console.log(IdEmpresa);
       })
   }
+  function UltimosEstrenos(){
+    let fecha=new Date();
+    let year=fecha.getFullYear();
+      let month=fecha.getMonth()+1;
+      let day=fecha.getDate();
+      let cadenafecha=year+'-'+month+'-'+day;
+      axios.get("/api/ultimosestrenos",{
+        params:{
+          idempresa:Empresa.idempresa,
+          idsucursal:IdSucursal,
+          fechaestreno:cadenafecha
+        }
+      }).then((res)=>{
+        let data=res.data;
+        setPeliculasEstreno(data);
+      })
+  }
   function IrA(){
     navigate("/cine/peliculas/entradas")
   }
@@ -48,16 +68,34 @@ export default function Inicio() {
   return (
     <div className="container-fluid">
       <div className="grid grid-cols-1">
-        <Carousel showArrows={true} showThumbs={false}>
+        <Carousel dynamicHeight={true} showArrows={true} showThumbs={false}>
           {(BannerList.map((Banner)=>(
-              <div>
-                <img src={url+Banner.imgbanner} />
-                <p className="legend">Legend 1</p>
+              <div key={Banner.idbanner}>
+                <img src={url+Banner.imgbanner}/>
               </div>
           )))}
         </Carousel>
       </div>
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-1">
+        <h1 className="text-center">Ultimos Estrenos</h1>
+      </div>
+      <div className="grid grid-cols-4 gap-4">
+      {PeliculasEstreno.map((Pelicula)=>(
+          <div key={Pelicula.idpelicula} className="mb-2">
+            <Card style={{width:"80%"}}>
+              <CardHeader className="justify-center">
+                <Image src={urlpelicula+Pelicula.imgportada} width={150}></Image>
+              </CardHeader>
+              <Divider/>
+              <CardBody>
+                <h1 className="text-center">{Pelicula.titulo}</h1>
+              </CardBody>
+            </Card>
+           
+          </div>
+        ))}
+      </div>
+      {/* <div className="grid grid-cols-3">
         <div>
           <h1 className="text-center">DESCUBRE LO NUEVO</h1>
           <div className="flex justify-center">
@@ -120,9 +158,9 @@ export default function Inicio() {
             <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-3 mt-9">
+      {/* <div className="grid grid-cols-3 mt-9">
         <div>
           <h1 className="text-center">¿Qué tal algo para degustar?</h1>
           <div className="flex justify-center">
@@ -170,7 +208,7 @@ export default function Inicio() {
             </Button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

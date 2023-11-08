@@ -18,6 +18,7 @@ export default function ListComponent(){
      // SWAL
     const [swalProps, setSwalProps] = useState({});
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     const navigate=useNavigate();
     

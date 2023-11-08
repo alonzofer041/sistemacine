@@ -75,5 +75,15 @@ class Pelicula{
         ])
         return respuesta
     }
+    async UltimosEstrenos(){
+        let sql=`SELECT * FROM peliculas WHERE idempresa=? AND idsucursal=? AND deleted_at IS NULL AND fechaestreno BETWEEN DATE_SUB(?, INTERVAL 10 DAY) AND  DATE_ADD(?,INTERVAL 10 DAY)`
+        const [rows]=await pool.execute(sql,[
+            this.idempresa,
+            this.idsucursal,
+            this.fechaestreno,
+            this.fechaestreno
+        ]);
+        return rows;
+    }
 }
 module.exports=Pelicula

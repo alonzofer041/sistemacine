@@ -175,4 +175,16 @@ const getPeliculaCartelera=(async(req,res)=>{
     });
 })
 
-module.exports={addPelicula,getPelicula,updatePelicula,deletePelicula,getPeliculaCartelera,uploads}
+//@desc listar peliculas estreno para inicio
+//@route get /api/ultimosestrenos
+//@access public
+const getPeliculasEstreno=(async(req,res)=>{
+    let Pelicula=new PeliculaClass;
+    Pelicula.idempresa=req.query.idempresa;
+    Pelicula.idsucursal=req.query.idsucursal;
+    Pelicula.fechaestreno=req.query.fechaestreno;
+    let rows=await Pelicula.UltimosEstrenos();
+    res.json(rows);
+})
+
+module.exports={addPelicula,getPelicula,updatePelicula,deletePelicula,getPeliculaCartelera,getPeliculasEstreno,uploads}
