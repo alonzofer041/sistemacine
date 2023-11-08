@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Spinner } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
@@ -10,7 +10,7 @@ import SweetAlert2 from 'react-sweetalert2';
 export default function ListComponent(){
     // SWAL
     const [swalProps, setSwalProps] = useState({});
-    
+
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     // USER STATE
 
@@ -27,9 +27,10 @@ export default function ListComponent(){
         nombre:""
     });
     const [PeliculasCategoriaList,setPeliculasCategoriaList]=useState([
-        {idpeliculacategoria:0,nombre:''}
+        
     ]);
     const [ErrorValidacion,setErrorValidacion]=useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
         Lista();
@@ -59,14 +60,17 @@ export default function ListComponent(){
     
     // METODOS
     function Lista(){
-        axios.get("/api/peliculacategoria"
-        ).then((res)=>{
-            let data=res.data;
-            setPeliculasCategoriaList(data);
-            // setFiltro({...Filtro});
-        }).finally(()=>{
-            // SetPaginator();
-        });
+        setLoading(true);
+        setTimeout(() => {
+            axios.get("/api/peliculacategoria"
+            ).then((res)=>{
+                let data=res.data;
+                setPeliculasCategoriaList(data);
+                // setFiltro({...Filtro});
+            }).finally(()=>{
+                setLoading(false);
+            });
+        }, 1000);
     }
     const FiltrarLista=React.useCallback((value)=>{
         setFiltro({...Filtro,Nombre:value})
@@ -120,6 +124,7 @@ export default function ListComponent(){
     return(
         <div>
             <ListGeneralComponent
+            loading={loading}
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             EsModal={true}
             Filtro={Filtro}
@@ -138,7 +143,7 @@ export default function ListComponent(){
                 </TableHeader>
             }
             CuerpoTabla={
-                <TableBody items={ItemsPaginado}>
+                <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={ItemsPaginado}>
                     {(item)=>(
                         <TableRow key={item.idpeliculacategoria}>
                             <TableCell>{item.idpeliculacategoria}</TableCell>

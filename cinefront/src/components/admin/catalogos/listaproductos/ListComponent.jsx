@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Link ,Image } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Link ,Image, Spinner } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
@@ -20,6 +20,15 @@ export default function ListComponent(){
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
     const navigate=useNavigate();
+    
+    // FILTROS
+    const [Filtro,setFiltro]=useState({
+        NumFilas:5,
+        Pagina:1,
+        Nombre:'',
+        TotalPaginas:1
+    });
+
     const [Producto,setProducto]=useState({
         idproducto:0,
         nombre:'',
@@ -33,18 +42,51 @@ export default function ListComponent(){
 
     // ESTADO DE ARCHIVO
     const [File,setFile]=useState({});
-    function Lista(){
-        axios.get('/api/producto',{
-            params:{
-                origen:'admin'
-            }
+
+    const [loading, setLoading] = useState(true);
+
+    // MEMOS
+    const BndFiltro=Boolean(Filtro.Nombre);
+    const ItemsFiltro=React.useMemo(()=>{
+        let ProductoFiltrado=[...ProductoList];
+        if (BndFiltro) {
+            ProductoFiltrado=ProductoFiltrado.filter((ProductoElement)=>
+                ProductoElement.nombre.toLowerCase().includes(Filtro.Nombre.toLowerCase())
+            );     
         }
-        ).then((res)=>{
-            let data=res.data;
-            setProductoList(data);
-            // console.log(import.meta.env.VITE_ASSET_URL);
-        })
+        return ProductoFiltrado;
+    },[ProductoList,Filtro.Nombre]);
+
+    const Paginator=React.useMemo(()=>{
+        return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
+    },[ItemsFiltro?.length,Filtro.NumFilas]);
+
+    const ItemsPaginado=React.useMemo(()=>{
+        const Inicio=(Filtro.Pagina-1)*Filtro.NumFilas;
+        const Fin=Inicio+Filtro.NumFilas;
+        return ItemsFiltro.slice(Inicio,Fin);
+    },[Filtro.Pagina,ItemsFiltro,Filtro.NumFilas]);
+
+
+    function Lista(){
+        setLoading(true);
+        setTimeout(() => {
+            axios.get('/api/producto',{
+                params:{
+                    origen:'admin'
+                }
+            }
+            ).then((res)=>{
+                let data=res.data;
+                setProductoList(data);
+            }).finally(()=>{
+                setLoading(false);
+            })
+        }, 1000);
     }
+    const FiltrarLista=React.useCallback((value)=>{
+        setFiltro({...Filtro,Nombre:value})
+    })
     function Limpiar(){
         setProducto({
             ...Producto,
@@ -118,10 +160,14 @@ export default function ListComponent(){
             <ListGeneralComponent
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             EsModal={true}
-            Filtro={"1"} 
+            Filtro={Filtro}
+            setFiltro={setFiltro}
+            FiltroEvento={FiltrarLista} 
+            TotalElementos={ItemsFiltro.length}
             Titulo={"Producto"}
             NombreLista={"Configuración"}
             EventoLimpiar={Limpiar}
+            TotalPagina={Paginator}
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
@@ -133,7 +179,7 @@ export default function ListComponent(){
                 </TableHeader>
             }
             CuerpoTabla={
-                <TableBody items={ProductoList}>
+                <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={ItemsPaginado}>
                     {(item)=>(
                         <TableRow key={item.idproducto}>
                             <TableCell>{item.idproducto}</TableCell>

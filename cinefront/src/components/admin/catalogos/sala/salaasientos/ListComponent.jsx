@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Spinner } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import ListGeneralComponent from "../../../../base/ListGeneralComponent";
 import Modal from "../../../../base/ModalComponent";
@@ -23,23 +23,64 @@ export default function ListComponent(){
 
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     // USER STATE
+
+    // FILTROS
+    const [Filtro,setFiltro]=useState({
+        NumFilas:5,
+        Pagina:1,
+        Nombre:'',
+        TotalPaginas:1
+    });
+
     const [Asientos,setAsientos]=useState({
         idasiento:0,
         nombre:"",
         fila:""
     });
 
-    function Lista(){
-        axios.get("/api/asientos",{
-            params:{
-                idsala:idsala
-            }
+    const [loading, setLoading] = useState(true);
+
+    // MEMOS
+    const BndFiltro=Boolean(Filtro.Nombre);
+    const ItemsFiltro=React.useMemo(()=>{
+        let AsientosFiltrado=[...AsientosList];
+        if (BndFiltro) {
+            AsientosFiltrado=AsientosFiltrado.filter((AsientosElement)=>
+                AsientosElement.nombre.toLowerCase().includes(Filtro.Nombre.toLowerCase())
+            );     
         }
-        ).then((res)=>{
-            let data=res.data;
-            setAsientosList(data);
-        });
+        return AsientosFiltrado;
+    },[AsientosList,Filtro.Nombre]);
+
+    const Paginator=React.useMemo(()=>{
+        return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
+    },[ItemsFiltro?.length,Filtro.NumFilas]);
+
+    const ItemsPaginado=React.useMemo(()=>{
+        const Inicio=(Filtro.Pagina-1)*Filtro.NumFilas;
+        const Fin=Inicio+Filtro.NumFilas;
+        return ItemsFiltro.slice(Inicio,Fin);
+    },[Filtro.Pagina,ItemsFiltro,Filtro.NumFilas]);
+
+    function Lista(){
+        setLoading(true);
+        setTimeout(() => {
+            axios.get("/api/asientos",{
+                params:{
+                    idsala:idsala
+                }
+            }
+            ).then((res)=>{
+                let data=res.data;
+                setAsientosList(data);
+            }).finally(()=>{
+                setLoading(false);
+            });
+        }, 1000);
     }
+    const FiltrarLista=React.useCallback((value)=>{
+        setFiltro({...Filtro,Nombre:value})
+    })
     function Limpiar(){
         setAsientos({...Asientos,idasiento:0,nombre:"",fila:""});
     }
@@ -88,12 +129,17 @@ export default function ListComponent(){
     return(
         <div>
             <ListGeneralComponent
+                loading={loading}
                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                 EsModal={true}
-                Filtro={1} 
+                Filtro={Filtro}
+                setFiltro={setFiltro}
+                FiltroEvento={FiltrarLista}
+                TotalElementos={ItemsFiltro.length}
                 Titulo={"Asientos"}
                 NombreLista={"Sala "+idsala}
                 EventoLimpiar={Limpiar}
+                TotalPagina={Paginator}
                 CabeceraTabla={
                    <TableHeader>
                         <TableColumn>#</TableColumn>
@@ -103,7 +149,7 @@ export default function ListComponent(){
                    </TableHeader> 
                 }
                 CuerpoTabla={
-                    <TableBody items={AsientosList}>
+                    <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={ItemsPaginado}>
                         {(item)=>(
                             <TableRow key={item.idasiento}>
                                 <TableCell>{item.idasiento}</TableCell>

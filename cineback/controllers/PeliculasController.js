@@ -1,5 +1,6 @@
 const jwt=require("jsonwebtoken");
 let PeliculaClass=require("../models/Pelicula");
+let HorarioPeliculaClass=require("../models/HorarioPelicula");
 const multer=require('multer');
 
 let filename="";
@@ -103,4 +104,30 @@ const deletePelicula=(async(req,res)=>{
     res.json(respuesta);
 })
 
-module.exports={addPelicula,getPelicula,updatePelicula,deletePelicula,uploads}
+//@desc listar peliculas para cartelera
+//@route get /api/peliculacarletera
+//@access public
+const getPeliculaCartelera=(async(req,res)=>{
+    let Pelicula=new PeliculaClass;
+    let fecha=req.query.fecha;
+    Pelicula.idempresa=req.query.idempresa;
+    Pelicula.idsucursal=req.query.idsucursal;
+    await Pelicula.listar().then((response)=>{
+        response.forEach(async (pelicula)=>{
+            pelicula.horarios=[];
+            let HorarioPelicula=new HorarioPeliculaClass;
+            HorarioPelicula.idpelicula=pelicula.idpelicula;
+            if (req.query.fecha!='') {
+                HorarioPelicula.FechaFiltro=req.query.fecha;   
+            }
+            let respuesta=await HorarioPelicula.listarFiltro();
+            pelicula.horarios=respuesta;
+            // peliculas.push(pelicula);
+        });
+        setTimeout(() => {
+            res.json(response);
+        }, 500);
+    });
+})
+
+module.exports={addPelicula,getPelicula,updatePelicula,deletePelicula,getPeliculaCartelera,uploads}

@@ -5,15 +5,19 @@ class HorarioPelicula{
         this.idsala=0;
         this.idpelicula=0;
         this.hora='',
+        this.fecha='';
         this.created_at='';
         this.updated_at='';
         this.deleted_at='';
+        this.FechaFiltro='';
+        this.HoraFiltro='';
     }
     async insertar(){
-        let respuesta=await pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?)',[
+        let respuesta=await pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,fecha,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?)',[
             this.idpelicula,
             this.idsala,
             this.hora,
+            this.fecha,
             this.created_at,
             null,
             null
@@ -21,9 +25,10 @@ class HorarioPelicula{
         return respuesta;
     }
     async actualizar(){
-        let respuesta=await pool.query('UPDATE horariospelicula SET idsala=?,hora=?,updated_at=? WHERE idhorariopelicula=?',[
+        let respuesta=await pool.query('UPDATE horariospelicula SET idsala=?,hora=?,fecha=?,updated_at=? WHERE idhorariopelicula=?',[
             this.idsala,
             this.hora,
+            this.fecha,
             this.updated_at,
             this.idhorariopelicula,
         ]);
@@ -41,6 +46,12 @@ class HorarioPelicula{
             this.idpelicula
         ]);
         return rows;
+    }
+    async listarFiltro(){
+        let sql='SELECT * FROM horariospelicula WHERE idpelicula=? AND deleted_at IS NULL AND fecha=?';
+        let arraydata=[this.idpelicula,this.deleted_at,this.FechaFiltro];
+        const [rows]=await pool.execute(sql,arraydata);
+        return rows
     }
     async listarSalasDisponibles(){
         let sql=`SELECT hp.idhorariopelicula,hp.idsala,s.nombre,s.numfilas FROM horariospelicula AS hp

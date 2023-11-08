@@ -14,7 +14,11 @@ class Usuario{
         this.deleted_at='';
     }
     async login(res){
-        const [rows]=await pool.query('SELECT * FROM usuario WHERE correo=? AND password=? AND deleted_at IS NULL',[
+        let sql=`SELECT u.*,emp.imgempresa,suc.nombre as sucursal FROM usuario AS u
+        LEFT JOIN empresa AS emp ON u.idempresa=emp.idempresa
+        LEFT JOIN sucursal AS suc ON u.idsucursal=suc.idsucursal
+        WHERE u.correo=? AND u.password=? AND u.deleted_at IS NULL`;
+        const [rows]=await pool.query(sql,[
             this.correo,
             this.password,
         ])

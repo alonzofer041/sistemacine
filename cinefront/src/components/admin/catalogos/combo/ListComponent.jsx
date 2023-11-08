@@ -1,7 +1,7 @@
 import React,{ useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import Modal from "../../../base/ModalComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Spinner } from "@nextui-org/react";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "../combo/FormComponent";
 import { useState } from "react";
@@ -13,6 +13,15 @@ export default function ListComponent(){
     useEffect(()=>{
         Lista();
     },[]);
+
+    // FILTROS
+    const [Filtro,setFiltro]=useState({
+        NumFilas:5,
+        Pagina:1,
+        Nombre:'',
+        TotalPaginas:1
+    });
+
     const navigate=useNavigate();
     const [File,setFile]=useState({});
     const [Combo,setCombo]=useState({
@@ -22,19 +31,47 @@ export default function ListComponent(){
         imgcombo:'',
     });
     const[ComboList,setComboList]=useState([
-        {idcombo:1,nombre:'combo amigos',valor:'216',imgcombo:'nada.png'},
-        {idcombo:2,nombre:'combo pareja',valor:'220',imgcombo:'nada.png'}
     ]);
+
+    const [loading, setLoading] = useState(true);
+
+    // MEMOS
+    const BndFiltro=Boolean(Filtro.Nombre);
+    const ItemsFiltro=React.useMemo(()=>{
+        let ComboFiltrado=[...ComboList];
+        if (BndFiltro) {
+            ComboFiltrado=ComboFiltrado.filter((ComboElement)=>
+                ComboElement.nombre.toLowerCase().includes(Filtro.Nombre.toLowerCase())
+            );     
+        }
+        return ComboFiltrado;
+    },[ComboList,Filtro.Nombre]);
+
+    const Paginator=React.useMemo(()=>{
+        return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
+    },[ItemsFiltro?.length,Filtro.NumFilas]);
+
+    const ItemsPaginado=React.useMemo(()=>{
+        const Inicio=(Filtro.Pagina-1)*Filtro.NumFilas;
+        const Fin=Inicio+Filtro.NumFilas;
+        return ItemsFiltro.slice(Inicio,Fin);
+    },[Filtro.Pagina,ItemsFiltro,Filtro.NumFilas]);
     
     function Lista(){
-        axios.get('/api/combo'
-        ).then((res)=>{
-            let data=res.data;
-            setComboList(data);
-            // console.log(import.meta.env.VITE_ASSET_URL);
-        })
-    
+        setLoading(true);
+        setTimeout(() => {
+            axios.get('/api/combo'
+            ).then((res)=>{
+                let data=res.data;
+                setComboList(data);
+            }).finally(()=>{
+                setLoading(false);
+            })
+        }, 1000);
     }
+    const FiltrarLista=React.useCallback((value)=>{
+        setFiltro({...Filtro,Nombre:value})
+    })
     function Limpiar(){
         setCombo({...Combo,
         idcombo:0,nombre:'',valor:0,imgcombo:''});
@@ -103,10 +140,14 @@ export default function ListComponent(){
             <ListGeneralComponent
                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                 EsModal={true}
-                Filtro={1} 
+                Filtro={Filtro}
+                setFiltro={setFiltro}
+                FiltroEvento={FiltrarLista} 
+                TotalElementos={ItemsFiltro.length}
                 Titulo={"Combos"}
                 NombreLista={"Configuración"}
                 EventoLimpiar={Limpiar}
+                TotalPagina={Paginator}
                 CabeceraTabla={
                     <TableHeader>
                         <TableColumn>#</TableColumn>
@@ -117,7 +158,7 @@ export default function ListComponent(){
                     </TableHeader>
                 }
                 CuerpoTabla={
-                    <TableBody items={ComboList}>
+                    <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={ItemsPaginado}>
                     {(item)=>(
                         <TableRow key={item.idcombo}>
                             <TableCell>{item.idcombo}</TableCell>

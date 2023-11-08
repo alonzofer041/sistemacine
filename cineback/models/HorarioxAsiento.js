@@ -12,5 +12,11 @@ class HorarioxAsiento{
         ]);
         return respuesta;
     }
+    async listar(){
+        const [rows]=await pool.query('SELECT * FROM horarioxasiento WHERE idhorario=?',[
+            this.idhorario
+        ]);
+        return rows;
+    }
 }
 module.exports=HorarioxAsiento;

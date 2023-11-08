@@ -38,7 +38,7 @@ export default function SubMenuConfig(){
 
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarSucursal}>
                     <FaBuilding size="2em"/>
-                    Sucursales
+                    Sucursal
                 </Button>
 
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarPelicula}>
