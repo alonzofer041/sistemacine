@@ -57,9 +57,9 @@ export const ProductList = ({
 
 	return (
 		<div>
-			<div className="titlescinema">
+			{/* <div className="titlescinema">
 				<p>Combos</p>
-			</div>
+			</div> */}
 			
 			<br /><br /><br /><br />
 			<div className="titlescinema">

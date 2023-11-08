@@ -77,17 +77,22 @@ const Routes=()=>{
       element:<ProtectedRootRoute/>,
       children:[
         {
-          path:"/menuroot",
-          element:<SubMenuRoot/>
-        },
-        {
-          path:"/empresa",
-          element:<ListEmpresa/>
-        },
-        {
-          path:'/sucursales',
-          element:<ListSucursal/>
-        },
+          element:<NavBarComponent/>,
+          children:[
+            {
+              path:"/menuroot",
+              element:<SubMenuRoot/>
+            },
+            {
+              path:"/empresa",
+              element:<ListEmpresa/>
+            },
+            {
+              path:'/sucursales',
+              element:<ListSucursal/>
+            },
+          ]
+        }
       ]
     }
   ])
