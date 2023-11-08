@@ -10,9 +10,8 @@ const addPeliculaCategoria=(async (req,res)=>{
         "nombre":"required|string",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
@@ -56,9 +55,8 @@ const updatePeliculaCategoria=(async(req,res)=>{
         "nombre":"required|string",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{

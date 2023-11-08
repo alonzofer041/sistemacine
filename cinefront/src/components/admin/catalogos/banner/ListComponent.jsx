@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
+import { MensajeAdvertencia } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/banners/';
 export default function ListComponent(){
@@ -16,6 +17,8 @@ export default function ListComponent(){
     },[]);
 
     const [swalProps, setSwalProps] = useState({});
+
+    const [File,setFile]=useState(null);
     
     const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
     
@@ -24,7 +27,7 @@ export default function ListComponent(){
         imgbanner:''
     });
     const [BannerList,setBannerList]=useState([]);
-    const [File,setFile]=useState({});
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     function Lista(){
         axios.get('/api/banner'
@@ -37,7 +40,7 @@ export default function ListComponent(){
         setBanner({...Banner,
         idbanner:0,
         imgbanner:''});
-        setFile({});
+        setFile(null);
     }
     function Eliminar(index){
         setBanner({...Banner,idbanner:index});
@@ -57,6 +60,10 @@ export default function ListComponent(){
         onOpen();
     }
     function Guardar(){
+        if (Object.is(File,null)) {
+            MensajeAdvertencia("Debe seleccionar una imagen");
+            return false;
+        }
         var obj={
             idbanner:Banner.idbanner,
             imgbanner:Banner.imgbanner,
@@ -119,7 +126,7 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={Banner.idbanner==0 ? "Agregar Imagen" : "Editar Imagen"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
-            CuerpoFormulario={<FormComponent Banner={Banner} setBanner={setBanner} File={File} setFile={setFile}/>}></Modal>
+            CuerpoFormulario={<FormComponent Banner={Banner} setBanner={setBanner} File={File} setFile={setFile} Errores={ErrorValidacion}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

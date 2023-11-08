@@ -23,17 +23,19 @@ const addEmpresa=(async (req,res)=>{
     const ValidationRule={
         "nombrecomercial":"required|string",
         "razonsocial":"required|string",
-        "rfc":"required|string",
+        "rfc":"required|string|digits:12",
         "direccion":"required|string",
-        "telefono":"required|string",
-        "email":"required|string",
+        "telefono":"required|numeric|digits:10",
+        "email":"required|email",
         "estado":"required|string",
         "ciudad":"required|string",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        email:"Ingresa un correo electrónico válido",
+        digits:"Ingresa un :attribute válido",
+        numeric:"El valor debe ser numérico"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
@@ -76,17 +78,19 @@ const updateEmpresa=(async (req,res)=>{
     const ValidationRule={
         "nombrecomercial":"required|string",
         "razonsocial":"required|string",
-        "rfc":"required|string",
+        "rfc":"required|string|digits:12",
         "direccion":"required|string",
-        "telefono":"required|string",
-        "email":"required|string",
+        "telefono":"required|numeric|digits:10",
+        "email":"required|email",
         "estado":"required|string",
         "ciudad":"required|string",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        email:"Ingresa un correo electrónico válido",
+        digits:"Ingresa un número teléfonico válido",
+        numeric:"El valor debe ser numérico"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{

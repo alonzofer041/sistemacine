@@ -7,6 +7,7 @@ import BtnAccionComponent from "../../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
+import { MensajeAdvertencia } from "../../../../../helpers/functions";
 
 export default function ListComponent(){
     const location=useLocation();
@@ -22,6 +23,7 @@ export default function ListComponent(){
     const [swalProps, setSwalProps] = useState({});
 
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
     // USER STATE
     const [Asientos,setAsientos]=useState({
         idasiento:0,
@@ -42,6 +44,7 @@ export default function ListComponent(){
     }
     function Limpiar(){
         setAsientos({...Asientos,idasiento:0,nombre:"",fila:""});
+        setErrorValidacion([]);
     }
     function Eliminar(index){
         setAsientos({...Asientos,idasiento:index});
@@ -56,6 +59,7 @@ export default function ListComponent(){
         }); 
     }
     function Editar(index){
+        Limpiar();
         let indexAsientos=AsientosList.findIndex((element)=>element.idasiento==index);
         setAsientos({...Asientos,idasiento:index,
             nombre:AsientosList[indexAsientos].nombre,
@@ -64,6 +68,17 @@ export default function ListComponent(){
         onOpen();
     }
     function Guardar(){
+        let mensajes=[];
+        if (Asientos.fila==0) {
+            mensajes.push("Debe seleccionar un número de filas");
+        }
+        if (mensajes.length>0){
+            mensajes.forEach((mensaje)=>{
+                MensajeAdvertencia(mensaje);
+                
+            });
+            return false;
+        }
         var obj={
             idasiento:Asientos.idasiento,
             idsala:idsala,
@@ -75,12 +90,16 @@ export default function ListComponent(){
             ).then((res)=>{
                 Lista();
                 onClose();
-            });   
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
         else{
             axios.post("/api/asientos/"+Asientos.idasiento,obj).then((res)=>{
                 Lista();
                 onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
             });
         }
     }
@@ -127,7 +146,7 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={Asientos.idasiento==0 ? "Agregar Asiento" : "Editar Asiento"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Asientos={Asientos} setAsientos={setAsientos} NumFilas={numfilas}/>}></Modal>
+            CuerpoFormulario={<FormComponent Asientos={Asientos} setAsientos={setAsientos} NumFilas={numfilas} Errores={ErrorValidacion}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

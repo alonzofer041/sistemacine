@@ -8,18 +8,20 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
+import { MensajeAdvertencia } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/productos/';
 export default function ListComponent(){
-
     useEffect(()=>{
         Lista();
     },[]);
      // SWAL
     const [swalProps, setSwalProps] = useState({});
+    const [File,setFile]=useState(null);
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
     const navigate=useNavigate();
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
     const [Producto,setProducto]=useState({
         idproducto:0,
         nombre:'',
@@ -32,7 +34,6 @@ export default function ListComponent(){
     const [ProductoList,setProductoList]=useState([]);
 
     // ESTADO DE ARCHIVO
-    const [File,setFile]=useState({});
     function Lista(){
         axios.get('/api/producto',{
             params:{
@@ -56,6 +57,8 @@ export default function ListComponent(){
             idproveedor:0,
             idproductocategoria:0
         });
+        setFile(null);
+        setErrorValidacion([]);
     }
 
     function Eliminar(index){
@@ -73,6 +76,7 @@ export default function ListComponent(){
 
     function Editar(index){
         Limpiar();
+        setErrorValidacion([]);
         let indexProducto=ProductoList.findIndex((element)=>element.idproducto==index);
         setProducto({
             ...Producto,
@@ -87,6 +91,22 @@ export default function ListComponent(){
         onOpen();
     }
     function Guardar(){
+        let mensajes=[];
+        if (Object.is(File,null)) {
+            mensajes.push("Debe seleccionar una imagen");
+        }
+        if (Producto.idproveedor==0) {
+            mensajes.push("Debe seleccionar un proveedor");
+        }
+        if (Producto.idproductocategoria==0) {
+            mensajes.push("Debe seleccionar una categoría");
+        }
+        if (mensajes.length>0){
+            mensajes.forEach((mensaje)=>{
+                MensajeAdvertencia(mensaje);
+            });
+            return false;
+        }
         var obj={
             idproducto:Producto.idproducto,
             nombre:Producto.nombre,
@@ -95,21 +115,29 @@ export default function ListComponent(){
             idproveedor:Producto.idproveedor,
             idproductocategoria:Producto.idproductocategoria,
             files:File
-        }
+        };
         if (obj.idproducto==0) {
-            axios.post("/api/producto",obj,{headers:{
-                "Content-Type":"multipart/form-data"
-            }}).then((res)=>{
+            axios.post("/api/producto",obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
                 Lista();
                 onClose();
-            });   
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
         else{
-            axios.post("/api/producto/"+Producto.idproducto,obj,{headers:{
-                "Content-Type":"multipart/form-data"
-            }}).then((res)=>{
+            axios.post("/api/producto/"+Producto.idproducto,obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
                 Lista();
                 onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
             });
         }
     }
@@ -156,8 +184,8 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Size={"xl"}
             Titulo={"Agregar Producto"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Producto={Producto} setProducto={setProducto} File={File} setFile={setFile}/>}></Modal>
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
+            CuerpoFormulario={<FormComponent Producto={Producto} setProducto={setProducto} File={File} setFile={setFile} Errores={ErrorValidacion}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

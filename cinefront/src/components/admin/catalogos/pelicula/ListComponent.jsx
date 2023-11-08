@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
+import { MensajeAdvertencia } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 export default function ListComponent(){
@@ -18,6 +19,7 @@ export default function ListComponent(){
     const [swalProps, setSwalProps] = useState({});
     
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     const navigate=useNavigate();
     const [Pelicula,setPelicula]=useState({
@@ -35,8 +37,7 @@ export default function ListComponent(){
         imgportada:''
     });
     const [PeliculaList,setPeliculaList]=useState([
-        // {idpelicula:1,titulo:'star wars',fechaestreno:'23 de diciembre de 1977',director:'George Lucas',productora:'lucasfilm',duracion:'121 minutos'}
-        // {idpelicula:0,titulo:'',fechaestreno:'',director:'',productora:'',duracion:''}
+        
     ]);
     // ESTADO DE ARCHIVO
     const [File,setFile]=useState({});
@@ -50,9 +51,12 @@ export default function ListComponent(){
             let data=res.data;
             setPeliculaList(data);
             // console.log(import.meta.env.VITE_ASSET_URL);
-        })
+        }).finally(()=>{
+        });
     }
     function Limpiar(){
+        setFile(null);
+        setErrorValidacion([]);
         setPelicula({...Pelicula,
             idpelicula:0,
             idpeliculacategoria:'',
@@ -82,7 +86,7 @@ export default function ListComponent(){
     }
     function Editar(index){
         Limpiar();
-        let indexPelicula=PeliculaList.find((element)=>element.idpelicula=index);
+        let indexPelicula=PeliculaList.findIndex((element)=>element.idpelicula==index);
         setPelicula({
             ...Pelicula,
             idpelicula:index,
@@ -96,15 +100,30 @@ export default function ListComponent(){
             duracion:PeliculaList[indexPelicula].duracion,
             productora:PeliculaList[indexPelicula].productora,
             distribuidora:PeliculaList[indexPelicula].distribuidora,
-            imgportada:PeliculaList[indexPelicula].imgportada,
-        });
+            imgportada:PeliculaList[indexPelicula].imgportada
+        }
+        );
         onOpen();
     }
     function Navegar(idpelicula,titulo){
         navigate('/peliculahorario',{state:{idpelicula:idpelicula,titulo:titulo}})
     }
     function Guardar(){
+        let mensajes=[];
+        if (Object.is(File,null)) {
+            mensajes.push("Debe seleccionar una imagen");
+        }
+        if (Pelicula.idpeliculacategoria=="") {
+            mensajes.push("Debe seleccionar una categoría");
+        }
+        if (mensajes.length>0){
+            mensajes.forEach((mensaje)=>{
+                MensajeAdvertencia(mensaje);
+            });
+            return false;
+        }
         var obj={
+            idpelicula:Pelicula.idpelicula,
             idpeliculacategoria:Pelicula.idpeliculacategoria,
             titulo:Pelicula.titulo,
             sinopsis:Pelicula.sinopsis,
@@ -116,30 +135,30 @@ export default function ListComponent(){
             distribuidora:Pelicula.distribuidora,
             files:File
         }
-        axios.post('/api/pelicula',obj,{
-            headers:{
-                "Content-Type":"multipart/form-data"
-            }
-        }).then((res)=>{
-            Lista();
-            onClose();
-        });
-        // let formData=new FormData();
-        // formData.set("idpeliculacategoria",Pelicula.idpeliculacategoria);
-        // formData.set("titulo",Pelicula.titulo);
-        // formData.set("sinopsis",Pelicula.sinopsis);
-        // formData.set("aniorealizacion",Pelicula.aniorealizacion);
-        // formData.set("director",Pelicula.director);
-        // formData.set("reparto",Pelicula.reparto);
-        // formData.set("duracion",Pelicula.duracion);
-        // formData.set("productora",Pelicula.productora);
-        // formData.set("distribuidora",Pelicula.distribuidora);
-        // formData.append("files",File);
-        // axios.post("/api/pelicula",formData,{
-        //     headers:{
-        //         "Content-Type":"multipart/form-data"
-        //     }
-        // }).then(()=>{});
+        if (obj.idpelicula==0) {
+            axios.post("/api/pelicula",obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
+        }
+        else{
+            axios.post("/api/pelicula/"+Pelicula.idpelicula,obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
+                Lista();
+                onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
+        }
     }
     // Lista();
     return(
@@ -197,8 +216,23 @@ export default function ListComponent(){
             Size="xl"
             EventoGuardar={Guardar}
             Titulo={"Agregar Película"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Pelicula={Pelicula} setPelicula={setPelicula} File={File} setFile={setFile}/>}></Modal>
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
+            CuerpoFormulario={<FormComponent Pelicula={Pelicula} setPelicula={setPelicula} File={File} setFile={setFile} Errores={ErrorValidacion}/>}></Modal>
+
+            <SweetAlert2 {...swalProps}
+                onConfirm={()=>{
+                    axios.delete('/api/pelicula/'+Pelicula.idpelicula
+                    ).then((res)=>{
+                        Lista();
+                    });
+                }}
+                didClose={()=>{
+                    Limpiar();
+                    setSwalProps({
+                        show:false
+                    })
+                }}
+            ></SweetAlert2>
         </div>
     )  
 }

@@ -3,21 +3,64 @@
     src: local("RuberoidBold"),url("./fonts/Ruberoid/Ruberoid-Bold.otf");
     font-weight: bold;
 }
-body{
-	background-color: #000;
-	min-height: 620px;
-}
 .fuenteruberoidbold{
     font-family: "RuberoidBold";
 }
-/* .btn{
-    width: 15%;
-    height: 5rem;
-    border-radius: 0.7rem;
-} */
-
-.container{
-    padding: 1rem 1rem;
+body {
+	margin: 0 auto;
+	font-family: 'RuberoidBold';
+	color: #000;
+	background-color: #000;
+	min-height: 620px;
+}
+.tabs{
+	padding-top: 50px;
+	display: grid;
+    justify-content: center;
+    align-items: center;
+}
+.cards{
+	width: 400px;
+}
+.titlescinema{
+	display: flex;
+	font-size: 50px;
+	justify-content: center;
+}
+.asterisco{
+	color: red;
+	font-size: 12px;
+}
+@media screen and (min-width: 900px){
+	.container-items {
+	padding-left: 50px;
+	padding-right: 50px;
+	display: grid; /*Esto hace que se organicen en rejillas*/
+	grid-template-columns: repeat(3, 1fr); /*Elementos por fila*/
+	gap: 60px; /*Espaciado*/
+	border-radius: 30px;
+	}
+	.container{
+		padding: 1rem 1rem;
+	}
+	header {
+		display: flex;
+		justify-content: right;
+		padding-right: 25px;
+	}
+}
+@media screen and (max-width: 900px){
+	.container-items {
+		padding-left: 20px;
+		padding-right: 20px;
+		display: grid; /*Esto hace que se organicen en rejillas*/
+		grid-template-columns: repeat(1, 1fr); /*Elementos por fila*/
+		gap: 10px; /*Espaciado*/
+	}
+	header {
+		display: flex;
+		justify-content: center;
+	}
 }
 
 
@@ -49,14 +92,6 @@ body{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-}
-
-body {
-	margin: 0 auto;
-	font-family: 'RuberoidBold';
-	color: #000;
-	background-color: #000;
-
 }
 
 .center {
@@ -133,12 +168,7 @@ img {
 }
 
 /* Header */
-header {
-	display: flex;
-	justify-content: space-between;
-	padding: 30px 20px 40px 530px;
-	font-size: 50px;
-}
+
 
 .container-icon {
 	position: relative;
@@ -240,21 +270,12 @@ header {
 }
 
 /* Main */
-.container-items {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 20px;
-}
 
 .container-inputs {
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 20px;
 	margin: auto;
-}
-
-.item {
-	border-radius: 30px;
 }
 
 .item:hover {
@@ -283,6 +304,8 @@ header {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+	background-color: grey;
+	color: #000;
 }
 
 .price {

@@ -12,12 +12,9 @@ const addSalas=(async(req,res)=>{
         "numfilas":"required|numeric",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        },
-        numeric:{
-            string:"El Campo Debe Ser un Número"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        numeric:"El valor debe ser numérico"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
@@ -65,12 +62,9 @@ const updateSalas=(async(req,res)=>{
         "numfilas":"required|numeric",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        },
-        numeric:{
-            string:"El Campo Debe Ser un Número"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        numeric:"El valor debe ser numérico"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
