@@ -103,24 +103,31 @@ export default function NavBarComponent() {
           
           ) : (
           <>
-            <NavbarBrand>
-              <Image radius="none" width={80} src={urlempresa+jwtDecode(Token).Usuario.imgempresa}></Image>
-            </NavbarBrand>
-            <NavbarItem>
-              <Link color="foreground" onClick={()=>{Navegar("/dashboard")}} >
-                Dashboard
-              </Link>
-            </NavbarItem>
-            <NavbarItem >
-              <Link onClick={()=>{Navegar("/configuracion")}} color="foreground" aria-current="page" >
-                Configuración
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link color="foreground" onClick={()=>{Navegar("/productos")}}>
-                Productos
-              </Link>
-            </NavbarItem>
+            {jwtDecode(Token).Usuario.rol=="admin" ? (
+              <>
+                <NavbarBrand>
+                  <Image radius="none" width={80} src={urlempresa+jwtDecode(Token).Usuario.imgempresa}></Image>
+                </NavbarBrand>
+                <NavbarItem>
+                  <Link color="foreground" onClick={()=>{Navegar("/dashboard")}} >
+                    Dashboard
+                  </Link>
+                </NavbarItem>
+                <NavbarItem >
+                  <Link onClick={()=>{Navegar("/configuracion")}} color="foreground" aria-current="page" >
+                    Configuración
+                  </Link>
+                </NavbarItem>
+                <NavbarItem>
+                  <Link color="foreground" onClick={()=>{Navegar("/productos")}}>
+                    Productos
+                  </Link>
+                </NavbarItem>
+              </>  
+            ):<NavbarItem>
+              <Link>Menu</Link>
+              </NavbarItem>}
+            
           </>
           
 

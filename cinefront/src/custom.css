@@ -392,9 +392,9 @@ img {
 	fill:#ff2626
 }
 .previaimagen .contenedorinputimagen{
-	position: absolute;
-  	top: 230px;
-	left: 180px;
+	position: relative;
+  	top: 190px;
+	left: 146px;
   	z-index: 1;
 }
 .previaimagen .contenedorinputimagen input{

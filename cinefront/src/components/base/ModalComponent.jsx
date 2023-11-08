@@ -15,7 +15,7 @@ export default function ModalComponent({
         // const {isOpen, onOpen, onOpenChange} = useDisclosure();
         return(
             <>
-                <Modal size={Size} isOpen={isOpen} onOpenChange={onOpenChange}>
+                <Modal scrollBehavior="inside" placement="top-center" isDismissable={false} size={Size} isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
                         {(onClose)=>(
                             <>

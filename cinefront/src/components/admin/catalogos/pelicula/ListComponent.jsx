@@ -251,7 +251,7 @@ export default function ListComponent(){
             }
             ></ListGeneralComponent>
             <Modal
-            Size="xl"
+            Size="3xl"
             EventoGuardar={Guardar}
             Titulo={"Agregar Película"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}

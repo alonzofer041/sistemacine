@@ -59,7 +59,7 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
     }
     return (
         <div>
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-12 mb-3">
                 <div className="previaimagen col-span-4">
                     <div className="contenedorinputimagen">
                         <input id="file" type="file" name="files"  onChange={handleFile}/><input/>
@@ -71,20 +71,35 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
                         <div id="ImagePreview" style={{backgroundImage:"url('"+url+Pelicula.imgportada+"')"}}></div>
                     </div>
                 </div>
-                <div>
-                    <Select onChange={handleIdPeliculaCategoria} label="Seleccione una Categoría">
-                        {PeliculaCategoriaList.map((PeliculaCategoria)=>(
-                            <SelectItem key={PeliculaCategoria.idpeliculacategoria} value={PeliculaCategoria.idpeliculacategoria}>
-                                {PeliculaCategoria.nombre}
-                            </SelectItem>
-                        ))}
-                    </Select>
-                </div>
-            </div>
-            <div className="grid grid-cols-1 mb-2">
-                <div>
-                    <Input name="titulo" label="Titulo de la pelicula" value={Pelicula.titulo} onChange={handleTitulo}></Input>
-                    {!Object.is(Errores.titulo,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.titulo[0]}</label> : null}
+                <div className="col-span-8">
+                    <div className="mb-2">
+                        <Select defaultSelectedKeys={[Pelicula.idpeliculacategoria.toString()]} onChange={handleIdPeliculaCategoria} label="Seleccione una Categoría">
+                            {PeliculaCategoriaList.map((PeliculaCategoria)=>(
+                                <SelectItem key={PeliculaCategoria.idpeliculacategoria} value={PeliculaCategoria.idpeliculacategoria}>
+                                    {PeliculaCategoria.nombre}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    </div>
+                    <div className="mb-2">
+                        <Input name="titulo" label="Titulo de la pelicula" value={Pelicula.titulo} onChange={handleTitulo}></Input>
+                        {!Object.is(Errores.titulo,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.titulo[0]}</label> : null}
+                    </div>
+                    <div className="mb-2">
+                        <div className="grid grid-cols-2">
+                            <div>
+                                <DatePicker customInput={<Input label="Fecha"></Input>} selected={startDate} onChange={(date)=>setStartDate(date)}/>
+                            </div>
+                            <div>
+                                <Input value={Pelicula.aniorealizacion} onChange={handleAnioRealizacion} name="aniorealizacion" label="Año de estreno"></Input>
+                                {!Object.is(Errores.aniorealizacion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.aniorealizacion[0]}</label> : null}
+                            </div>
+                        </div> 
+                    </div>
+                    <div>
+                        <Input value={Pelicula.director} onChange={handleDirector}  name="director" label="Director"></Input>
+                        {!Object.is(Errores.director,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.director[0]}</label> : null}   
+                    </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 mb-2">
@@ -93,17 +108,8 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
                     {!Object.is(Errores.sinopsis,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.sinopsis[0]}</label> : null}
                 </div>
             </div>
-            <div className="grid grid-cols-3 mb-2">
+            <div className="grid grid-cols-1 mb-2">
                 <div>
-                    <DatePicker customInput={<Input label="Fecha"></Input>} selected={startDate} onChange={(date)=>setStartDate(date)}/>
-                </div>
-                <div className="mb-2 ml-2">
-                    <Input value={Pelicula.aniorealizacion} onChange={handleAnioRealizacion} name="aniorealizacion" label="Año de estreno"></Input>
-                    {!Object.is(Errores.aniorealizacion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.aniorealizacion[0]}</label> : null}
-                </div>
-                <div className="mb-2 ml-2">
-                    <Input value={Pelicula.director} onChange={handleDirector}  name="director" label="Director"></Input>
-                    {!Object.is(Errores.director,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.director[0]}</label> : null}
                 </div>
             </div>
             <div className="grid grid-cols-1 mb-2">

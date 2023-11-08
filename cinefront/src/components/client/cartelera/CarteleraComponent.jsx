@@ -41,6 +41,11 @@ export default function CarteleraComponent(){
     // },[Peliculas,FechaString]);
 
     async function ListarPeliculas(){
+        let year=Fecha.getFullYear();
+        let month=Fecha.getMonth()+1;
+        let day=Fecha.getDate();
+        let cadenafecha=year+'-'+month+'-'+day;
+        setFechaString(cadenafecha);
         await axios.get('/api/peliculacartelera',{
             params:{
                 idempresa:Empresa.idempresa,
@@ -68,11 +73,14 @@ export default function CarteleraComponent(){
 
     return(
         <div className="container">
+            <div className="titlescinema">
+				<p>Cartelera</p>
+			</div>
             <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-4 align-content-center">
+                <div className="col-span-4">
                     <h1 className="text-center">Filtros</h1>
-                    <div>
-                        <h2>Fecha</h2>
+                    <h2 className="text-center">Fecha</h2>
+                    <div className="flex justify-center">
                         <DatePicker selected={Fecha} onChange={(date) => TransformarFecha(date)} customInput={<Input label="Selecciona una Fecha" className="max-w-xs"></Input>}></DatePicker>
                     </div>
                     {/* <div>
@@ -98,11 +106,13 @@ export default function CarteleraComponent(){
                                         <div className="col-span-3">
                                             <img width={150} src={url+Pelicula.imgportada} alt=""/>
                                             <br />
-                                            <Button className="btn" onClick={()=>IrAComprarEntrada(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}>Conseguir Entradas</Button>
+                                            {Pelicula.horarios.length>0?(
+                                                <Button className="mt-4 mb-4" color="default" size="sl" radius="sm" style={{height:"40px"}} onClick={()=>IrAComprarEntrada(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}>Conseguir Entradas</Button>
+                                            ):null}
                                         </div>
                                         <div className="col-span-9">
                                             <h2 className="text-white">{Pelicula.titulo}</h2>
-                                            <p>{Pelicula.categoria} / {Pelicula.fechaestreno} / {Pelicula.duracion}</p>
+                                            <p>{Pelicula.categoria} / {Pelicula.duracion}</p>
                                             <p>Dirigida por: {Pelicula.director}</p>
                                             <p>Reparto: {Pelicula.reparto}</p>
                                             <br />
