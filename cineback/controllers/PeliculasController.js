@@ -109,6 +109,7 @@ const deletePelicula=(async(req,res)=>{
 //@access public
 const getPeliculaCartelera=(async(req,res)=>{
     let Pelicula=new PeliculaClass;
+    let fecha=req.query.fecha;
     Pelicula.idempresa=req.query.idempresa;
     Pelicula.idsucursal=req.query.idsucursal;
     await Pelicula.listar().then((response)=>{
@@ -116,7 +117,10 @@ const getPeliculaCartelera=(async(req,res)=>{
             pelicula.horarios=[];
             let HorarioPelicula=new HorarioPeliculaClass;
             HorarioPelicula.idpelicula=pelicula.idpelicula;
-            let respuesta=await HorarioPelicula.listar();
+            if (req.query.fecha!='') {
+                HorarioPelicula.FechaFiltro=req.query.fecha;   
+            }
+            let respuesta=await HorarioPelicula.listarFiltro();
             pelicula.horarios=respuesta;
             // peliculas.push(pelicula);
         });

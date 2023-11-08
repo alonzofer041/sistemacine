@@ -9,6 +9,8 @@ class HorarioPelicula{
         this.created_at='';
         this.updated_at='';
         this.deleted_at='';
+        this.FechaFiltro='';
+        this.HoraFiltro='';
     }
     async insertar(){
         let respuesta=await pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,fecha,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?)',[
@@ -44,6 +46,12 @@ class HorarioPelicula{
             this.idpelicula
         ]);
         return rows;
+    }
+    async listarFiltro(){
+        let sql='SELECT * FROM horariospelicula WHERE idpelicula=? AND deleted_at IS NULL AND fecha=?';
+        let arraydata=[this.idpelicula,this.deleted_at,this.FechaFiltro];
+        const [rows]=await pool.execute(sql,arraydata);
+        return rows
     }
     async listarSalasDisponibles(){
         let sql=`SELECT hp.idhorariopelicula,hp.idsala,s.nombre,s.numfilas FROM horariospelicula AS hp
