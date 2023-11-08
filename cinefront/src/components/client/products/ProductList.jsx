@@ -56,21 +56,31 @@ export const ProductList = ({
 	  }
 
 	return (
-		<div className='container-items'>
-			{ProductoList.map(Producto => (
-				<div className="item" key={Producto.idproducto}>
-					<figure>
-						<img src={url+Producto.imgproducto} alt={Producto.idproducto} />
-					</figure>
-				<div className='info-product'>
-					<h2>{Producto.nombre}</h2>
-					<p className='price'>${Producto.valor}.00 MXN</p>
-					<button onClick={() => onAddProduct(Producto)}>
-						Añadir al carrito
-					</button>
-				</div>
-				</div>
-			))}
+		<div>
+			<div className="titlescinema">
+				<p>Combos</p>
+			</div>
+			
+			<br /><br /><br /><br />
+			<div className="titlescinema">
+				<p>Productos</p>
+			</div>
+			<div className='container-items'>
+				{ProductoList.map(Producto => (
+					<div className="item" key={Producto.idproducto}>
+						<figure>
+							<img src={url+Producto.imgproducto} alt={Producto.idproducto} />
+						</figure>
+					<div className='info-product'>
+						<h2>{Producto.nombre}</h2>
+						<p className='price'>${Producto.valor}.00 MXN</p>
+						<button onClick={() => onAddProduct(Producto)}>
+							Añadir al carrito
+						</button>
+					</div>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };

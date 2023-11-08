@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo ,useState} from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Image } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
@@ -9,6 +9,7 @@ import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { MensajeAdvertencia } from "../../../../helpers/functions";
 
+const url=import.meta.env.VITE_ASSET_URL+'/empresas/';
 export default function ListComponent(){
     const navigate=useNavigate();
      // SWAL
@@ -132,7 +133,7 @@ export default function ListComponent(){
     }
     function Guardar(){
         if (Object.is(File,null)) {
-            MensajeAdvertencia("Debe Seleccionar una Imagen");
+            MensajeAdvertencia("Debe seleccionar una imagen");
             return false;
         }
         var obj={
@@ -157,7 +158,7 @@ export default function ListComponent(){
                 onClose();
             }).catch((err)=>{
                 setErrorValidacion(err.response.data.errors.errors);
-            });   
+            });
         }
         else{
             axios.post("/api/empresa/"+Empresa.idempresa,obj,{
@@ -191,6 +192,7 @@ export default function ListComponent(){
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
+                    <TableColumn>Imagen</TableColumn>
                     <TableColumn>Nombre Comercial</TableColumn>
                     <TableColumn>Razón Social</TableColumn>
                     <TableColumn>Dirección</TableColumn>
@@ -206,6 +208,7 @@ export default function ListComponent(){
                     {(item)=>(
                         <TableRow key={item.idempresa}>
                             <TableCell>{item.idempresa}</TableCell>
+                            <TableCell>{<Image width={200} height={200} src={url+item.imgempresa}></Image>}</TableCell>
                             <TableCell>{item.nombrecomercial}</TableCell>
                             <TableCell>{item.razonsocial}</TableCell>
                             <TableCell>{item.direccion}</TableCell>

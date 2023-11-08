@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
+import { MensajeAdvertencia } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 export default function ListComponent(){
@@ -18,6 +19,7 @@ export default function ListComponent(){
     const [swalProps, setSwalProps] = useState({});
     
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     const navigate=useNavigate();
     const [Pelicula,setPelicula]=useState({
@@ -91,6 +93,8 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setFile(null);
+        setErrorValidacion([]);
         setPelicula({...Pelicula,
             idpelicula:0,
             idpeliculacategoria:'',
@@ -134,14 +138,28 @@ export default function ListComponent(){
             duracion:PeliculaList[indexPelicula].duracion,
             productora:PeliculaList[indexPelicula].productora,
             distribuidora:PeliculaList[indexPelicula].distribuidora,
-            imgportada:PeliculaList[indexPelicula].imgportada,
-        });
+            imgportada:PeliculaList[indexPelicula].imgportada
+        }
+        );
         onOpen();
     }
     function Navegar(idpelicula,titulo){
         navigate('/peliculahorario',{state:{idpelicula:idpelicula,titulo:titulo}})
     }
     function Guardar(){
+        let mensajes=[];
+        if (Object.is(File,null)) {
+            mensajes.push("Debe seleccionar una imagen");
+        }
+        if (Pelicula.idpeliculacategoria=="") {
+            mensajes.push("Debe seleccionar una categoría");
+        }
+        if (mensajes.length>0){
+            mensajes.forEach((mensaje)=>{
+                MensajeAdvertencia(mensaje);
+            });
+            return false;
+        }
         var obj={
             idpelicula:Pelicula.idpelicula,
             idpeliculacategoria:Pelicula.idpeliculacategoria,
@@ -232,8 +250,23 @@ export default function ListComponent(){
             Size="xl"
             EventoGuardar={Guardar}
             Titulo={"Agregar Película"} 
-            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Pelicula={Pelicula} setPelicula={setPelicula} File={File} setFile={setFile}/>}></Modal>
+            isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
+            CuerpoFormulario={<FormComponent Pelicula={Pelicula} setPelicula={setPelicula} File={File} setFile={setFile} Errores={ErrorValidacion}/>}></Modal>
+
+            <SweetAlert2 {...swalProps}
+                onConfirm={()=>{
+                    axios.delete('/api/pelicula/'+Pelicula.idpelicula
+                    ).then((res)=>{
+                        Lista();
+                    });
+                }}
+                didClose={()=>{
+                    Limpiar();
+                    setSwalProps({
+                        show:false
+                    })
+                }}
+            ></SweetAlert2>
         </div>
     )  
 }

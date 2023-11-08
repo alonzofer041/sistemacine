@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Button,useDisclosure } from "@nextui-org/react";
+import { Navbar,useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import ModalComponent from '../../base/ModalComponent';
 import Pago from '../payment/PaymentComponent';
@@ -107,8 +107,6 @@ export const Header = ({
 
 	return (
 		<header>
-			<h1>Tienda</h1>
-
 			<div className='container-icon'>
 				<div
 					className='container-cart-icon'

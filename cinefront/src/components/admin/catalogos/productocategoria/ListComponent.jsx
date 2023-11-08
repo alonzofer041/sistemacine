@@ -7,7 +7,6 @@ import FormComponent from "./FormComponent";
 import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
-
 export default function ListComponent(){
      // SWAL
      const [swalProps, setSwalProps] = useState({});
@@ -30,6 +29,7 @@ export default function ListComponent(){
     });
     const [ProductoCategoriaList,setProductoCategoriaList]=useState([
     ]);
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     useEffect(()=>{
         Lista();
@@ -73,6 +73,7 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setErrorValidacion([]);
         setProductoCategoria({...ProductoCategoria,idproductocategoria:0,nombre:""});
     }
     function Eliminar(index){
@@ -102,12 +103,16 @@ export default function ListComponent(){
             axios.post("/api/productocategoria",obj).then((res)=>{
                 Lista();
                 onClose();
-            });   
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
         else{
             axios.post("/api/productocategoria/"+ProductoCategoria.idproductocategoria,obj).then((res)=>{
                 Lista();
                 onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
             });
         }
     }
@@ -155,7 +160,7 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={ProductoCategoria.idproductocategoria==0 ? "Agregar Tipo de Producto" : "Editar Tipo de Producto"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent ProductoCategoria={ProductoCategoria} setProductoCategoria={setProductoCategoria}/>}></Modal>
+            CuerpoFormulario={<FormComponent ProductoCategoria={ProductoCategoria} setProductoCategoria={setProductoCategoria} Errores={ErrorValidacion}/>}></Modal>
 
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

@@ -1,3 +1,4 @@
+const jwt=require("jsonwebtoken");
 const validator = require("../helpers/validate");
 const jwt=require("jsonwebtoken");
 let ProductoClass=require("../models/Producto");
@@ -21,20 +22,28 @@ const uploads=multer({storage:storage});
 const addProducto=(async (req,res)=>{
     const ValidationRule={
         "nombre":"required|string",
-        "valor":"required|numeric",
-        "cantidad":"required|numeric"
+        "valor":"required|numeric|min:1",
+        "cantidad":"required|numeric|min:1",
+        "nombrecomercial":"required|string",
+        "idproductocategoria":"required|string"
+    };
+    const Messages={
+        required:"El campo es requerido",
+        string:"Que vergas es un string",
+        numeric:"El valor debe ser numérico",
+        min:"El valor no puede ser 0"
     }
-    let estatus=await validator(req.body,ValidationRule,{},(err,status)=>{
+    let estatus=false;
+    await validator(req.body,ValidationRule,Messages,(err,status)=>{
         if (!status) {
             res.status(412).send({errors:err});
         }
-        return status;
-    });
+        status=status;
+    })
     if (estatus) {
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
         let Producto=new ProductoClass;
-        // req.body=JSON.stringify(req.body);
-        // console.log(req.body);
-        // SUBIDA DE ARCHIVO
         uploads.single('files');
         // SUBIDA EN BD
         Producto.idproductocategoria=req.body.idproductocategoria;
@@ -48,7 +57,7 @@ const addProducto=(async (req,res)=>{
         Producto.created_at=new Date();
         
         let respuesta=await Producto.insertar(res);
-        res.json(respuesta);
+        res.status(200).send({respuesta:respuesta});
     }
     
 })
@@ -91,7 +100,7 @@ const updateProducto=(async(req,res)=>{
     Producto.updated_at=new Date();
     Producto.idproducto=req.params.id;
     let respuesta=await Producto.actualizar();
-    res.json(respuesta);
+    res.status(200).send({respuesta:respuesta});
 })
 
 //@desc borrar producto
