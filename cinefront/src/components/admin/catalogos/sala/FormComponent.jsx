@@ -14,16 +14,20 @@ export default function FormComponent({Sala,setSala,Errores}){
     return (
         <div className="container">
             <div className="mb-2">
-                <Input name="nombre" label="Nombre de la sala" value={Sala.nombre} onChange={handleNombre}></Input>
+                <Input isRequired name="nombre" label="Nombre de la sala" value={Sala.nombre} onChange={handleNombre}></Input>
                 {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label> : null}
             </div>
             <div className="mb-2">
-                <Input name="ubicacion" label="Ubicación" value={Sala.ubicacion} onChange={handleUbicacion}></Input>
+                <Input isRequired name="ubicacion" label="Ubicación" value={Sala.ubicacion} onChange={handleUbicacion}></Input>
                 {!Object.is(Errores.ubicacion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.ubicacion[0]}</label> : null}
             </div>
-            <div>
-                <Input name="numfilas" label="Número de Filas" value={Sala.numfilas} onChange={handleNumFilas}></Input>
+            <div className="mb-12">
+                <Input isRequired name="numfilas" label="Número de Filas" value={Sala.numfilas} onChange={handleNumFilas}></Input>
                 {!Object.is(Errores.numfilas,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.numfilas[0]}</label> : null}
+            </div>
+
+            <div>
+                <br /><p className="asterisco">* Campos obligatorios</p>
             </div>
         </div>
         

@@ -63,70 +63,77 @@ export default function Login() {
         })
     }
     return (
-        <div className="center">
-            <div className="flex w-full flex-col">
-              <Tabs aria-label="Options">
+        <div className="tabs">
+            <Tabs>
                 <Tab title="Iniciar sesión">
-                  <Card>
-                    <CardBody>
-                        <Card className="max-w-[400px]">
-                            <CardHeader className="flex gap-3">
-                                <BiLogIn size={50}></BiLogIn>
-                                <div className="flex flex-col">
-                                    <p className="text-md">Iniciar sesión</p>
-                                </div>
-                            </CardHeader>
+                    <Card className="cards">
+                        <CardBody>
+                            <Card>
+                                <CardHeader>
+                                    <BiLogIn size={50}></BiLogIn>
+                                    <div>
+                                        <p>Iniciar sesión</p>
+                                    </div>
+                                </CardHeader>
 
-                            <Divider/>
+                                <Divider/>
 
-                            <CardBody>
-                            <div>
-                                <Input type="text" label="Nombre de usuario" placeholder="Ingresa tu nombre de usuario" value={Usuario.correo} onChange={handleCorreo}/>
-                            </div>
-                            </CardBody>
+                                <CardBody>
+                                    <div>
+                                        <Input type="text" label="Correo electrónico" placeholder="Ingresa tu correo electrónico" value={Usuario.correo} onChange={handleCorreo}/>
+                                    </div>
+                                </CardBody>
 
-                            <Divider/>
+                                <Divider/>
 
-                            <CardBody>
-                            <div>
-                                <Input type="password" label="Contraseña" placeholder="Ingresa tu contraseña" value={Usuario.password} onChange={handlePassword}/>
-                            </div>
-                            </CardBody>
+                                <CardBody>
+                                    <div>
+                                        <Input type="password" label="Contraseña" placeholder="Ingresa tu contraseña" value={Usuario.password} onChange={handlePassword}/>
+                                    </div>
+                                </CardBody>
 
-                            <Divider/>
+                                <Divider/>
 
-                            <CardFooter>
-                                <Button className="btn" onClick={Login}>
-                                    Iniciar sesión.
-                                </Button>  
-                            </CardFooter>
-                        </Card>
-                    </CardBody>
-                  </Card>  
-                </Tab>
-                <Tab title="No tengo cuenta">
-                    <Card>
-                    <CardBody>
-                        <Card className="max-w-[400px]">
-                    <CardBody>
-                        <Register UsuarioRegistro={UsuarioRegistro} setUsuarioRegistro={setUsuarioRegistro}></Register>
-                        {/* <Image
-                            src="https://cur.glitter-graphics.net/pub/3719/3719211j01pncxkem.gif"
-                            width={300}
-                        />  */}
-                    </CardBody>
-                    <Divider/>
-                    <CardFooter>
-                        <Button className="btn" onClick={register}>
-                            Crear una cuenta.
-                        </Button>
-                    </CardFooter>
-                    </Card>
-                    </CardBody>
+                                <CardFooter>
+                                    <Button className="btn" onClick={Login}>
+                                        Iniciar sesión
+                                    </Button>  
+                                </CardFooter>
+                            </Card>
+                        </CardBody>
                     </Card>  
                 </Tab>
-              </Tabs>
-            </div>  
-        </div>
-  );
+                <Tab title="No tengo cuenta">
+                    <Card className="cards">
+                        <CardBody>
+                            <Card>
+                                <CardHeader>
+                                    <BiLogIn size={50}></BiLogIn>
+                                    <div>
+                                        <p>Registrarse</p>
+                                    </div>
+                                </CardHeader>
+
+                                <Divider/>
+
+                                <Register UsuarioRegistro={UsuarioRegistro} setUsuarioRegistro={setUsuarioRegistro}></Register>
+                                {/* <Image
+                                    src="https://cur.glitter-graphics.net/pub/3719/3719211j01pncxkem.gif"
+                                    width={300}
+                                />  */}
+                    
+                                <Divider/>
+
+                                <CardFooter>
+                                    <Button className="btn" onClick={register}>
+                                        Crear una cuenta
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </CardBody>
+                    </Card>  
+                </Tab>
+            </Tabs>
+        </div>  
+    );
 }

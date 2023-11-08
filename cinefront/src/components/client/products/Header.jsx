@@ -1,11 +1,13 @@
 import { useContext, useState } from 'react';
-import { Button,useDisclosure } from "@nextui-org/react";
+import { Navbar,useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import ModalComponent from '../../base/ModalComponent';
 import Pago from '../payment/PaymentComponent';
 import axios from "axios";
 import { EmpresaContext } from '../../../provider/EmpresaProvider';
 import { SucursalContext } from '../../../provider/SucursalProvider';
+import { MensajeExito } from "../../../../src/helpers/functions";
+
 
 export const Header = ({
 	allProducts,
@@ -15,13 +17,26 @@ export const Header = ({
 	setCountProducts,
 	setTotal,
 }) => {
-	const {isOpen,onOpen,onOpenChange}=useDisclosure();
+	const {isOpen,onOpen,onOpenChange, onClose}=useDisclosure();
 	const [active, setActive] = useState(false);
 	const [OrdenProductos,setOrdenProductos]=useState({
-		folio:'',
-		nombrecliente:'',
-		correocliente:''
+		idordenproducto:0,
+		folio:"",
+		nombrecliente:"",
+		correocliente:"",
+
 	})
+
+	const [ErrorValidacion,setErrorValidacion]=useState([]);
+	
+	const [DatosCorreo,setDatosCorreo]=useState({
+        correocliente:'',
+        nombrecliente:'',
+		importe:0,
+		iva:0
+    })
+
+
 	const {Empresa,setEmpresa}=useContext(EmpresaContext);
 	const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
 	const navigate=useNavigate();
@@ -46,8 +61,11 @@ export const Header = ({
 		// navigate ('/cine/pagarproducto', );
 		onOpen();
 	};
+
+
 	const GuardarOrden=()=>{
 		let obj={
+			idordenproducto:OrdenProductos.idordenproducto,
 			idempresa:Empresa.idempresa,
 			idsucursal:IdSucursal,
 			nombrecliente:OrdenProductos.nombrecliente,
@@ -55,18 +73,40 @@ export const Header = ({
 			correocliente:OrdenProductos.correocliente,
 			ordenproductosdetalle:allProducts
 		}
+
 		axios.post("/api/ordenproducto",obj
 		).then((res)=>{
 			alert("Realizado con éxito");
-		}).catch((err)=>{
-			alert("Error");
-		})
+			onClose();
+        }).catch((err)=>{
+            setErrorValidacion(err.response.data.errors.errors);
+        });
+		
+		
+	}
+
+	function EnviarCorreoCompra(){
+        let obj={
+            correocliente:DatosCorreo.correocliente,
+            nombrecliente:DatosCorreo.nombrecliente,
+			importe:total,
+        }
+        axios.post("/api/pagoproductoemail",obj
+        ).then((res)=>{
+            MensajeExito("Correo Enviado");
+        }).catch((err)=>{
+            alert("Ingresa tus datos");
+			setErrorValidacion(err.response.data.errors.errors);
+        })
+    }
+
+	const doBoth = () => {
+		GuardarOrden();
+		EnviarCorreoCompra();
 	}
 
 	return (
 		<header>
-			<h1>Tienda</h1>
-
 			<div className='container-icon'>
 				<div
 					className='container-cart-icon'
@@ -152,10 +192,10 @@ export const Header = ({
 
 			<ModalComponent
 				Titulo={"Pagar"}
-				isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
+				isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
 				Size={"xl"}
-				EventoGuardar={GuardarOrden}
-				CuerpoFormulario={<Pago Orden={OrdenProductos} setOrden={setOrdenProductos}/>}
+				EventoGuardar={doBoth}
+				CuerpoFormulario={<Pago Orden={OrdenProductos} setOrden={setOrdenProductos} Errores={ErrorValidacion} DatosCorreo={DatosCorreo} setDatosCorreo={setDatosCorreo}/>}
 			></ModalComponent>
 		</header>
 	);

@@ -1,8 +1,11 @@
 import { Input, Select, SelectItem, Spacer } from "@nextui-org/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { ImagePreview } from "../../../../helpers/functions";
+import { FaUpload } from "react-icons/fa";
+const url=import.meta.env.VITE_ASSET_URL+'/productos/';
 
-export default function FormComponent({Producto,setProducto, File, setFile}){
+export default function FormComponent({Producto,setProducto, File, setFile, Errores}){
     const [ProveedorList,setProveedorList]=useState([]);
     const [ProductoCategoriaList,setProductoCategoriaList]=useState([]);
     useEffect(()=>{
@@ -25,9 +28,10 @@ export default function FormComponent({Producto,setProducto, File, setFile}){
         setProducto({...Producto,idproductocategoria:e.target.value});
     }
     function handleFile(e){
-        let value=e.target.files;
-        console.log(value[0]);
-        setFile(value[0]);
+        if(ImagePreview(e)){
+            let value=e.target.files;
+            setFile(value[0]);
+        }
     }
     function ListaProveedor(){
         axios.get("/api/proveedor"
@@ -46,32 +50,53 @@ export default function FormComponent({Producto,setProducto, File, setFile}){
 
     return (
         <div className="container" >
-            <div className="flex w-full flex-wrap gap-2">
-                <Input name="nombre"  label="Nombre Producto"  value={Producto.nombre} onChange={handleNombre}></Input>
-                <div className="w-full flex gap-2">
-                    <Select selectedKeys={[Producto.idproveedor]} onChange={handleIdProveedor} label="Seleccione un Proveedor">
-                        {ProveedorList.map((Proveedor)=>(
-                            <SelectItem key={Proveedor.idproveedor} value={Proveedor.idproveedor}>
-                                {Proveedor.nombrecomercial}
-                            </SelectItem>
-                        ))}
-                    </Select>
-                    <Select onChange={handleIdProductoCategoria} label="Seleccione un Tipo de Producto">
-                        {ProductoCategoriaList.map((ProductoCategoria)=>(
-                            <SelectItem key={ProductoCategoria.idproductocategoria} value={ProductoCategoria.idproductocategoria}>
-                                {ProductoCategoria.nombre}
-                            </SelectItem>
-                        ))}
-                    </Select>
+            <div className="grid grid-cols-12 mb-3">
+                <div className="previaimagen">
+                    <div className="contenedorinputimagen">
+                        <input id="file" type="file" name="files"  onChange={handleFile}/><input/>
+                        <label htmlFor="file">
+                            <FaUpload className="iconoupload"/>
+                        </label>
+                    </div>
+                    <div className="contenedorimagenprevia mb-2">
+                        <div id="ImagePreview" style={{backgroundImage:"url('"+url+Producto.imgproducto+"')"}}></div>
+                    </div>
                 </div>
-                <div className="w-full flex gap-2">
-                    <Input type="number" name="valor"  label="Precio"  value={Producto.valor} onChange={handlePrecio}></Input>
-                    <Input name="cantidad"  label="Cantidad" type="number" value={Producto.cantidad} onChange={handleCantidad}></Input>
-                </div> 
-                <div>
-                    <input type="file" name="files"  onChange={handleFile}/>
-                </div> 
-            </div>  
+                <div className="col-span-8 mb-2">
+                    <Input name="nombre"  label="Nombre Producto"  value={Producto.nombre} onChange={handleNombre}></Input>
+                    {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label>:null}
+                </div>
+                <div className="grid grid-cols-2 mb-2">
+                    <div>
+                        <Select selectedKeys={[Producto.idproveedor]} onChange={handleIdProveedor} label="Seleccione un Proveedor">
+                            {ProveedorList.map((Proveedor)=>(
+                                <SelectItem key={Proveedor.idproveedor} value={Proveedor.idproveedor}>
+                                    {Proveedor.nombrecomercial}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    </div>
+                    <div className="ml-2">
+                        <Select selectedKeys={[Producto.idproductocategoria]} onChange={handleIdProductoCategoria} label="Seleccione un tipo de producto">
+                            {ProductoCategoriaList.map((ProductoCategoria)=>(
+                                <SelectItem key={ProductoCategoria.idproductocategoria} value={ProductoCategoria.idproductocategoria}>
+                                    {ProductoCategoria.nombre}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 mb-2">
+                    <div>
+                        <Input name="valor" label="Precio"  value={Producto.valor} onChange={handlePrecio}></Input>
+                        {!Object.is(Errores.valor,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.valor[0]}</label>:null}
+                    </div>
+                    <div className="ml-2">
+                        <Input name="cantidad"  label="Cantidad" value={Producto.cantidad} onChange={handleCantidad}></Input>
+                        {!Object.is(Errores.cantidad,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.cantidad[0]}</label>:null}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
