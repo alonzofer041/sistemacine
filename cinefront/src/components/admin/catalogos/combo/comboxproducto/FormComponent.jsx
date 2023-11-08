@@ -1,7 +1,7 @@
 import React,{ useEffect, useState } from "react";
 import { Input, Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
-export default function FormComponent({ComboDetalle,setComboDetalle}){
+export default function FormComponent({ComboDetalle,setComboDetalle, Errores}){
     const [ListaProductos,setListaProductos]=useState([
     ]);
     useEffect(()=>{
@@ -26,21 +26,27 @@ export default function FormComponent({ComboDetalle,setComboDetalle}){
     return(
         <div>
             <div className="grid-cols-1 mb-3">
-                <Select label="Selecciona un Producto" onChange={changeProducto}>
+                <Select isRequired label="Selecciona un Producto" onChange={changeProducto}>
                     {ListaProductos.map((Producto)=>(
                         <SelectItem key={Producto.idproducto} value={Producto.idproducto}>
                             {Producto.nombre}
                         </SelectItem>
                     ))}
-                    {/* <SelectItem key="0" value={0}>Palomitas</SelectItem>
-                    <SelectItem key="1" value={1}>Perros</SelectItem>
-                    <SelectItem key="2" value={2}>Refresco</SelectItem> */}
                 </Select>
             </div>
             <div className="grid grid-cols-3 gap-3">
-                <Input name="nombre" label="Nombre" value={ComboDetalle.nombre}></Input>
-                <Input name="valor" label="Valor" value={ComboDetalle.valor}></Input>
-                <Input name="cantidad" label="Cantidad" value={ComboDetalle.cantidad} onChange={handleCantidad}></Input>
+                <div>
+                    <Input name="nombre" label="Nombre" value={ComboDetalle.nombre}></Input>
+                    {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label> : null}
+                </div>
+                <div>
+                    <Input name="valor" label="Valor" value={ComboDetalle.valor}></Input>
+                    {!Object.is(Errores.valor,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.valor[0]}</label> : null}
+                </div>
+                <div>
+                    <Input name="cantidad" label="Cantidad" value={ComboDetalle.cantidad} onChange={handleCantidad}></Input>
+                    {!Object.is(Errores.cantidad,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.cantidad[0]}</label> : null}
+                </div>
             </div>
         </div>
     )

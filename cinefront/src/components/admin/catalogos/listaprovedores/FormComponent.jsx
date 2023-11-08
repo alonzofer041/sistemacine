@@ -1,7 +1,7 @@
 import { Input, Spacer } from "@nextui-org/react";
 import React, { useState } from "react";
 
-export default function FormComponent({Proveedor,setProveedor}){
+export default function FormComponent({Proveedor,setProveedor, Errores}){
     function handleNombre(e){
         setProveedor({...Proveedor,nombrecomercial:e.target.value});
     }
@@ -28,29 +28,46 @@ export default function FormComponent({Proveedor,setProveedor}){
     }
     return (
         <div className="container" >
-            {/* <div className="grid grid-cols-1">
-                <Input className="mb-3" name="nombrecomercial"  label="Nombre"  value={Proveedor.nombrecomercial} onChange={handleNombre}></Input>
-                <Input className="mb-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
-                <Input className="mb-3" name="email" label="Email" value={Proveedor.email} onChange={handleEmail}></Input>
-                <Input className="mb-3" name="contacto" label="Contacto" value={Proveedor.contacto} onChange={handleContacto}></Input>
-                <Input className="mb-3" name="telefono" label="Telefono" value={Proveedor.telefono} onChange={handleTelefono}></Input>
-                <Input className="mb-3" name="direccion" label="Direccion" value={Proveedor.direccion} onChange={handleDireccion}></Input>
-                <Input className="mb-3" name="estado" label="Estado" value={Proveedor.estado} onChange={handleEstado}></Input>
-                <Input name="ciudad" label="Ciudad" value={Proveedor.ciudad} onChange={handleCiudad}></Input>
-            </div>     */}
-            <div className="grid grid-cols-2">
-                <Input className="mb-3" name="nombrecomercial"  label="Nombre"  value={Proveedor.nombrecomercial} onChange={handleNombre}></Input>
-                <Input className="ml-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
+            <div className="grid grid-cols-1 mb-2">
+                <Input isRequired className="mb-3" name="nombrecomercial"  label="Nombre"  value={Proveedor.nombrecomercial} onChange={handleNombre}></Input>
+                {!Object.is(Errores.nombrecomercial,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombrecomercial[0]}</label> : null}
+            </div>
+            <div className="grid grid-cols-1 mb-2">
+                <Input isRequired className="ml-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
+                {!Object.is(Errores.razonsocial,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.razonsocial[0]}</label> : null}
             </div>
             <div className="grid grid-cols-3 mb-3">
-                <Input name="email" label="Email" value={Proveedor.email} onChange={handleEmail}></Input>
-                <Input className="ml-2" name="contacto" label="Contacto" value={Proveedor.contacto} onChange={handleContacto}></Input>
-                <Input className="ml-4" name="telefono" label="Telefono" value={Proveedor.telefono} onChange={handleTelefono}></Input>
+                <div className="mb-2">
+                    <Input isRequired name="email" label="Email" value={Proveedor.email} onChange={handleEmail}></Input>
+                    {!Object.is(Errores.email,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.email[0]}</label> : null}
+                </div>
+                <div className="mb-2 ml-2">
+                    <Input isRequired name="contacto" label="Contacto" value={Proveedor.contacto} onChange={handleContacto}></Input>
+                    {!Object.is(Errores.contacto,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.contacto[0]}</label> : null}
+                </div>
+                <div className="mb-2 ml-2">
+                    <Input isRequired name="telefono" label="Telefono" value={Proveedor.telefono} onChange={handleTelefono}></Input>
+                    {!Object.is(Errores.telefono,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.telefono[0]}</label> : null}
+                </div>
             </div>
-            <div className="grid grid-cols-3">
-                <Input name="direccion" label="Direccion" value={Proveedor.direccion} onChange={handleDireccion}></Input>
-                <Input className="ml-2" name="estado" label="Estado" value={Proveedor.estado} onChange={handleEstado}></Input>
-                <Input className="ml-4" name="ciudad" label="Ciudad" value={Proveedor.ciudad} onChange={handleCiudad}></Input>
+            <div className="grid grid-cols-3 mb-3">
+                <div className="mb-2">
+                    <Input isRequired name="direccion" label="Direccion" value={Proveedor.direccion} onChange={handleDireccion}></Input>
+                    {!Object.is(Errores.direccion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.direccion[0]}</label> : null}
+                </div>
+                <div className="mb-2 ml-2">
+                    <Input isRequired className="ml-2" name="estado" label="Estado" value={Proveedor.estado} onChange={handleEstado}></Input>
+                    {!Object.is(Errores.estado,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.estado[0]}</label> : null}
+                </div>
+                <div className="mb-2 ml-2">
+                    <Input isRequired className="ml-4" name="ciudad" label="Ciudad" value={Proveedor.ciudad} onChange={handleCiudad}></Input>
+                    {!Object.is(Errores.ciudad,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.ciudad[0]}</label> : null}
+                </div>
+            </div>
+
+            <br />
+            <div>
+                <p className="asterisco">* Campos obligatorios</p>
             </div>
         </div>
     )

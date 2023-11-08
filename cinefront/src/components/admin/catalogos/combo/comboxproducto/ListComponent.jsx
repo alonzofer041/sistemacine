@@ -9,6 +9,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import SweetAlert2 from "react-sweetalert2";
 const url=import.meta.env.VITE_ASSET_URL+'/combosdetalle/';
+import { MensajeAdvertencia } from "../../../../../helpers/functions";
 
 export default function ListComponent(){
     // SWAL
@@ -39,6 +40,7 @@ export default function ListComponent(){
         valor:0
     })
     const [ComboDetalleList,setComboDetalleList]=useState([]);
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     const [loading, setLoading] = useState(true);
     
@@ -83,6 +85,7 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setErrorValidacion([]);
         setComboDetalle({...ComboDetalle,idcombodetalle:0,idproducto:0,cantidad:0,valor:0,nombre:''});
     }
     function Eliminar(index){
@@ -112,6 +115,17 @@ export default function ListComponent(){
     }
     const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
     function Guardar(){
+        let mensajes=[];
+        if (ComboDetalle.idproducto==0) {
+            mensajes.push("Debe seleccionar un producto");
+        }
+        if (mensajes.length>0){
+            mensajes.forEach((mensaje)=>{
+                MensajeAdvertencia(mensaje);
+                
+            });
+            return false;
+        }
         var obj={
             idcombodetalle:ComboDetalle.idcombodetalle,
             idcombo:idcombo,
@@ -123,6 +137,8 @@ export default function ListComponent(){
         ).then((res)=>{
             Lista();
             onClose();
+        }).catch((err)=>{
+            setErrorValidacion(err.response.data.errors.errors);
         });
     }
     return(
@@ -175,7 +191,7 @@ export default function ListComponent(){
                 Titulo={ComboDetalle.idcombodetalle==0 ? "Agregar Producto a "+nombre : "Editar Producto en "+nombre} 
                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                 CuerpoFormulario={
-                    <FormComponent ComboDetalle={ComboDetalle} setComboDetalle={setComboDetalle}></FormComponent>
+                    <FormComponent ComboDetalle={ComboDetalle} setComboDetalle={setComboDetalle} Errores={ErrorValidacion}></FormComponent>
                 }
             ></Modal>
 
