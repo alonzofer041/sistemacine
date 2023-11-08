@@ -14,7 +14,7 @@ import { SucursalContext } from "../../../provider/SucursalProvider";
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
 export default function GetTickets() {
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const location=useLocation();
     const idpelicula=location.state?.idpelicula;
     const titulopelicula=location.state?.titulo;
@@ -36,6 +36,14 @@ export default function GetTickets() {
     const [Nombre,setNombre]=useState("");
     const [Apellido,setApellido]=useState("");
     const [Correo,setCorreo]=useState("");
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
+    
+    const [DatosCorreo,setDatosCorreo]=useState({
+        correocliente:'',
+        nombrecliente:'',
+        cantidadentradas:0,
+        preciototal:0,
+    })
 
     useEffect(()=>{
         if (IdSala=="") {
@@ -87,12 +95,15 @@ export default function GetTickets() {
     }
     function handleNombre(e){
         setNombre(e.target.value)
+        setDatosCorreo(e.target.value)
     }
     function handleApellido(e){
         setApellido(e.target.value)
+        setDatosCorreo(e.target.value)
     }
     function handleCorreo(e){
         setCorreo(e.target.value)
+        setDatosCorreo(e.target.value)
     }
     async function ListaSalasDisponibles(){
         await axios.get("/api/salasdisponibles/"+idpelicula
@@ -185,8 +196,30 @@ export default function GetTickets() {
             }
         }).then((res)=>{
             MensajeExito("Se ha guardado la orden con éxito");
+        }).catch((err)=>{
+            setErrorValidacion(err.response.data.errors.errors);
+        });
+    }
+    async function EnviarCorreoCompra(){
+        let obj={
+            nombrecliente:Nombre + ' ' + Apellido,
+            correocliente:Correo,
+            cantidadentradas:NumEntradasSeleccionadas,
+            preciototal:NumEntradasSeleccionadas*30
+        }
+        axios.post("/api/pagoentradaemail",obj
+        ).then((res)=>{
+            MensajeExito("Correo Enviado");
+        }).catch((err)=>{
+            alert("Algo fallo");
+            setErrorValidacion(err.response.data.errors.errors);
         })
     }
+
+	const doBoth = () => {
+		GuardarOrden();
+		EnviarCorreoCompra();
+	}
     return (
         <div className="center2">
             <div className="">
@@ -331,7 +364,7 @@ export default function GetTickets() {
                             
                         <CardBody>
                         <div>
-                            <Input onChange={handleNombre} value={Nombre} isRequired type="text" label="Nombre" placeholder="Ingresa tu nombre" />
+                            <Input isRequired type="text" label="Nombre" placeholder="Ingresa tu nombre" />
                         </div>
                         </CardBody>
                             
@@ -339,7 +372,7 @@ export default function GetTickets() {
 
                         <CardBody>
                         <div>
-                            <Input onChange={handleApellido} value={Apellido} isRequired type="text" label="Apellidos" placeholder="Ingresa tus apellidos" />
+                            <Input  isRequired type="text" label="Apellidos" placeholder="Ingresa tus apellidos" />
                         </div>
                         </CardBody>
                             
@@ -347,7 +380,7 @@ export default function GetTickets() {
 
                         <CardBody>
                         <div>
-                            <Input onChange={handleCorreo} value={Correo} isRequired type="email" label="Correo electrónico" placeholder="Ingresa tu correo" />
+                            <Input  isRequired type="email" label="Correo electrónico" placeholder="Ingresa tu correo" />
                         </div>
                         </CardBody>
                             
@@ -385,8 +418,8 @@ export default function GetTickets() {
                     <Divider/>
                     <CardFooter>
                         <Button onClick={onOpen} className="btn">Pagar</Button>
-                        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                                <ModalContent>
+                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} >
+                                <ModalContent >
                                 {(onClose) => (
                                     <>
                                     <ModalHeader className="flex flex-col gap-1">Datos de Pago</ModalHeader>
@@ -394,13 +427,23 @@ export default function GetTickets() {
                                         <Card>
                                             <CardBody>
                                             <div>
-                                                <Input isRequired type="text" label="Nombre"/>
+                                                <Input  onChange={handleNombre} value={Nombre} isRequired type="text" label="Nombre"/>
+                                                {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
                                             </div>
                                             </CardBody>
                                             <Divider/>
                                             <CardBody>
                                             <div>
-                                                <Input isRequired type="text" label="Apellidos"/>
+                                                <Input onChange={handleApellido} value={Apellido} isRequired type="text" label="Apellidos"/>
+                                                {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
+                                            </div>
+                                            </CardBody>
+                                            <Divider/>
+                                            <Divider/>
+                                            <CardBody>
+                                            <div>
+                                                <Input onChange={handleCorreo} value={Correo} isRequired type="text" label="Correo"/>
+                                                {!Object.is(ErrorValidacion.correocliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.correocliente[0]}</label> : null}
                                             </div>
                                             </CardBody>
                                             <Divider/>
@@ -425,7 +468,7 @@ export default function GetTickets() {
                                         </Card>
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button className="btn-modal" color="primary" onClick={GuardarOrden}>Guardar Orden</Button>
+                                        <Button className="btn-modal" color="primary" onClick={doBoth}>Guardar Orden</Button>
                                     </ModalFooter>
                                     </>
                                 )}

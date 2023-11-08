@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .textofondo{
+            color: #FFF;
+        }
+        .fondo{
+            background-color: black;
+            width: 100%;
+            height: 60px;
+        }
+        .botonfalso{
+            background-color: #1c87c9;
+            border: none;
+            color: white;
+            padding: 20px 34px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email de compra de entrada</title>
+</head>
+<body>
+    <div class="fondo">
+        <h1 class="textofondo">Cineflash</h1>
+    </div>
+    <div>
+        <h3>Estimado: {{nombrecliente}}</h3>
+        <p>Su compra se ha realizado con exito</p>
+    </div>
+    <div>
+        <p>datos de tu compra</p>
+        <p>Precio: <b>{{pagototal}}.00</b></p>
+        <p>Tickets: <b>{{{NumEntradasSeleccionadas}}}</b></p>
+        <p></p>  
+    </div>
+    
+</body>
+</html>
