@@ -59,8 +59,8 @@ export default function Inicio() {
         setPeliculasEstreno(data);
       })
   }
-  function IrA(){
-    navigate("/cine/peliculas/entradas")
+  function IrA(idpelicula,titulo,imgportada){
+    navigate("/cine/peliculas/entradas",{state:{idpelicula:idpelicula,titulo:titulo,imgportada:imgportada,fecha:new Date()}})
   }
   function IrAProductos(){
     navigate("/cine/productosventa")
@@ -71,15 +71,15 @@ export default function Inicio() {
         <Carousel dynamicHeight={true} showArrows={true} showThumbs={false}>
           {(BannerList.map((Banner)=>(
               <div key={Banner.idbanner}>
-                <img src={url+Banner.imgbanner}/>
+                <img width="100px" src={url+Banner.imgbanner}/>
               </div>
           )))}
         </Carousel>
       </div>
       <div className="grid grid-cols-1">
-        <h1 className="text-center">Ultimos Estrenos</h1>
+        <h1 className="text-center">Para Ver Hoy</h1>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 ml-4 mr-4">
       {PeliculasEstreno.map((Pelicula)=>(
           <div key={Pelicula.idpelicula} className="mb-2">
             <Card style={{width:"80%"}}>
@@ -89,6 +89,7 @@ export default function Inicio() {
               <Divider/>
               <CardBody>
                 <h1 className="text-center">{Pelicula.titulo}</h1>
+                <Button onClick={()=>{IrA(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}} className="mt-4 mb-4" color="default" size="sl" radius="sm" style={{height:"40px"}}>Conseguir Entradas</Button>
               </CardBody>
             </Card>
            
