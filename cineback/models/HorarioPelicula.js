@@ -48,25 +48,31 @@ class HorarioPelicula{
         return rows;
     }
     async listarFiltro(){
-        let sql='SELECT * FROM horariospelicula WHERE idpelicula=? AND deleted_at IS NULL AND fecha=?';
-        let arraydata=[this.idpelicula,this.deleted_at,this.FechaFiltro];
+        let sql='SELECT * FROM horariospelicula WHERE idpelicula=? AND deleted_at IS NULL';
+        let arraydata=[this.idpelicula];
+        if (this.FechaFiltro!='') {
+            sql+=' AND fecha=?';
+            arraydata.push(this.FechaFiltro);
+        }
         const [rows]=await pool.execute(sql,arraydata);
         return rows
     }
     async listarSalasDisponibles(){
         let sql=`SELECT hp.idhorariopelicula,hp.idsala,s.nombre,s.numfilas FROM horariospelicula AS hp
         JOIN salas AS s ON hp.idsala=s.idsala
-        WHERE hp.idpelicula=? AND hp.deleted_at IS NULL GROUP BY hp.idsala`
+        WHERE hp.idpelicula=? AND hp.deleted_at IS NULL AND hp.fecha=? GROUP BY hp.idsala`
         const [rows]=await pool.execute(sql,[
-            this.idpelicula
+            this.idpelicula,
+            this.fecha
         ]);
         return rows;
     }
     
     async listarHorariosxSala(){
-        const [rows]=await pool.query('SELECT * FROM horariospelicula WHERE idsala=? AND idpelicula=? AND deleted_at IS NULL',[
+        const [rows]=await pool.query('SELECT * FROM horariospelicula WHERE idsala=? AND idpelicula=? AND deleted_at IS NULL AND fecha=?',[
             this.idsala,
-            this.idpelicula
+            this.idpelicula,
+            this.fecha
         ])
         return rows;
     }

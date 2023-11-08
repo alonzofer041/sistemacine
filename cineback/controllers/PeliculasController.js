@@ -117,9 +117,7 @@ const getPeliculaCartelera=(async(req,res)=>{
             pelicula.horarios=[];
             let HorarioPelicula=new HorarioPeliculaClass;
             HorarioPelicula.idpelicula=pelicula.idpelicula;
-            if (req.query.fecha!='') {
-                HorarioPelicula.FechaFiltro=req.query.fecha;   
-            }
+            HorarioPelicula.FechaFiltro=fecha;
             let respuesta=await HorarioPelicula.listarFiltro();
             pelicula.horarios=respuesta;
             // peliculas.push(pelicula);

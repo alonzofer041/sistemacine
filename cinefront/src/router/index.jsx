@@ -43,6 +43,10 @@ const Routes=()=>{
       element:<Login/>
     },
     {
+      path:"/registro/:idempresa/:idsucursal",
+      element:<Register/>
+    },
+    {
       element:<NavBarComponent/>,
       children:[
         {

@@ -55,7 +55,7 @@ export default function CarteleraComponent(){
     }
 
     function IrAComprarEntrada(idpelicula,titulo,imgportada){
-        navigate("/cine/peliculas/entradas",{state:{idpelicula:idpelicula,titulo:titulo,imgportada:imgportada}});
+        navigate("/cine/peliculas/entradas",{state:{idpelicula:idpelicula,titulo:titulo,imgportada:imgportada,fecha:Fecha}});
     }
     function TransformarFecha(date){
         setFecha(date);
@@ -75,7 +75,7 @@ export default function CarteleraComponent(){
                         <h2>Fecha</h2>
                         <DatePicker selected={Fecha} onChange={(date) => TransformarFecha(date)} customInput={<Input label="Selecciona una Fecha" className="max-w-xs"></Input>}></DatePicker>
                     </div>
-                    <div>
+                    {/* <div>
                         <h2>Hora</h2>
                         <DatePicker
                             selected={Fecha}
@@ -87,7 +87,7 @@ export default function CarteleraComponent(){
                             showTimeInput
                             customInput={<Input label="Selecciona una Hora" className="max-w-xs"></Input>}
                             />
-                    </div>
+                    </div> */}
                 </div>
                 <div className="col-span-8">
                     {Peliculas.map((Pelicula)=>(
@@ -108,10 +108,10 @@ export default function CarteleraComponent(){
                                             <br />
                                             <p>{Pelicula.sinopsis}</p>
                                             <br />
-                                            <h2>Horarios disponibles:</h2>
-                                            {Pelicula.horarios.map((horario)=>(
+                                            <h2 className="mb-2">Horarios disponibles:</h2>
+                                            {Pelicula.horarios.length>0 ? Pelicula.horarios.map((horario)=>(
                                                 <Chip key={horario.idhorariopelicula} className="mr-2">{horario.hora}</Chip>
-                                            ))}
+                                            )):<h2>Sin Horarios Disponibles</h2>}
                                         </div>
                                         
                                     </div>

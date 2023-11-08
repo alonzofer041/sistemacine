@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 import { ReactSVG } from "react-svg";
 // import {Sit} from "../../../assets/sit.svg";
 import axios from "axios";
-import { MensajeAdvertencia, MensajeExito } from "../../../helpers/functions";
+import { FormatearFecha, MensajeAdvertencia, MensajeExito } from "../../../helpers/functions";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
 
@@ -19,6 +19,7 @@ export default function GetTickets() {
     const idpelicula=location.state?.idpelicula;
     const titulopelicula=location.state?.titulo;
     const imgportada=location.state?.imgportada;
+    const fechafuncion=location.state?.fecha;
 
     const {Empresa,setEmpresa}=useContext(EmpresaContext);
     const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
@@ -36,6 +37,7 @@ export default function GetTickets() {
     const [Nombre,setNombre]=useState("");
     const [Apellido,setApellido]=useState("");
     const [Correo,setCorreo]=useState("");
+    const [PestaniasDeshabilitadas,setPestaniasDeshabilitadas]=useState([]);
 
     useEffect(()=>{
         if (IdSala=="") {
@@ -95,17 +97,30 @@ export default function GetTickets() {
         setCorreo(e.target.value)
     }
     async function ListaSalasDisponibles(){
-        await axios.get("/api/salasdisponibles/"+idpelicula
+        let year=fechafuncion.getFullYear();
+        let month=fechafuncion.getMonth()+1;
+        let day=fechafuncion.getDate();
+        let fechaformat=year+'-'+month+'-'+day;
+        await axios.get("/api/salasdisponibles/"+idpelicula,{
+            params:{
+                fecha:fechaformat
+            }
+        }
         ).then((res)=>{
             let data=res.data;
             setSalasDisponibles(data);
         })
     }
     async function ListaHorariosDisponibles(){
+        let year=fechafuncion.getFullYear();
+        let month=fechafuncion.getMonth()+1;
+        let day=fechafuncion.getDate();
+        let fechaformat=year+'-'+month+'-'+day;
         await axios.get("/api/horariosdisponibles",{
             params:{
                 idpelicula:idpelicula,
-                idsala:IdSala
+                idsala:IdSala,
+                fecha:fechaformat
             }
         }
         ).then((res)=>{
@@ -171,7 +186,7 @@ export default function GetTickets() {
             idsucursal:IdSucursal,
             idsala:IdSala,
             idpelicula:idpelicula,
-            nombrecliente:Nombre + ' ' + Apellido,
+            nombrecliente:Nombre,
             cantidadentradas:NumEntradasSeleccionadas,
             correocliente:Correo,
             estatus:'pagado',
@@ -191,10 +206,10 @@ export default function GetTickets() {
         <div className="center2">
             <div className="">
           <Tabs aria-label="Options">
-            <Tab title="Paso 1 - Horario">
+            <Tab title="Paso 1 - Horario" key="Horario">
                 <Card>
                     <CardHeader>
-                        <p>Selecciona tu Horario</p>
+                        <p>Selecciona tu Horario para el día {FormatearFecha(fechafuncion)}</p>
                     </CardHeader>
                     <Divider></Divider>
                     <CardBody>
@@ -211,7 +226,7 @@ export default function GetTickets() {
                     </CardBody>
                 </Card>
             </Tab>
-            <Tab title="Paso 2 - Boletos">
+            <Tab title="Paso 2 - Boletos" key="Boletos">
               <Card>
                 <CardBody>
                     <Card className="max-w-[400px]">
@@ -248,16 +263,16 @@ export default function GetTickets() {
 
                         <Divider/>
 
-                        <CardFooter>
+                        {/* <CardFooter>
                             <Button variant="shadow" className="btn" >
                                 Siguiente paso.
                             </Button>  
-                        </CardFooter>
+                        </CardFooter> */}
                     </Card>
                 </CardBody>
               </Card>  
             </Tab>
-            <Tab title="Paso 3 - Asientos">
+            <Tab title="Paso 3 - Asientos" key="Asientos">
               <Card>
                 <CardBody>
                     <Card className="max-w-[400px]">
@@ -307,16 +322,16 @@ export default function GetTickets() {
 
                         <Divider/>
                             
-                        <CardFooter>
+                        {/* <CardFooter>
                             <Button variant="shadow" className="btn" >
                                 Siguiente paso.
                             </Button>  
-                        </CardFooter>
+                        </CardFooter> */}
                     </Card>
                 </CardBody>
               </Card>  
             </Tab>
-            <Tab title="Paso 4 - Pago">
+            {/* <Tab title="Paso 4 - Pago">
               <Card>
                 <CardBody>
                     <Card className="max-w-[300px] m-auto">
@@ -361,8 +376,8 @@ export default function GetTickets() {
                     </Card>
                 </CardBody>
               </Card>  
-            </Tab>
-            <Tab title="Paso 5 - Confirmar Compra">
+            </Tab> */}
+            <Tab title="Paso 4 - Confirmar Compra">
                 <Card style={{width:"50%", margin:"auto"}}>
                     <CardHeader>
                         <h3>Resumen de Compra</h3>
@@ -394,17 +409,17 @@ export default function GetTickets() {
                                         <Card>
                                             <CardBody>
                                             <div>
-                                                <Input isRequired type="text" label="Nombre"/>
+                                                <Input onChange={handleNombre} value={Nombre} isRequired type="text" label="Nombre" placeholder="Ingresa tu nombre" />
                                             </div>
                                             </CardBody>
                                             <Divider/>
                                             <CardBody>
                                             <div>
-                                                <Input isRequired type="text" label="Apellidos"/>
+                                                <Input onChange={handleCorreo} value={Correo} isRequired type="email" label="Correo electrónico" placeholder="Ingresa tu correo" />
                                             </div>
                                             </CardBody>
                                             <Divider/>
-                                            <CardBody>
+                                            {/* <CardBody>
                                             <div>
                                                 <Input isRequired type="number" label="Número de tarjeta"/>
                                             </div>
@@ -421,7 +436,7 @@ export default function GetTickets() {
                                                 <Input className="inputs" isRequired type="date" label="Fecha de expiración" labelPlacement="outside-left"/>
                                             </div>
                                             </CardBody>
-                                            <Divider/>
+                                            <Divider/> */}
                                         </Card>
                                     </ModalBody>
                                     <ModalFooter>

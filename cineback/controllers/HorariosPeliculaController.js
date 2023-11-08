@@ -55,6 +55,7 @@ const deleteHorarioPelicula=(async (req,res)=>{
 const getListaSalasDisponibles=(async(req,res)=>{
     let HorarioPelicula=new HorarioPeliculaClass;
     HorarioPelicula.idpelicula=req.params.id;
+    HorarioPelicula.fecha=req.query.fecha;
     let SalasDisponibles=await HorarioPelicula.listarSalasDisponibles();
     // console.log(SalasDisponibles);
     res.json(SalasDisponibles);
@@ -67,6 +68,7 @@ const getHorarios=(async(req,res)=>{
     let HorarioPelicula=new HorarioPeliculaClass;
     HorarioPelicula.idpelicula=req.query.idpelicula;
     HorarioPelicula.idsala=req.query.idsala;
+    HorarioPelicula.fecha=req.query.fecha;
     let Horarios=await HorarioPelicula.listarHorariosxSala();
     res.json(Horarios);
 })
