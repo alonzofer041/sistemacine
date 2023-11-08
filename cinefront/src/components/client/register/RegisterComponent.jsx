@@ -3,8 +3,17 @@ import React from "react";
 import {Button, Card, CardHeader, CardBody, CardFooter, Divider, Image, Tabs, Tab, Input} from "@nextui-org/react";
 import { BiBody } from 'react-icons/bi';
 import { BiLogIn } from 'react-icons/bi';
-
-export default function Register({UsuarioRegistro,setUsuarioRegistro}) {
+import {useParams,useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import { MensajeExito } from "../../../helpers/functions";
+export default function Register() {
+    const navigate=useNavigate();
+    let {idempresa,idsucursal}=useParams();
+    const [UsuarioRegistro,setUsuarioRegistro]=React.useState({
+        nombre:'',
+        correo:'',
+        password:''
+    })
     function handleNombre(e){
         setUsuarioRegistro({...UsuarioRegistro,nombre:e.target.value});
     }
@@ -14,10 +23,27 @@ export default function Register({UsuarioRegistro,setUsuarioRegistro}) {
     function handlePassword(e){
         setUsuarioRegistro({...UsuarioRegistro,password:e.target.value});
     }
+    function Guardar(){
+        let obj={
+            nombre:UsuarioRegistro.nombre,
+            correo:UsuarioRegistro.correo,
+            password:UsuarioRegistro.password,
+            idempresa:idempresa,
+            idsucursal:idsucursal
+        }
+        axios.post('/api/register',obj
+        ).then((res)=>{
+            MensajeExito("El Usuario se ha Registrado con Éxito");
+            navigate("/login");
+        });
+    }
     return (
-      <div>
-
-              <CardBody>
+      <div className="tabs">
+        <Card className="cards">
+            <CardHeader>
+                <h1 className="text-center">Registro de Usuario</h1>
+            </CardHeader>
+        <CardBody>
                   <div>
                       <Input type="text" label="Nombre" placeholder="Ingresa tu nombre" value={UsuarioRegistro.nombre} onChange={handleNombre}/>
                   </div>
@@ -38,6 +64,12 @@ export default function Register({UsuarioRegistro,setUsuarioRegistro}) {
                       <Input type="password" label="Contraseña" placeholder="Ingresa tu contraseña" value={UsuarioRegistro.password} onChange={handlePassword}/>
                   </div>
               </CardBody>
+              <Divider/>
+              <CardFooter className="justify-end">
+                <Button className="btn" onClick={()=>Guardar()}>Registrarse</Button>
+              </CardFooter>
+        </Card>
+              
       </div>
     );
 }   

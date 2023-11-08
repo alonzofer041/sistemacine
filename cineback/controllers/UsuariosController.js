@@ -22,6 +22,8 @@ const addUsuario=(async (req,res)=>{
     Usuario.nombre=req.body.nombre;
     Usuario.correo=req.body.correo;
     Usuario.password=req.body.password;
+    Usuario.idempresa=req.body.idempresa;
+    Usuario.idsucursal=req.body.idsucursal;
     Usuario.rol='admin';
     Usuario.created_at=new Date();
     let respuesta=await Usuario.insertar();

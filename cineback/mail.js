@@ -9,7 +9,7 @@ const transporter=nodemailer.createTransport({
     // service:"gmail",
     auth:{
         user:"cineflashmid@gmail.com",
-        pass:"owsm xohh ntri emot"
+        pass:"nutj gkum arkc wfgf"
     }
 });
 const handlebarOptions={

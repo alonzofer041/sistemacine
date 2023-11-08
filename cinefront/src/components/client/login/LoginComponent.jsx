@@ -103,7 +103,7 @@ export default function Login() {
                         </CardBody>
                     </Card>  
                 </Tab>
-                <Tab title="No tengo cuenta">
+                {/* <Tab title="No tengo cuenta">
                     <Card className="cards">
                         <CardBody>
                             <Card>
@@ -116,13 +116,13 @@ export default function Login() {
 
                                 <Divider/>
 
-                                <Register UsuarioRegistro={UsuarioRegistro} setUsuarioRegistro={setUsuarioRegistro}></Register>
+                                <Register UsuarioRegistro={UsuarioRegistro} setUsuarioRegistro={setUsuarioRegistro}></Register> */}
                                 {/* <Image
                                     src="https://cur.glitter-graphics.net/pub/3719/3719211j01pncxkem.gif"
                                     width={300}
                                 />  */}
                     
-                                <Divider/>
+                                {/* <Divider/>
 
                                 <CardFooter>
                                     <Button className="btn" onClick={register}>
@@ -132,7 +132,7 @@ export default function Login() {
                             </Card>
                         </CardBody>
                     </Card>  
-                </Tab>
+                </Tab> */}
             </Tabs>
         </div>  
     );
