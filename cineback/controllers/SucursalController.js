@@ -8,16 +8,17 @@ const addSucursal=(async (req,res)=>{
     const ValidationRule={
         "nombre":"required|string",
         "direccion":"required|string",
-        "telefono":"required|string",
-        "email":"required|string",
+        "telefono":"required|numeric|digits:10",
+        "email":"required|email",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        numeric:"El valor debe ser nunérico",
+        digits:"Ingrese un número de teléfono válido",
+        email:"Ingrese un correo electrónico válido"
     }
     let estatus=false;
-
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
         if (!status) {
             res.status(412).send({errors:err});
@@ -54,13 +55,15 @@ const updateSucursal=(async (req,res)=>{
     const ValidationRule={
         "nombre":"required|string",
         "direccion":"required|string",
-        "telefono":"required|string",
-        "email":"required|string",
+        "telefono":"required|numeric|digits:10",
+        "email":"required|email",
     };
     const Messages={
-        required:{
-            string:"El Campo es Requerido"
-        }
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        numeric:"El valor debe ser nunérico",
+        digits:"Ingrese un número de teléfono válido",
+        email:"Ingrese un correo electrónico válido"
     }
     let estatus=false;
 

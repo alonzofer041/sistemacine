@@ -181,6 +181,8 @@ export default function ListComponent(){
             }).then((res)=>{
                 Lista();
                 onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
             });
         }
         else{
@@ -188,7 +190,9 @@ export default function ListComponent(){
             ).then((res)=>{
                 Lista();
                 onClose();
-            })
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
     }
     return(

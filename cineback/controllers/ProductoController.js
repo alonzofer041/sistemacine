@@ -23,7 +23,6 @@ const addProducto=(async (req,res)=>{
         "nombre":"required|string",
         "valor":"required|numeric|min:1",
         "cantidad":"required|numeric|min:1",
-        "nombrecomercial":"required|string",
         "idproductocategoria":"required|string"
     };
     const Messages={
@@ -55,7 +54,7 @@ const addProducto=(async (req,res)=>{
         Producto.imgproducto=filename;
         Producto.created_at=new Date();
         
-        let respuesta=await Producto.insertar(res);
+        let respuesta=await Producto.insertar();
         res.status(200).send({respuesta:respuesta});
     }
     

@@ -39,7 +39,7 @@ export default function FormComponent({PeliculaHorario,setPeliculaHorario}){
     return(
         <div>
             <div className="grid grid-cols-2">
-                <Select label="Selecciona una sala" onChange={changeIdSala}>
+                <Select isRequired label="Selecciona una sala" onChange={changeIdSala}>
                 {ListaSalas.map((Sala)=>(
                         <SelectItem key={Sala.idsala} value={Sala.idsala}>
                             {Sala.nombre}

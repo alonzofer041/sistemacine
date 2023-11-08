@@ -28,7 +28,7 @@ const addPelicula=(async(req,res)=>{
         "reparto":"required|string",
         "duracion":"required|numeric",
         "productora":"required|string",
-        "distribuidora":"required|string",
+        "distribuidora":"required|string"
     };
     const Messages={
         required:"El campo es requerido",
@@ -105,7 +105,7 @@ const updatePelicula=(async(req,res)=>{
         "reparto":"required|string",
         "duracion":"required|numeric",
         "productora":"required|string",
-        "distribuidora":"required|string",
+        "distribuidora":"required|string"
     };
     const Messages={
         required:"El campo es requerido",

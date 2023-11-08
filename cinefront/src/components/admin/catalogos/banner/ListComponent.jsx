@@ -19,6 +19,8 @@ export default function ListComponent(){
     const [swalProps, setSwalProps] = useState({});
     
     const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
+
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
     
     const [Banner,setBanner]=useState({
         idbanner:0,
@@ -45,6 +47,7 @@ export default function ListComponent(){
         idbanner:0,
         imgbanner:''});
         setFile(null);
+        setErrorValidacion([]);
     }
     function Eliminar(index){
         setBanner({...Banner,idbanner:index});
@@ -78,14 +81,18 @@ export default function ListComponent(){
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
-            }).then((res)=>{Lista();onClose();});   
+            }).then((res)=>{Lista();onClose();}).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
         else{
             axios.post('/api/banner/'+Banner.idbanner,obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
-            }).then((res)=>{Lista();onClose();});
+            }).then((res)=>{Lista();onClose();}).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
     }
     return(

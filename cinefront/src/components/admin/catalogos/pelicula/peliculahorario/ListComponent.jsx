@@ -8,6 +8,7 @@ import BtnAccionComponent from "../../../../base/BtnAccionComponent";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { FormatearFecha } from "../../../../../helpers/functions";
+import { MensajeAdvertencia } from "../../../../../helpers/functions";
 
 export default function ListComponent(){
     const location=useLocation();
@@ -60,6 +61,16 @@ export default function ListComponent(){
 
     }
     function Guardar(){
+        let mensajes=[];
+        if (PeliculaHorario.idsala==0) {
+            mensajes.push("Debe seleccionar una sala");
+        }
+        if (mensajes.length>0){
+            mensajes.forEach((mensaje)=>{
+                MensajeAdvertencia(mensaje);
+            });
+            return false;
+        }
         var obj={
             idhorariopelicula:PeliculaHorario.idhorariopelicula,
             idpelicula:idpelicula,

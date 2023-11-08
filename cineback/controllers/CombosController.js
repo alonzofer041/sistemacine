@@ -1,6 +1,7 @@
 const jwt=require("jsonwebtoken");
 let ComboClass=require("../models/Combo");
 const multer=require('multer');
+const validator = require("../helpers/validate");
 
 let filename="";
 const storage=multer.diskStorage({
@@ -18,25 +19,37 @@ const uploads=multer({storage:storage});
 //@route POST /api/combo
 //@access public
 const addCombo=(async (req,res)=>{
-    const token=req.headers.authorization
-    const decoded=jwt.verify(token,"jwtSecretKey");
-    let Combo=new ComboClass;
-    // req.body=JSON.stringify(req.body);
-    // console.log(req.body);
-    // SUBIDA DE ARCHIVO
-    uploads.single('files');
-    // SUBIDA EN BD
-    Combo.idcombo=req.body.idcombo;
-    Combo.idempresa=decoded.Usuario.idempresa;
-    Combo.idsucursal=decoded.Usuario.idsucursal;
-    Combo.nombre=req.body.nombre;
-    Combo.valor=req.body.valor;
-    Combo.imgcombo=filename;
-    Combo.created_at=new Date();
-    Combo.fechaestreno=new Date();
-
-    let respuesta=Combo.insertar();
-    res.json(respuesta);
+    const ValidationRule={
+        "nombre":"required|string",
+        "valor":"required|numeric",
+    };
+    const Messages={
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        numeric:"El valor debe ser numérico"
+    }
+    let estatus=false;
+    await validator(req.body,ValidationRule,Messages,(err,status)=>{
+        if (!status) {
+            res.status(412).send({errors:err});
+        }
+        estatus=status
+    })
+    if (estatus) {
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
+        let Combo=new ComboClass;
+        uploads.single('files');
+        Combo.idcombo=req.body.idcombo;
+        Combo.idempresa=decoded.Usuario.idempresa;
+        Combo.idsucursal=decoded.Usuario.idsucursal;
+        Combo.nombre=req.body.nombre;
+        Combo.valor=req.body.valor;
+        Combo.imgcombo=filename;
+        Combo.created_at=new Date();
+        let respuesta=Combo.insertar();
+        res.status(200).send({respuesta:respuesta});
+    }
 })
 
 //@desc listar combo
@@ -56,16 +69,34 @@ const getCombo=(async (req,res)=>{
 //@route POST /api/combo/:id
 //@access public
 const updateCombo=(async (req,res)=>{
-    let Combo=new ComboClass;
-    Combo.idcombo=req.params.id;
-    Combo.idempresa=req.body.empresa;
-    Combo.idsucursal=req.body.idsucursal;
-    Combo.nombre=req.body.nombre;
-    Combo.valor=req.body.valor;
-    Combo.imgcombo=filename;
-    Combo.updated_at=new Date();
-    let respuesta=await Combo.actualizar();
-    res.json(respuesta);
+    const ValidationRule={
+        "nombre":"required|string",
+        "valor":"required|numeric",
+    };
+    const Messages={
+        required:"El campo es requerido",
+        string:"El campo es requerido",
+        numeric:"El valor debe ser numérico"
+    }
+    let estatus=false;
+    await validator(req.body,ValidationRule,Messages,(err,status)=>{
+        if (!status) {
+            res.status(412).send({errors:err});
+        }
+        estatus=status
+    })
+    if (estatus) {
+        let Combo=new ComboClass;
+        Combo.idcombo=req.params.id;
+        Combo.idempresa=req.body.empresa;
+        Combo.idsucursal=req.body.idsucursal;
+        Combo.nombre=req.body.nombre;
+        Combo.valor=req.body.valor;
+        Combo.imgcombo=filename;
+        Combo.updated_at=new Date();
+        let respuesta=await Combo.actualizar();
+        res.status(200).send({respuesta:respuesta});
+    }
 })
 
 //@desc borrar combo

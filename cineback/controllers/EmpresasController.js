@@ -28,7 +28,7 @@ const addEmpresa=(async (req,res)=>{
         "telefono":"required|numeric|digits:10",
         "email":"required|email",
         "estado":"required|string",
-        "ciudad":"required|string",
+        "ciudad":"required|string"
     };
     const Messages={
         required:"El campo es requerido",
@@ -116,7 +116,6 @@ const updateEmpresa=(async (req,res)=>{
         let respuesta=await Empresa.actualizar();
         res.status(200).send({respuesta:respuesta});
     }
-    
 });
 
 //@desc borrar empresa

@@ -1,12 +1,13 @@
 import React,{ useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
 import Modal from "../../../base/ModalComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Spinner } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Spinner, Image } from "@nextui-org/react";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "../combo/FormComponent";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { MensajeAdvertencia } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/combos/';
 export default function ListComponent(){
@@ -23,7 +24,7 @@ export default function ListComponent(){
     });
 
     const navigate=useNavigate();
-    const [File,setFile]=useState({});
+    const [File,setFile]=useState(null);
     const [Combo,setCombo]=useState({
         idcombo:0,
         nombre:'',
@@ -34,6 +35,7 @@ export default function ListComponent(){
     ]);
 
     const [loading, setLoading] = useState(true);
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
 
     // MEMOS
     const BndFiltro=Boolean(Filtro.Nombre);
@@ -73,6 +75,8 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setFile(null);
+        setErrorValidacion([]);
         setCombo({...Combo,
         idcombo:0,nombre:'',valor:0,imgcombo:''});
     }
@@ -106,6 +110,10 @@ export default function ListComponent(){
     }
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     function Guardar(){
+        if (Object.is(File,null)) {
+            MensajeAdvertencia("Debe seleccionar una imagen");
+            return false;
+        }
         var obj={
             idcombo:Combo.idcombo,
             nombre:Combo.nombre,
@@ -122,7 +130,9 @@ export default function ListComponent(){
             }).then((res)=>{
                 Lista();
                 onClose();
-            });   
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
         else{
             axios.post('/api/combo/'+Combo.idcombo,obj,{
@@ -132,6 +142,8 @@ export default function ListComponent(){
             }).then((res)=>{
                 Lista();
                 onClose();
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
             });
         }
     }
@@ -164,7 +176,7 @@ export default function ListComponent(){
                             <TableCell>{item.idcombo}</TableCell>
                             <TableCell>{item.nombre}</TableCell>
                             <TableCell>{item.valor}</TableCell>
-                            <TableCell>{item.imagen}</TableCell>
+                            <TableCell>{<Image width={200} height={200} src={url+item.imgcombo}></Image>}</TableCell>
                             <TableCell>
                                 <BtnAccionComponent 
                                     MostrarBtnEditar={true} 
@@ -187,7 +199,7 @@ export default function ListComponent(){
             EventoGuardar={Guardar}
             Titulo={"Agregar Combo"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Combo={Combo} setCombo={setCombo} File={File} setFile={setFile}/>}></Modal>
+            CuerpoFormulario={<FormComponent Combo={Combo} setCombo={setCombo} File={File} setFile={setFile} Errores={ErrorValidacion}/>}></Modal>
         </div>
     )
 }

@@ -56,6 +56,7 @@ export default function ListComponent(){
     ]);
 
     const [loading, setLoading] = useState(true);
+    const [ErrorValidacion,setErrorValidacion]=useState([]);
     
     // MEMOS
     const BndFiltro=Boolean(Filtro.Nombre);
@@ -95,6 +96,7 @@ export default function ListComponent(){
         setFiltro({...Filtro,Nombre:value})
     })
     function Limpiar(){
+        setErrorValidacion([]);
         setProveedor({
             ...Proveedor,
             idproveedor:0,
@@ -155,13 +157,17 @@ export default function ListComponent(){
             axios.post("/api/proveedor",obj).then((res)=>{
                 Lista();
                 onClose();
-            });   
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });
         }
         else{
             axios.post("/api/proveedor/"+Proveedor.idproveedor,obj).then((res)=>{
                 Lista();
                 onClose();
-            });
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            }); 
         }
     }
     return(
@@ -219,7 +225,7 @@ export default function ListComponent(){
             Size={"3xl"}
             Titulo={"Agregar Provedor"} 
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-            CuerpoFormulario={<FormComponent Proveedor={Proveedor} setProveedor={setProveedor}/>}></Modal>
+            CuerpoFormulario={<FormComponent Proveedor={Proveedor} setProveedor={setProveedor} Errores={ErrorValidacion}/>}></Modal>
             
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{
