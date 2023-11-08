@@ -27,8 +27,9 @@ export default function GetTickets() {
     const [IdSala,setIdSala]=useState("");
     const [NombreSala,setNombreSala]=useState("");
     const [HorariosDisponibles,setHorariosDisponibles]=useState([]);
-    const [HorarioSeleccionado,setHorarioSeleccionado]=useState([]);
+    const [HorarioSeleccionado,setHorarioSeleccionado]=useState("");
     const [Asientos,setAsientos]=useState([]);
+    const [AsientosOcupados,setAsientosOcupados]=useState([]);
     const [NumFilaSeleccionada,setNumFilaSeleccionada]=useState(0);
     const [NumEntradasSeleccionadas,setNumEntradasSeleccionadas]=useState(0);
     const [AsientosSeleccionados,setAsientosSeleccionados]=useState([]);
@@ -46,8 +47,14 @@ export default function GetTickets() {
     },[IdSala])
 
     useEffect(()=>{
-        ListarAsientos()
+        if (HorarioSeleccionado!="") {
+            // ListarAsientos();
+            ListarAsientosOcupados();
+        }
     },[HorarioSeleccionado]);
+    useEffect(()=>{
+        ListarAsientos();
+    },[AsientosOcupados])
 
     function handleIdSala(e){
         setIdSala(e.target.value);
@@ -57,6 +64,7 @@ export default function GetTickets() {
     }
     function handleHorarioSeleccionado(e){
         setHorarioSeleccionado(e.target.value);
+
     }
     function handleNumEntradasSeleccionadas(e){
         setNumEntradasSeleccionadas(e.target.value);
@@ -112,7 +120,42 @@ export default function GetTickets() {
             }
         }).then((res)=>{
             let data=res.data;
+            if (AsientosOcupados.length>0) {
+                data.forEach((Asiento)=>{
+                    let bndDisponibilidad=true;
+                    AsientosOcupados.forEach((AsientoOcupado)=>{
+                        if (AsientoOcupado.idasiento==Asiento.idasiento) {
+                            bndDisponibilidad=false;
+                        }
+                    });
+                    if (bndDisponibilidad) {
+                        Asiento.estatus="disponible"
+                    }
+                    else{
+                        Asiento.estatus="ocupado"
+                    }
+                });
+            }
+            else{
+                data.forEach((Asiento)=>{
+                    Asiento.estatus="disponible";
+                })
+            }
             setAsientos(data);
+        })
+    }
+    async function ListarAsientosOcupados(){
+        let horaIndex=HorariosDisponibles.findIndex((hora)=>{return hora.hora==HorarioSeleccionado});
+        let hora=HorariosDisponibles[horaIndex];
+        await axios.get("/api/asientosocupados",{
+            params:{
+                idhorario:hora.idhorariopelicula
+            }
+        }).then((res)=>{
+            let data=res.data;
+            setAsientosOcupados(data);
+            // ListarAsientos();
+            // setAsientos(array);
         })
     }
     async function GuardarOrden(){
@@ -245,10 +288,10 @@ export default function GetTickets() {
                                             {Asientos.map((Asiento,index2)=>(
                                                 (Asiento.fila==(index+1))?
                                                 (<span style={{display:"inline-block"}} key={Asiento.idasiento}>
-                                                    <input defaultChecked={(AsientosSeleccionados.some(item=>Asientos[index2].nombre===item)) ? true : false} onChange={(e)=>handleAsientoSeleccionado(e,index,index2)} style={{display:"none"}} type="checkbox" value={Asiento.nombre} id={index+'_'+index2}/>
+                                                    <input disabled={Asiento.estatus=="disponible" ? false : true} defaultChecked={(AsientosSeleccionados.some(item=>Asientos[index2].nombre===item)) ? true : false} onChange={(e)=>handleAsientoSeleccionado(e,index,index2)} style={{display:"none"}} type="checkbox" value={Asiento.nombre} id={index+'_'+index2}/>
                                                     {/* <Checkbox id={index+'_'+index2} key={Asiento.idasiento} value={Asiento.idasiento}></Checkbox>  */}
                                                     <label id={index+'_'+index2} htmlFor={index+'_'+index2} className="form-label">
-                                                        <ReactSVG id={"svg_"+index+"_"+index2} className="sillasdisponibles" src="../../sit.svg"/>
+                                                        <ReactSVG id={"svg_"+index+"_"+index2} className={Asiento.estatus=="disponible" ? "sillasdisponibles" : "sillasocupadas"} src="../../sit.svg"/>
                                                     </label>
                                                 </span>)
                                                 : null

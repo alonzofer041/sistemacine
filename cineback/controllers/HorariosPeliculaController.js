@@ -1,4 +1,5 @@
 let HorarioPeliculaClass = require("../models/HorarioPelicula");
+let HorarioxAsientoClass=require("../models/HorarioxAsiento");
 
 //@desc crear horario pelicula
 //@route POST /api/horariopelicula
@@ -70,11 +71,22 @@ const getHorarios=(async(req,res)=>{
     res.json(Horarios);
 })
 
+//@desc obtener lista de asientos para validacion
+//@route GET /api/asientosocupados
+//@access public
+const getAsientosOcupados=(async(req,res)=>{
+    let HorarioxAsiento=new HorarioxAsientoClass;
+    HorarioxAsiento.idhorario=req.query.idhorario;
+    let AsientosOcupados=await HorarioxAsiento.listar();
+    res.json(AsientosOcupados);
+})
+
 module.exports={
     addHorarioPelicula,
     getHorarioPelicula,
     updateHorarioPelicula,
     deleteHorarioPelicula,
     getListaSalasDisponibles,
-    getHorarios
+    getHorarios,
+    getAsientosOcupados
 }

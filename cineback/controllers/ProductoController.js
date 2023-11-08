@@ -1,4 +1,5 @@
 const validator = require("../helpers/validate");
+const jwt=require("jsonwebtoken");
 let ProductoClass=require("../models/Producto");
 const multer=require('multer');
 

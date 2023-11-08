@@ -36,7 +36,7 @@ export default function Inicio() {
       ).then((res)=>{
           let data=res.data;
           setBannerList(data);
-          console.log(IdEmpresa);
+          // console.log(IdEmpresa);
       })
   }
   function IrA(){

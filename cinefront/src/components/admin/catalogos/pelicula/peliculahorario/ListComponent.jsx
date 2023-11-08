@@ -95,7 +95,9 @@ export default function ListComponent(){
             <ListGeneralComponent
                 isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
                 EsModal={true}
-                Filtro={1} 
+                ShowInput={false}
+                ShowPaginador={false} 
+                Filtro={1}
                 Titulo={"Horario"}
                 NombreLista={titulo}
                 EventoLimpiar={Limpiar}
