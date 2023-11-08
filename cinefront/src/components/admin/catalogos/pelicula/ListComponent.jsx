@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link ,Image} from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link ,Image, Spinner} from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "../pelicula/FormComponent";
@@ -37,23 +37,61 @@ export default function ListComponent(){
         imgportada:''
     });
     const [PeliculaList,setPeliculaList]=useState([
-        
     ]);
+    // FILTROS
+    const [Filtro,setFiltro]=useState({
+        NumFilas:5,
+        Pagina:1,
+        Nombre:'',
+        TotalPaginas:1
+    });
+
     // ESTADO DE ARCHIVO
     const [File,setFile]=useState({});
-    function Lista(){
-        axios.get('/api/pelicula',{
-            params:{
-                origen:'admin'
-            }
+
+    const [loading, setLoading] = useState(true);
+
+    // MEMOS
+    const BndFiltro=Boolean(Filtro.Nombre);
+    const ItemsFiltro=React.useMemo(()=>{
+        let PeliculaFiltrado=[...PeliculaList];
+        if (BndFiltro) {
+            PeliculaFiltrado=PeliculaFiltrado.filter((PeliculaElement)=>
+                PeliculaElement.titulo.toLowerCase().includes(Filtro.Nombre.toLowerCase())
+            );     
         }
-        ).then((res)=>{
-            let data=res.data;
-            setPeliculaList(data);
-            // console.log(import.meta.env.VITE_ASSET_URL);
-        }).finally(()=>{
-        });
+        return PeliculaFiltrado;
+    },[PeliculaList,Filtro.Nombre]);
+
+    const Paginator=React.useMemo(()=>{
+        return ItemsFiltro?.length ? Math.ceil(ItemsFiltro.length/Filtro.NumFilas) : 0;
+    },[ItemsFiltro?.length,Filtro.NumFilas]);
+
+    const ItemsPaginado=React.useMemo(()=>{
+        const Inicio=(Filtro.Pagina-1)*Filtro.NumFilas;
+        const Fin=Inicio+Filtro.NumFilas;
+        return ItemsFiltro.slice(Inicio,Fin);
+    },[Filtro.Pagina,ItemsFiltro,Filtro.NumFilas]);
+    
+    function Lista(){
+        setLoading(true);
+        setTimeout(() => {
+            axios.get('/api/pelicula',{
+                params:{
+                    origen:'admin'
+                }
+            }
+            ).then((res)=>{
+                let data=res.data;
+                setPeliculaList(data);
+            }).finally(()=>{
+                setLoading(false);
+            })
+        }, 1000);
     }
+    const FiltrarLista=React.useCallback((value)=>{
+        setFiltro({...Filtro,Nombre:value})
+    })
     function Limpiar(){
         setFile(null);
         setErrorValidacion([]);
@@ -136,40 +174,36 @@ export default function ListComponent(){
             files:File
         }
         if (obj.idpelicula==0) {
-            axios.post("/api/pelicula",obj,{
+            axios.post('/api/pelicula',obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
             }).then((res)=>{
                 Lista();
                 onClose();
-            }).catch((err)=>{
-                setErrorValidacion(err.response.data.errors.errors);
             });
         }
         else{
-            axios.post("/api/pelicula/"+Pelicula.idpelicula,obj,{
-                headers:{
-                    "Content-Type":"multipart/form-data"
-                }
-            }).then((res)=>{
+            axios.post("/api/pelicula/"+Pelicula.idpelicula,obj
+            ).then((res)=>{
                 Lista();
                 onClose();
-            }).catch((err)=>{
-                setErrorValidacion(err.response.data.errors.errors);
-            });
+            })
         }
     }
-    // Lista();
     return(
         <div>
             <ListGeneralComponent
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             EsModal={true}
-            Filtro={1} 
+            Filtro={Filtro}
+            setFiltro={setFiltro}
+            FiltroEvento={FiltrarLista} 
+            TotalElementos={ItemsFiltro.length}
             Titulo={"Películas"}
             NombreLista={"Configuración"}
             EventoLimpiar={Limpiar}
+            TotalPagina={Paginator}
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
@@ -183,7 +217,7 @@ export default function ListComponent(){
                 </TableHeader>
             }
             CuerpoTabla={
-                <TableBody items={PeliculaList}>
+                <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={ItemsPaginado}>
                     {(item)=>(
                         <TableRow key={item.idpelicula}>
                             <TableCell>{item.idpelicula}</TableCell>
@@ -199,7 +233,7 @@ export default function ListComponent(){
                                     MostrarBtnEliminar={true}
                                     EventoEditar={Editar}
                                     EventoEliminar={Eliminar}
-                                    
+                                    Id={item.idpelicula}
                                     BotonesAdicionales={
                                         <Button as={Link} variant="light" onClick={()=>Navegar(item.idpelicula,item.titulo)}>Asignar Horarios</Button>
                                     }

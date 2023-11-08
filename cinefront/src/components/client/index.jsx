@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, Image } from "@nextui-org/react";
 import { EmpresaContext } from "../../provider/EmpresaProvider";
 import { useNavigate } from "react-router-dom";
 
+const url=import.meta.env.VITE_ASSET_URL+'/empresas/';
 export default function ListaEmpresas(){
     const navigate=useNavigate();
     const [Empresas,setEmpresas]=useState([]);
@@ -26,14 +27,19 @@ export default function ListaEmpresas(){
         navigate("/cine/inicio");
     }
     return(
-        <div className="container mt-3">
-            <div className="flex gap-3 justify-center">
+        <div className="container">
+            <h1 className="text-center">Selecciona un Cine</h1>
+            <div className="flex gap-3 justify-center mt-3">
                 {Empresas.map((Empresa)=>(
                     <button key={Empresa.idempresa} onClick={()=>SeleccionarEmpresa(Empresa)}>
                         <Card>
-                            <CardHeader>{Empresa.nombrecomercial}</CardHeader>
+                            <CardHeader>
+                                <Image width={180} src={url+Empresa.imgempresa}></Image>
+                            </CardHeader>
                             <Divider/>
-                            <CardBody>{Empresa.nombrecomercial}</CardBody>
+                            <CardBody>
+                                <h2 className="text-center">{Empresa.nombrecomercial}</h2>
+                            </CardBody>
                         </Card>
                     </button>
                 ))}

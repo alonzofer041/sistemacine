@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
+import jwtDecode from "jwt-decode";
 import { useState, useEffect } from "react";
 import LogoCine from "../../assets/logo.png";
 import { EmpresaContext } from "../../provider/EmpresaProvider";
 import { SucursalContext } from "../../provider/SucursalProvider";
+import {useAuth} from "../../provider/AuthProvider";
 
 import {Navbar, 
     NavbarBrand, 
@@ -15,10 +17,17 @@ import {Navbar,
     Divider,
     Button,
     Select,
-    SelectItem} from "@nextui-org/react";
+    SelectItem,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
+    Image} from "@nextui-org/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaChevronDown } from "react-icons/fa";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
+const urlempresa=import.meta.env.VITE_ASSET_URL+'/empresas/';
 
 export default function NavBarComponent() {
   const navigate=useNavigate();
@@ -28,12 +37,19 @@ export default function NavBarComponent() {
   const {Empresa,setEmpresa}=useContext(EmpresaContext);
   const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
   const [Sucursales,setSucursales]=useState([]);
+  const {Token}=useAuth();
 
   useEffect(()=>{
     if (index!=-1) {
       ListarSucursales();
     }
   },[])
+  useEffect(()=>{
+    if (Sucursales.length>0) {
+      let idsucursal=Sucursales[0].idsucursal;
+      setIdSucursal(idsucursal); 
+    }
+  },[Sucursales]);
   function Navegar(url){
     navigate(url);
   }
@@ -45,10 +61,16 @@ export default function NavBarComponent() {
     }).then((res)=>{
       let data=res.data;
       setSucursales(data);
+    }).finally(()=>{
+
     })
   }
   function handleIdSucursal(e){
     setIdSucursal(e.target.value);
+  }
+  function logout(){
+    localStorage.removeItem("token");
+    navigate("/login")
   }
   
   return (
@@ -81,6 +103,9 @@ export default function NavBarComponent() {
           
           ) : (
           <>
+            <NavbarBrand>
+              <Image radius="none" width={80} src={urlempresa+jwtDecode(Token).Usuario.imgempresa}></Image>
+            </NavbarBrand>
             <NavbarItem>
               <Link color="foreground" onClick={()=>{Navegar("/dashboard")}} >
                 Dashboard
@@ -115,13 +140,32 @@ export default function NavBarComponent() {
       {index!=-1?(
         <NavbarContent>
           <Link color="foreground">{Empresa.nombrecomercial}</Link>
-          <Select size="sm" variant="underlined" className="max-w-xs" placeholder="selecciona una sucursal" onChange={handleIdSucursal}>
-            {Sucursales.map((Sucursal)=>(
-              <SelectItem key={Sucursal.idsucursal} value={Sucursal.idsucursal}>{Sucursal.nombre}</SelectItem>
-            ))}
-          </Select>
+          {Sucursales.length>0?(
+            <Select defaultSelectedKeys={[Sucursales[0].idsucursal].toString()} size="sm" variant="underlined" className="max-w-xs" placeholder="selecciona una sucursal" onChange={handleIdSucursal}>
+              {Sucursales.map((Sucursal)=>(
+                <SelectItem key={Sucursal.idsucursal} value={Sucursal.idsucursal}>{Sucursal.nombre}</SelectItem>
+              ))}
+            </Select>
+          ):null}
         </NavbarContent>
-      ):null}
+      ):(
+        <NavbarContent justify="end">
+          <Dropdown>
+            <NavbarItem>
+              <DropdownTrigger>
+                <Button disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent" radius="sm" variant="light"
+                endContent={<FaChevronDown className="ml-2"></FaChevronDown>}>
+                  Bienvenido {jwtDecode(Token).Usuario.nombre}
+                </Button>
+              </DropdownTrigger>
+            </NavbarItem>
+            <DropdownMenu>
+              <DropdownItem onClick={logout} key="cerrarsesion">Cerrar Sesión</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarContent>
+      )}
       <NavbarContent>
 
       </NavbarContent>

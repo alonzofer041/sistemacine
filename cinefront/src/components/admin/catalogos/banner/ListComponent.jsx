@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link ,Image} from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link ,Image, Spinner} from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "../banner/FormComponent";
@@ -17,8 +17,6 @@ export default function ListComponent(){
     },[]);
 
     const [swalProps, setSwalProps] = useState({});
-
-    const [File,setFile]=useState(null);
     
     const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
     
@@ -27,14 +25,20 @@ export default function ListComponent(){
         imgbanner:''
     });
     const [BannerList,setBannerList]=useState([]);
-    const [ErrorValidacion,setErrorValidacion]=useState([]);
+    const [File,setFile]=useState({});
+    const [loading, setLoading] = useState(true);
 
     function Lista(){
-        axios.get('/api/banner'
-        ).then((res)=>{
-            let data=res.data;
-            setBannerList(data);
-        })
+        setLoading(true);
+        setTimeout(() => {
+            axios.get('/api/banner'
+            ).then((res)=>{
+                let data=res.data;
+                setBannerList(data);
+            }).finally(()=>{
+                setLoading(false);
+            })
+        }, 1000);
     }
     function Limpiar(){
         setBanner({...Banner,
@@ -87,6 +91,7 @@ export default function ListComponent(){
     return(
         <div>
             <ListGeneralComponent
+            ShowInput={false}
             isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
             EsModal={true}
             Filtro={1} 
@@ -101,7 +106,7 @@ export default function ListComponent(){
                 </TableHeader>
             }
             CuerpoTabla={
-                <TableBody items={BannerList}>
+                <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={BannerList}>
                     {(item)=>(
                         <TableRow key={item.idbanner}>
                             <TableCell>{item.idbanner}</TableCell>

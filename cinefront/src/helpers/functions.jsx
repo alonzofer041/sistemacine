@@ -40,3 +40,12 @@ export function ImagePreview(e){
         return false;
     }
 }
+export function FormatearFecha(date){
+    let fecha=new Date(date);
+    let year=fecha.getFullYear();
+    let month=fecha.getMonth()+1;
+    let day=fecha.getDate();
+    // let cadenafecha=year+'-'+month+'-'+day;
+    let cadenafecha=day+'/'+month+'/'+year;
+    return cadenafecha;
+}

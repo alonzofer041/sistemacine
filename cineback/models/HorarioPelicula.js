@@ -5,15 +5,17 @@ class HorarioPelicula{
         this.idsala=0;
         this.idpelicula=0;
         this.hora='',
+        this.fecha='';
         this.created_at='';
         this.updated_at='';
         this.deleted_at='';
     }
     async insertar(){
-        let respuesta=await pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?)',[
+        let respuesta=await pool.query('INSERT INTO horariospelicula (idpelicula,idsala,hora,fecha,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?)',[
             this.idpelicula,
             this.idsala,
             this.hora,
+            this.fecha,
             this.created_at,
             null,
             null
@@ -21,9 +23,10 @@ class HorarioPelicula{
         return respuesta;
     }
     async actualizar(){
-        let respuesta=await pool.query('UPDATE horariospelicula SET idsala=?,hora=?,updated_at=? WHERE idhorariopelicula=?',[
+        let respuesta=await pool.query('UPDATE horariospelicula SET idsala=?,hora=?,fecha=?,updated_at=? WHERE idhorariopelicula=?',[
             this.idsala,
             this.hora,
+            this.fecha,
             this.updated_at,
             this.idhorariopelicula,
         ]);

@@ -440,3 +440,7 @@ img {
 	color: #ff2626;
 	font-size: 11px;
 }
+.react-datepicker-popper{
+	z-index: 999999 !important;
+	position: relative;
+}

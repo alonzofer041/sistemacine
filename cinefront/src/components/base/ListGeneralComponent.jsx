@@ -16,7 +16,9 @@ export default function ListGeneralComponent({
     CuerpoTabla,
     isOpen,onOpen,onOpenChange,
     EventoLimpiar,
-    TotalPagina
+    TotalPagina,
+    ShowInput=true,
+    ShowPaginador=true
 }){
     // const {isOpen, onOpen, onOpenChange} = useDisclosure();
     // useEffect(()=>{
@@ -43,22 +45,6 @@ export default function ListGeneralComponent({
         setFiltro({...Filtro,Pagina:1});
       },[])
 
-    // const Bottom=React.useMemo(()=>{
-    //     return(
-    //         <div>
-    //             <Pagination
-    //             isCompact
-    //             showControls
-    //             showShadow
-    //             color="primary"
-    //             page={Filtro.Pagina}
-    //             total={Filtro.TotalPaginas}
-    //             onChange={(page)=>setFiltro({...Filtro,Pagina:page})}
-    //             ></Pagination>
-    //         </div>
-    //     )
-    // },[Filtro.Pagina,Filtro.TotalPaginas])
-
     let boton=null;
     if (EsModal) {
         boton=<button onClick={()=>{onOpen();EventoLimpiar();}}><h3>Nuevo</h3></button>
@@ -72,14 +58,15 @@ export default function ListGeneralComponent({
                 </div>
             </div>
             <div className="grid grid-cols-3">
-                <Input 
+                {ShowInput ? (<Input 
                 startContent={<FaSearch/>} 
                 placeholder="Buscar por nombre" 
                 className="w-full"
                 style={{height:"40px"}}
                 value={Filtro.Nombre}
                 onClear={() => onClear()}
-                onValueChange={FiltroEvento}></Input>
+                onValueChange={FiltroEvento}></Input>) : null}
+                
 
                 <div>
                     <label className="text-default-400 text-small">Número de Filas</label>
@@ -94,7 +81,7 @@ export default function ListGeneralComponent({
             {CabeceraTabla}
             {CuerpoTabla}
             </Table>
-            {TotalPagina>0?(
+            {ShowPaginador && TotalPagina>0?(
                 <Pagination
                 isCompact
                 showControls

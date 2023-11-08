@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure } from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Spinner } from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "./FormComponent";
@@ -14,6 +14,7 @@ export default function ListComponent(){
      const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
      // USER STATE
  
+     const [loading, setLoading] = useState(true);
      // FILTROS
      const [Filtro,setFiltro]=useState({
          NumFilas:5,
@@ -27,7 +28,6 @@ export default function ListComponent(){
         nombre:""
     });
     const [ProductoCategoriaList,setProductoCategoriaList]=useState([
-        {idproductocategoria:0,nombre:''}
     ]);
     const [ErrorValidacion,setErrorValidacion]=useState([]);
 
@@ -59,12 +59,15 @@ export default function ListComponent(){
     
     // METODOS
     function Lista(){
-        axios.get("/api/productocategoria"
-        ).then((res)=>{
-            let data=res.data;
-            setProductoCategoriaList(data);
-        }).finally(()=>{
-        });
+        setTimeout(() => {
+            axios.get("/api/productocategoria"
+            ).then((res)=>{
+                let data=res.data;
+                setProductoCategoriaList(data);
+            }).finally(()=>{
+                setLoading(false);
+            });
+        }, 1000);
     }
     const FiltrarLista=React.useCallback((value)=>{
         setFiltro({...Filtro,Nombre:value})
@@ -134,7 +137,7 @@ export default function ListComponent(){
                 </TableHeader>
             }
             CuerpoTabla={
-                <TableBody items={ItemsPaginado}>
+                <TableBody isLoading={loading} loadingContent={<Spinner label="Cargando..." size="lg" color="primary"></Spinner>} items={ItemsPaginado}>
                     {(item)=>(
                         <TableRow key={item.idproductocategoria}>
                             <TableCell>{item.idproductocategoria}</TableCell>
