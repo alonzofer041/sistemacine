@@ -17,7 +17,7 @@ export default function FormComponent({Asientos,setAsientos,NumFilas, Errores}){
                     {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label> : null}
                 </div>
                 <div className="ml-2">
-                <Select isRequired label="Fila" onChange={handleFila}>
+                <Select defaultSelectedKeys={[Asientos.fila.toString()]} isRequired label="Fila" onChange={handleFila}>
                     <SelectItem key={0} value={0}>0</SelectItem>
                     {Array.from({length:NumFilas}).map((fila,index)=><SelectItem key={index+1} value={index+1}>{(index+1).toString()}</SelectItem>)}
                 </Select>
