@@ -131,6 +131,7 @@ export default function ListComponent(){
         axios.post("/api/empresaRegistro",obj
         ).then((res)=>{
             MensajeExito("Correo Enviado");
+            onClose();
         })
     }
 

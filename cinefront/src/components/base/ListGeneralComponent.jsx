@@ -51,13 +51,13 @@ export default function ListGeneralComponent({
     }
     return(
         <div>
-            <div className="flex">
+            <div className="flex mt-3 mb-2 pt-4 ml-3">
                 <div className="basis-1/4"><h3>{NombreLista + " / " + Titulo}</h3></div>
                 <div className="basis-1/8">
                     {boton}
                 </div>
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 mb-3 ml-3">
                 {ShowInput ? (<Input 
                 startContent={<FaSearch/>} 
                 placeholder="Buscar por nombre" 
@@ -68,7 +68,7 @@ export default function ListGeneralComponent({
                 onValueChange={FiltroEvento}></Input>) : null}
                 
 
-                <div>
+                <div className="ml-3 mt-2">
                     <label className="text-default-400 text-small">Número de Filas</label>
                     <select className="bg-transparent outline-none text-default-400 text-small" onChange={onRowsPerPageChange}>
                         <option value="5">5</option>
@@ -82,15 +82,20 @@ export default function ListGeneralComponent({
             {CuerpoTabla}
             </Table>
             {ShowPaginador && TotalPagina>0?(
-                <Pagination
-                isCompact
-                showControls
-                showShadow
-                color="primary"
-                page={Filtro.Pagina}
-                total={TotalPagina}
-                onChange={(page)=>setFiltro({...Filtro,Pagina:page})}
-            ></Pagination>
+                <div className="mt-4 mb-3 flex justify-center">
+                    <Pagination
+                        isCompact
+                        showControls
+                        showShadow
+                        color="primary"
+                        page={Filtro.Pagina}
+                        total={TotalPagina}
+                        onChange={(page)=>setFiltro({...Filtro,Pagina:page})}
+                    ></Pagination>
+                    <br />
+                    <br />
+                    <br />
+                </div>
             ):null}
             {/* <div className="hidden sm:flex w-[30%] justify-end gap-2">
                 <Button isDisabled={Filtro.TotalPaginas === 1} size="sm" variant="flat" onPress={onPrevPage}>

@@ -36,7 +36,7 @@ const addProducto=(async (req,res)=>{
         if (!status) {
             res.status(412).send({errors:err});
         }
-        status=status;
+        estatus=status;
     })
     if (estatus) {
         const token=req.headers.authorization
@@ -88,13 +88,19 @@ const getProducto=(async (req,res)=>{
 //@access public
 const updateProducto=(async(req,res)=>{
     let Producto=new ProductoClass;
-    uploads.single('files');
+    if (Object.is(req.body.files,null)) {
+        Producto.imgproducto=req.body.imgproducto;    
+    }
+    else{
+        uploads.single('files');
+        Producto.imgproducto=filename;
+    }
+    
     Producto.idproductocategoria=req.body.idproductocategoria;
     Producto.idproveedor=req.body.idproveedor;
     Producto.nombre=req.body.nombre;
     Producto.valor=req.body.valor;
     Producto.cantidad=req.body.cantidad;
-    Producto.imgproducto=filename;
     Producto.updated_at=new Date();
     Producto.idproducto=req.params.id;
     let respuesta=await Producto.actualizar();

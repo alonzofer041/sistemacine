@@ -8,7 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
-import { MensajeAdvertencia } from "../../../../helpers/functions";
+import { FormatearFecha, MensajeAdvertencia } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 export default function ListComponent(){
@@ -47,7 +47,7 @@ export default function ListComponent(){
     });
 
     // ESTADO DE ARCHIVO
-    const [File,setFile]=useState({});
+    const [File,setFile]=useState(null);
 
     const [loading, setLoading] = useState(true);
 
@@ -148,9 +148,6 @@ export default function ListComponent(){
     }
     function Guardar(){
         let mensajes=[];
-        if (Object.is(File,null)) {
-            mensajes.push("Debe seleccionar una imagen");
-        }
         if (Pelicula.idpeliculacategoria=="") {
             mensajes.push("Debe seleccionar una categoría");
         }
@@ -171,9 +168,14 @@ export default function ListComponent(){
             duracion:Pelicula.duracion,
             productora:Pelicula.productora,
             distribuidora:Pelicula.distribuidora,
+            imgportada:Pelicula.imgportada,
+            fechaestreno:Pelicula.fechaestreno,
             files:File
         }
         if (obj.idpelicula==0) {
+            if (Object.is(File,null)) {
+                mensajes.push("Debe seleccionar una imagen");
+            }
             axios.post('/api/pelicula',obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"
@@ -186,7 +188,11 @@ export default function ListComponent(){
             });
         }
         else{
-            axios.post("/api/pelicula/"+Pelicula.idpelicula,obj
+            axios.post("/api/pelicula/"+Pelicula.idpelicula,obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }
             ).then((res)=>{
                 Lista();
                 onClose();
@@ -227,7 +233,7 @@ export default function ListComponent(){
                             <TableCell>{item.idpelicula}</TableCell>
                             <TableCell>{<Image width={200} height={200} src={url+item.imgportada}></Image>}</TableCell>
                             <TableCell>{item.titulo}</TableCell>
-                            <TableCell>{item.fechaestreno}</TableCell>
+                            <TableCell>{FormatearFecha(item.fechaestreno)}</TableCell>
                             <TableCell>{item.director}</TableCell>
                             <TableCell>{item.productora}</TableCell>
                             <TableCell>{item.duracion}</TableCell>

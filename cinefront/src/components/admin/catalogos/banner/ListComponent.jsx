@@ -67,16 +67,16 @@ export default function ListComponent(){
         onOpen();
     }
     function Guardar(){
-        if (Object.is(File,null)) {
-            MensajeAdvertencia("Debe seleccionar una imagen");
-            return false;
-        }
         var obj={
             idbanner:Banner.idbanner,
             imgbanner:Banner.imgbanner,
             files:File
         };
         if (obj.idbanner==0) {
+            if (Object.is(File,null)) {
+                MensajeAdvertencia("Debe seleccionar una imagen");
+                return false;
+            }
             axios.post('/api/banner',obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"

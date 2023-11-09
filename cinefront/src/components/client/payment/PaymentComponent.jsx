@@ -28,10 +28,10 @@ function Pago({Orden,setOrden,Errores, DatosCorreo, setDatosCorreo}){
                     {!Object.is(Errores.correocliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.correocliente[0]}</label> : null}
                 </div>
                 
-                <Input type='text' label="NOMBRE DE LA TARJETA" placeholder="Tal y como aparece en la tarjeta" />
+                {/* <Input type='text' label="NOMBRE DE LA TARJETA" placeholder="Tal y como aparece en la tarjeta" />
                 <Input type='number' label="NÚMERO DE TARJETA" placeholder="Digite los 16 números" />
                 <Input type='number' label="FECHA DE VENCIMIENTO" placeholder="MM/AA" />
-                <Input type='number' label="CVV" placeholder="CVV" />
+                <Input type='number' label="CVV" placeholder="CVV" /> */}
             </div>
             {/* <div className='cart-empty'>
                 <Button className='btn'>Pagar</Button>

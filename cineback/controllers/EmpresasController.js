@@ -23,7 +23,7 @@ const addEmpresa=(async (req,res)=>{
     const ValidationRule={
         "nombrecomercial":"required|string",
         "razonsocial":"required|string",
-        "rfc":"required|string|digits:12",
+        "rfc":"required|string|size:12",
         "direccion":"required|string",
         "telefono":"required|numeric|digits:10",
         "email":"required|email",
@@ -35,7 +35,8 @@ const addEmpresa=(async (req,res)=>{
         string:"El campo es requerido",
         email:"Ingresa un correo electrónico válido",
         digits:"Ingresa un :attribute válido",
-        numeric:"El valor debe ser numérico"
+        numeric:"El valor debe ser numérico",
+        size:"El RFC debe ser de 12 caracteres"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
@@ -78,7 +79,7 @@ const updateEmpresa=(async (req,res)=>{
     const ValidationRule={
         "nombrecomercial":"required|string",
         "razonsocial":"required|string",
-        "rfc":"required|string|digits:12",
+        "rfc":"required|string|size:12",
         "direccion":"required|string",
         "telefono":"required|numeric|digits:10",
         "email":"required|email",
@@ -90,7 +91,8 @@ const updateEmpresa=(async (req,res)=>{
         string:"El campo es requerido",
         email:"Ingresa un correo electrónico válido",
         digits:"Ingresa un número teléfonico válido",
-        numeric:"El valor debe ser numérico"
+        numeric:"El valor debe ser numérico",
+        size:"El RFC debe ser de 12 caracteres"
     }
     let estatus=false;
     await validator(req.body,ValidationRule,Messages,(err,status)=>{
@@ -101,7 +103,13 @@ const updateEmpresa=(async (req,res)=>{
     })
     if (estatus) {
         let Empresa=new EmpresaClass;
-        uploads.single('files');
+        if (Object.is(req.body.files,null)) {
+            Empresa.imgempresa=req.body.imgempresa;
+        }
+        else{
+            uploads.single('files');
+            Empresa.imgempresa=filename;
+        }
         Empresa.nombrecomercial=req.body.nombrecomercial;
         Empresa.razonsocial=req.body.razonsocial;
         Empresa.rfc=req.body.rfc;
@@ -110,7 +118,6 @@ const updateEmpresa=(async (req,res)=>{
         Empresa.email=req.body.email;
         Empresa.estado=req.body.estado;
         Empresa.ciudad=req.body.ciudad;
-        Empresa.imgempresa=filename;
         Empresa.updated_at=new Date();
         Empresa.idempresa=req.params.id;
         let respuesta=await Empresa.actualizar();

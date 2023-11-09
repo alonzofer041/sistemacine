@@ -59,8 +59,13 @@ const getBanner=(async (req,res)=>{
 //@access public
 const updateBanner=(async (req,res)=>{
     let Banner=new BannerClass;
-    uploads.single('files');
-    Banner.imgbanner=filename;
+    if (Object.is(req.body.files,null)) {
+        Banner.imgbanner=req.body.imgbanner
+    }
+    else{
+        uploads.single('files');
+        Banner.imgbanner=filename;
+    }
     Banner.idbanner=req.params.id;
     Banner.updated_at=new Date();
     let respuesta=await Banner.actualizar();

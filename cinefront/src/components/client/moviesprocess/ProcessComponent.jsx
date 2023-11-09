@@ -483,7 +483,7 @@ export default function GetTickets() {
                                         </Card>
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button className="btn-modal" color="primary" onClick={doBoth}>Guardar Orden</Button>
+                                        <Button className="btn" color="primary" onClick={doBoth}>Guardar Orden</Button>
                                     </ModalFooter>
                                     </>
                                 )}

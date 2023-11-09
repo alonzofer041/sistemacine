@@ -132,10 +132,6 @@ export default function ListComponent(){
         onOpen();
     }
     function Guardar(){
-        if (Object.is(File,null)) {
-            MensajeAdvertencia("Debe seleccionar una imagen");
-            return false;
-        }
         var obj={
             idempresa:Empresa.idempresa,
             nombrecomercial:Empresa.nombrecomercial,
@@ -146,9 +142,14 @@ export default function ListComponent(){
             email:Empresa.email,
             estado:Empresa.estado,
             ciudad:Empresa.ciudad,
+            imgempresa:Empresa.imgempresa,
             files:File
         };
         if (obj.idempresa==0) {
+            if (Object.is(File,null)) {
+                MensajeAdvertencia("Debe seleccionar una imagen");
+                return false;
+            }
             axios.post("/api/empresa",obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"

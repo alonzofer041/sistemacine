@@ -41,7 +41,7 @@ class Pelicula{
         return respuesta;
     }
     async actualizar(){
-        let respuesta=await pool.query('UPDATE peliculas SET idpeliculacategoria=?,titulo=?,sinopsis=?,aniorealizacion=?,director=?,reparto=?,duracion=?,productora=?,distribuidora=?,imgportada=? ,updated_at=? WHERE idpelicula=?',[
+        let respuesta=await pool.query('UPDATE peliculas SET idpeliculacategoria=?,titulo=?,sinopsis=?,fechaestreno=?,aniorealizacion=?,director=?,reparto=?,duracion=?,productora=?,distribuidora=?,imgportada=? ,updated_at=? WHERE idpelicula=?',[
             this.idpeliculacategoria,
             this.titulo,
             this.sinopsis,

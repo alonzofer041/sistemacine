@@ -31,6 +31,7 @@ const getHorarioPelicula=(async (req,res)=>{
 const updateHorarioPelicula=(async (req,res)=>{
     let HorarioPelicula=new HorarioPeliculaClass;
     HorarioPelicula.idsala=req.body.idsala;
+    HorarioPelicula.fecha=req.body.fecha;
     HorarioPelicula.hora=req.body.hora;
     HorarioPelicula.updated_at=new Date();
     HorarioPelicula.idhorariopelicula=req.params.id;

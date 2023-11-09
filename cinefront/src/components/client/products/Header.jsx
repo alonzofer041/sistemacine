@@ -76,7 +76,7 @@ export const Header = ({
 
 		axios.post("/api/ordenproducto",obj
 		).then((res)=>{
-			alert("Realizado con éxito");
+			MensajeExito("Compra Realizada con éxito");
 			onClose();
         }).catch((err)=>{
             setErrorValidacion(err.response.data.errors.errors);

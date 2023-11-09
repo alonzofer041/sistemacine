@@ -14,6 +14,14 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
     useEffect(()=>{
         ListaCategoria();
     },[]);
+    useEffect(()=>{
+        ListaCategoria();
+        let year=startDate.getFullYear();
+        let month=startDate.getMonth()+1;
+        let day=startDate.getDate();
+        let cadenafecha=year+'-'+month+'-'+day;
+        setPelicula({...Pelicula,fechaestreno:cadenafecha})
+    },[startDate]);
     function handleIdPeliculaCategoria(e){
         setPelicula({...Pelicula,idpeliculacategoria:e.target.value});
     }
@@ -23,8 +31,10 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
     function handleSinopsis(e){
         setPelicula({...Pelicula,sinopsis:e.target.value});
     }
-    function handleFechaEstreno(e){
-        setPelicula({...Pelicula,fechaestreno:e.target.value});
+    function handleFechaEstreno(date){
+        // setPelicula({...Pelicula,fechaestreno:e.target.value});
+        setStartDate(date);
+
     }
     function handleReparto(e){
         setPelicula({...Pelicula,reparto:e.target.value});
@@ -88,7 +98,7 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
                     <div className="mb-2">
                         <div className="grid grid-cols-2">
                             <div>
-                                <DatePicker customInput={<Input label="Fecha"></Input>} selected={startDate} onChange={(date)=>setStartDate(date)}/>
+                                <DatePicker customInput={<Input label="Fecha"></Input>} selected={startDate} onChange={(date)=>handleFechaEstreno(date)}/>
                             </div>
                             <div>
                                 <Input value={Pelicula.aniorealizacion} onChange={handleAnioRealizacion} name="aniorealizacion" label="Año de estreno"></Input>

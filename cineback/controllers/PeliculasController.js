@@ -101,9 +101,9 @@ const updatePelicula=(async(req,res)=>{
         "sinopsis":"required|string",
         "fechaestreno":"required|string",
         "aniorealizacion":"required|numeric|digits:4",
-        "director":"required|string|",
+        "director":"required|string",
         "reparto":"required|string",
-        "duracion":"required|numeric",
+        "duracion":"required|string",
         "productora":"required|string",
         "distribuidora":"required|string"
     };
@@ -122,6 +122,13 @@ const updatePelicula=(async(req,res)=>{
     })
     if (estatus) {
         let Pelicula=new PeliculaClass;
+        if (Object.is(req.body.files,null)) {
+            Pelicula.imgportada=req.body.imgportada;
+        }
+        else{
+            uploads.single('files');
+            Pelicula.imgportada=filename;
+        }
         Pelicula.idpelicula=req.params.id;
         Pelicula.idpeliculacategoria=req.body.idpeliculacategoria;
         Pelicula.titulo=req.body.titulo;
@@ -133,7 +140,6 @@ const updatePelicula=(async(req,res)=>{
         Pelicula.duracion=req.body.duracion;
         Pelicula.productora=req.body.productora;
         Pelicula.distribuidora=req.body.distribuidora;
-        Pelicula.imgportada=req.body.imgportada;
         Pelicula.updated_at=new Date();
         let respuesta=await Pelicula.actualizar();
         res.status(200).send({respuesta:respuesta});

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
+import { MensajeExito } from "../../../helpers/functions";
 
 
 const url=import.meta.env.VITE_ASSET_URL+'/productos/';
@@ -29,6 +30,7 @@ export const ProductList = ({
 		setTotal(total + Producto.valor * Producto.cantidad_default);
 		setCountProducts(countProducts + Producto.cantidad_default);
 		setAllProducts([...allProducts, Producto]);
+		MensajeExito("Producto añadido al carrito");
 	};
 
 	const [ProductoList,setProductoList]=useState([]);

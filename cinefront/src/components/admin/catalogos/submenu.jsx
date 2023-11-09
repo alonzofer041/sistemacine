@@ -36,10 +36,10 @@ export default function SubMenuConfig(){
                     Salas
                 </Button>
 
-                <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarSucursal}>
+                {/* <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarSucursal}>
                     <FaBuilding size="2em"/>
                     Sucursal
-                </Button>
+                </Button> */}
 
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarPelicula}>
                     <FaFilm size="2em"/>

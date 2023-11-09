@@ -76,8 +76,10 @@ export default function Inicio() {
           )))}
         </Carousel>
       </div>
-      <div className="grid grid-cols-1">
-        <h1 className="text-center">Para Ver Hoy</h1>
+      <div className="grid grid-cols-1 mb-2">
+        <div className="titlescinema">
+			  	<p>Para Ver Hoy</p>
+			  </div>
       </div>
       <div className="grid grid-cols-4 gap-4 ml-4 mr-4">
       {PeliculasEstreno.map((Pelicula)=>(

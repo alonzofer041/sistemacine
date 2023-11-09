@@ -10,7 +10,7 @@ export default function FormCorreoComponent({DatosCorreo,setDatosCorreo}){
     }
     return(
         <div className="container">
-            <Input name="correo" label="Correo" value={DatosCorreo.email} onChange={handleEmail}></Input>
+            <Input className="mb-2" name="correo" label="Correo" value={DatosCorreo.email} onChange={handleEmail}></Input>
             <Input name="destinatario" label="Nombre de Quien Recibe" value={DatosCorreo.destinatario} onChange={handleDestinatario}></Input>
         </div>   
     )

@@ -66,9 +66,11 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
                     <Input name="nombre"  label="Nombre Producto"  value={Producto.nombre} onChange={handleNombre}></Input>
                     {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label>:null}
                 </div>
-                <div className="grid grid-cols-2 mb-2">
+                
+            </div>
+            <div className="grid grid-cols-2 mb-2">
                     <div>
-                        <Select selectedKeys={[Producto.idproveedor]} onChange={handleIdProveedor} label="Seleccione un Proveedor">
+                        <Select selectedKeys={[Producto.idproveedor.toString()]} onChange={handleIdProveedor} label="Seleccione un Proveedor">
                             {ProveedorList.map((Proveedor)=>(
                                 <SelectItem key={Proveedor.idproveedor} value={Proveedor.idproveedor}>
                                     {Proveedor.nombrecomercial}
@@ -77,7 +79,7 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
                         </Select>
                     </div>
                     <div className="ml-2">
-                        <Select selectedKeys={[Producto.idproductocategoria]} onChange={handleIdProductoCategoria} label="Seleccione un tipo de producto">
+                        <Select selectedKeys={[Producto.idproductocategoria.toString()]} onChange={handleIdProductoCategoria} label="Seleccione un tipo de producto">
                             {ProductoCategoriaList.map((ProductoCategoria)=>(
                                 <SelectItem key={ProductoCategoria.idproductocategoria} value={ProductoCategoria.idproductocategoria}>
                                     {ProductoCategoria.nombre}
@@ -96,7 +98,6 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
                         {!Object.is(Errores.cantidad,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.cantidad[0]}</label>:null}
                     </div>
                 </div>
-            </div>
         </div>
     )
 }

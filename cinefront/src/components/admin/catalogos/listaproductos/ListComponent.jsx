@@ -8,7 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
-import { MensajeAdvertencia } from "../../../../helpers/functions";
+import { MensajeAdvertencia, MensajeExito } from "../../../../helpers/functions";
 
 const url=import.meta.env.VITE_ASSET_URL+'/productos/';
 export default function ListComponent(){
@@ -42,7 +42,7 @@ export default function ListComponent(){
     const [ProductoList,setProductoList]=useState([]);
 
     // ESTADO DE ARCHIVO
-    const [File,setFile]=useState({});
+    const [File,setFile]=useState(null);
 
     const [loading, setLoading] = useState(true);
 
@@ -134,9 +134,7 @@ export default function ListComponent(){
     }
     function Guardar(){
         let mensajes=[];
-        if (Object.is(File,null)) {
-            mensajes.push("Debe seleccionar una imagen");
-        }
+        
         if (Producto.idproveedor==0) {
             mensajes.push("Debe seleccionar un proveedor");
         }
@@ -156,9 +154,13 @@ export default function ListComponent(){
             cantidad:Producto.cantidad,
             idproveedor:Producto.idproveedor,
             idproductocategoria:Producto.idproductocategoria,
+            imgproducto:Producto.imgproducto,
             files:File
         };
         if (obj.idproducto==0) {
+            if (Object.is(File,null)) {
+               MensajeAdvertencia("Debe seleccionar una imagen");
+            }
             axios.post("/api/producto",obj,{
                 headers:{
                     "Content-Type":"multipart/form-data"
@@ -166,6 +168,7 @@ export default function ListComponent(){
             }).then((res)=>{
                 Lista();
                 onClose();
+                MensajeExito("Se ha Guardado Correctamente la Información");
             }).catch((err)=>{
                 setErrorValidacion(err.response.data.errors.errors);
             });
