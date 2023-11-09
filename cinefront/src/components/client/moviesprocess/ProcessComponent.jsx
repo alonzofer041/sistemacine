@@ -218,8 +218,12 @@ export default function GetTickets() {
     async function EnviarCorreoCompra(){
         let obj={
             nombrecliente:Nombre + ' ' + Apellido,
+            titulo: titulopelicula,
             correocliente:Correo,
             cantidadentradas:NumEntradasSeleccionadas,
+            nombreasiento:AsientosSeleccionados,
+            hora: HorarioSeleccionado,
+            nombresala: NombreSala,
             preciototal:NumEntradasSeleccionadas*30
         }
         axios.post("/api/pagoentradaemail",obj
@@ -432,9 +436,9 @@ export default function GetTickets() {
                     </CardBody>
                     <Divider/>
                     <CardFooter>
-                        <Button onClick={onOpen} className="btn">Pagar</Button>
-                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} >
-                                <ModalContent >
+                        <Button onClick={onOpen} onClose={onClose}className="btn">Pagar</Button>
+                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
+                                <ModalContent>
                                 {(onClose) => (
                                     <>
                                     <ModalHeader className="flex flex-col gap-1">Datos de Pago</ModalHeader>
@@ -483,7 +487,7 @@ export default function GetTickets() {
                                         </Card>
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button className="btn" color="primary" onClick={doBoth}>Guardar Orden</Button>
+                                        <Button className="btn" color="primary" onClick={doBoth} >Guardar Orden</Button>
                                     </ModalFooter>
                                     </>
                                 )}

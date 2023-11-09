@@ -1,5 +1,6 @@
 let OrdenEntradaClass=require("../models/OrdenEntrada");
 let HorarioxAsientoClass=require("../models/HorarioxAsiento");
+let PeliculaClass=require("../models/Pelicula");
 const transporter=require("../mailqrentrada");
 const validator=require("../helpers/validate");
 
@@ -90,6 +91,10 @@ const pagoEmail=(async (req,res)=>{
         let correocliente=req.body.correocliente;
         let preciototal=req.body.preciototal;
         let cantidadentradas=Number(req.body.cantidadentradas);
+        let titulo=req.body.titulo;
+        let nombreasiento=req.body.nombreasiento;
+        let hora=req.body.hora;
+        let nombresala=req.body.nombresala;
         //let destinatario=req.body.destinatario;
         let url="127.0.0.1:5173/pagoentrada/"+idempresa+"/"+idsucursal;
         await transporter.sendMail({
@@ -101,11 +106,14 @@ const pagoEmail=(async (req,res)=>{
                 nombrecliente:nombrecliente,
                 pagototal:preciototal,
                 NumEntradasSeleccionadas:cantidadentradas,
+                pelicula:titulo,
+                asiento:nombreasiento,
+                hora:hora,
+                sala:nombresala,
                 url:url
             }
         });
         res.status(200).send({message:"ok"});
-        console.log(cantidadentradas);
     }
 }) 
 module.exports={addOrdenEntrada, pagoEmail, uploads}

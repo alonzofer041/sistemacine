@@ -82,6 +82,7 @@ const pagoEmail=(async (req,res)=>{
         let correocliente=req.body.correocliente;
         let importe=Number(req.body.importe);
         let iva=Number(req.body.importe)+(Number(req.body.importe)*0.16);
+        //let productos=req.body.productos;
         //let destinatario=req.body.destinatario;
         let url="127.0.0.1:5173/pago/"+idempresa+"/"+idsucursal;
         await transporter.sendMail({
@@ -93,6 +94,7 @@ const pagoEmail=(async (req,res)=>{
                 folio:folio,
                 nombrecliente:nombrecliente,
                 importe:importe,
+                //productos:productos,
                 iva:iva,
                 url:url
             }
