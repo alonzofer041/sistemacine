@@ -436,7 +436,7 @@ export default function GetTickets() {
                     </CardBody>
                     <Divider/>
                     <CardFooter>
-                        <Button onClick={onOpen} onClose={onClose}className="btn">Pagar</Button>
+                        <Button onClick={onOpen} className="btn">Pagar</Button>
                         <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
                                 <ModalContent>
                                 {(onClose) => (

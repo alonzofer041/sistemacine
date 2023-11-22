@@ -29,15 +29,16 @@
 </head>
 <body>
     <div class="fondo">
-        <h1 class="textofondo">Cineflash</h1>
+        <h1 class="textofondo"><center>Cineflash</center></h1>
     </div>
     <div>
-        <h3>Estimado: {{nombrecliente}}</h3>
-        <p>Su compra se ha realizado con exito</p>
+        <center><h3>Estimado: {{nombrecliente}}</h3></center> 
+        <center><h2>Su compra se ha realizado con exito</h2></center>
     </div>
-    <div>
-        <p>datos de tu compra</p>
-        <p>Pelicula: <b>{{pelicula}}</b></p>
+    <div class="datos">
+        <p><b>Datos de tu compra</b></p>
+
+        <p>Pelicula: <b>{{pelicula}}</b></p> 
         <p>Precio: <b>{{pagototal}}.00</b></p>
         <p>Tickets: <b>{{{NumEntradasSeleccionadas}}}</b></p>
         <p>Asiento: <b>{{{asiento}}}</b></p>
@@ -45,6 +46,8 @@
         <p>Tickets: <b>{{{sala}}}</b></p>
         <p></p>  
     </div>
+    <center>{{{qrImage}}}</center>
+    
     
 </body>
 </html>
