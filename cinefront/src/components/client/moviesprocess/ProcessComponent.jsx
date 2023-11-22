@@ -381,39 +381,97 @@ function MyComponent() {
 
                             <Divider/>
                             
-                            <CardFooter>
-                                <Button onClick={onOpen} className="btn">Pagar</Button>
-                                    <Modal isOpen={isOpen} onOpenChange={onOpenChange} >
-                                        <ModalContent>
-                                            {(onClose) => (
-                                            <>
-                                            <ModalHeader className="flex flex-col gap-1">Datos de Pago</ModalHeader>
-                                                <ModalBody>
-                                                    <div>
-                                                        <Input  onChange={handleNombre} value={Nombre} isRequired type="text" label="Nombre"/>
-                                                        {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
-                                                    </div>
-                                                    
-                                                    <div>
-                                                        <Input onChange={handleApellido} value={Apellido} isRequired type="text" label="Apellidos"/>
-                                                        {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
-                                                    </div>
-
-                                                    <div>
-                                                        <Input onChange={handleCorreo} value={Correo} isRequired type="text" label="Correo"/>
-                                                        {!Object.is(ErrorValidacion.correocliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.correocliente[0]}</label> : null}
-                                                    </div>
-                                                </ModalBody>
-                                            <ModalFooter>
-                                                <Button className="btn" color="primary" onClick={doBoth}>Guardar Orden</Button>
-                                            </ModalFooter>
-                                            </>
-                                        )}
-                                        </ModalContent>
-                                    </Modal>
-                            </CardFooter>
-                        </Card>
-                    </Tab>
+                        <CardFooter>
+                            <Button variant="shadow" className="btn" >
+                                Ver Resumen.
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                
+  
+            </Tab> 
+            <Tab title="Paso 4 - Confirmar Compra">
+                <Card style={{width:"50%", margin:"auto"}}>
+                    <CardHeader>
+                        <h3>Resumen de Compra</h3>
+                    </CardHeader>
+                    <Divider/>
+                    <CardBody>
+                        <div className="grid grid-cols-12">
+                            <div className="col-span-3 mr-2">
+                                <Image src={url+imgportada} width={180} alt="" />
+                            </div>
+                            <div className="col-span-9">
+                                <p className="textoasiento">Título: {titulopelicula}</p>
+                                <p className="textoasiento">Sala: {NombreSala}</p>
+                                <p className="textoasiento">Hora: {HorarioSeleccionado}</p>
+                                <p className="textoasiento">Asientos: {AsientosSeleccionados.map((asiento)=>asiento+", ")}</p>
+                                <p className="textoasiento">Precio: $ {NumEntradasSeleccionadas*30}</p>
+                            </div>
+                        </div>
+                    </CardBody>
+                    <Divider/>
+                    <CardFooter>
+                        <Button onClick={onOpen} className="btn">Pagar</Button>
+                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
+                                <ModalContent>
+                                {(onClose) => (
+                                    <>
+                                    <ModalHeader className="flex flex-col gap-1">Datos de Pago</ModalHeader>
+                                    <ModalBody>
+                                        <Card>
+                                            <CardBody>
+                                            <div>
+                                                <Input  onChange={handleNombre} value={Nombre} isRequired type="text" label="Nombre"/>
+                                                {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
+                                            </div>
+                                            </CardBody>
+                                            <Divider/>
+                                            <CardBody>
+                                            <div>
+                                                <Input onChange={handleApellido} value={Apellido} isRequired type="text" label="Apellidos"/>
+                                                {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
+                                            </div>
+                                            </CardBody>
+                                            <Divider/>
+                                            <Divider/>
+                                            <CardBody>
+                                            <div>
+                                                <Input onChange={handleCorreo} value={Correo} isRequired type="text" label="Correo"/>
+                                                {!Object.is(ErrorValidacion.correocliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.correocliente[0]}</label> : null}
+                                            </div>
+                                            </CardBody>
+                                            <Divider/>
+                                            {/* <CardBody>
+                                            <div>
+                                                <Input isRequired type="number" label="Número de tarjeta"/>
+                                            </div>
+                                            </CardBody>
+                                            <Divider/>
+                                            <CardBody>
+                                            <div>
+                                                <Input isRequired type="number" label="CVV"/>
+                                            </div>
+                                            </CardBody>
+                                            <Divider/>
+                                            <CardBody>
+                                            <div>
+                                                <Input className="inputs" isRequired type="date" label="Fecha de expiración" labelPlacement="outside-left"/>
+                                            </div>
+                                            </CardBody>
+                                            <Divider/> */}
+                                        </Card>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button className="btn" color="primary" onClick={doBoth} >Guardar Orden</Button>
+                                    </ModalFooter>
+                                    </>
+                                )}
+                                </ModalContent>
+                            </Modal>
+                    </CardFooter>
+                </Card>
+            </Tab>
           </Tabs>
         </div>  
             </div>

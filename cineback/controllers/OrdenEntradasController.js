@@ -3,6 +3,7 @@ let HorarioxAsientoClass=require("../models/HorarioxAsiento");
 let PeliculaClass=require("../models/Pelicula");
 const transporter=require("../mailqrentrada");
 const validator=require("../helpers/validate");
+const QRCode = require('qrcode');
 const Stripe=require("stripe");
 
 const multer=require('multer');
@@ -108,23 +109,44 @@ const pagoEmail=(async (req,res)=>{
         let nombresala=req.body.nombresala;
         //let destinatario=req.body.destinatario;
         let url="127.0.0.1:5173/pagoentrada/"+idempresa+"/"+idsucursal;
+        const qrData = {
+            nombrecliente: nombrecliente,
+            pagototal: preciototal,
+            NumEntradasSeleccionadas: cantidadentradas,
+            pelicula: titulo,
+            asiento: nombreasiento,
+            hora: hora,
+            sala: nombresala
+        };
+        const qrImage = await generateQRCode(qrData);
+
         await transporter.sendMail({
             from:"cineflashmid@gmail.com",
             to:correocliente,
             subject:"Compra de entadras",
             template:"PagoEntrada",
             context:{
-                nombrecliente:nombrecliente,
-                pagototal:preciototal,
-                NumEntradasSeleccionadas:cantidadentradas,
-                pelicula:titulo,
-                asiento:nombreasiento,
-                hora:hora,
-                sala:nombresala,
-                url:url
+                nombrecliente: nombrecliente,
+                pagototal: preciototal,
+                NumEntradasSeleccionadas: cantidadentradas,
+                pelicula: titulo,
+                asiento: nombreasiento,
+                hora: hora,
+                sala: nombresala,
+                qrImage: qrImage
             }
         });
         res.status(200).send({message:"ok"});
     }
 }) 
+
+const generateQRCode = async (data) => {
+    try {
+        const qrImage = await QRCode.toDataURL(JSON.stringify(data));
+        return `<img src="${qrImage}" alt="QR Code" style="max-width: 100%;">`;
+    } catch (error) {
+        console.error('Error generando el código QR', error);
+        throw error;
+    }
+};
 module.exports={addOrdenEntrada, pagoEmail, uploads}
