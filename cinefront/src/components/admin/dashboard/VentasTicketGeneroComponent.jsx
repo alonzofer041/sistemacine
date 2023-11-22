@@ -1,32 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import {Doughnut} from "react-chartjs-2";
+import {Pie} from "react-chartjs-2";
+import axios from "axios";
+import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 ChartJS.register(ArcElement, Tooltip, Legend)
 export default function VentasTicketComponent(){
+    const [labels,setLabels]=useState([]);
+    const [dataValues,setDataValues]=useState([]);
+    const [backgroundColors,setBackgroundColors]=useState([]);
+
+    useEffect(()=>{
+        GetData();
+    },[])
+    function GetData(){
+        setTimeout(() => {
+            axios.get("/api/dashboardticketsgenero").then((res)=>{
+                let etiquetas=res.data.labels;
+                let valores=res.data.values;
+                let colores=res.data.colors;
+                setLabels(etiquetas);
+                setDataValues(valores);
+                setBackgroundColors(colores);
+            })
+        }, 1000);
+    }
     return(
         <div>
-            <h1>Ventas por género de película</h1>
-            <Doughnut datasetIdKey='id'
-                data={
-                        {
-                        labels: ['Terror', 'Ciencia Ficción', 'Fantasía','Acción','Suspenso','Drama'],
-                        datasets: [
-                          {
-                            id: 1,
-                            label: 'No. de Ventas',
-                            data: [120, 134, 123,68,120,180],
-                            backgroundColor: [
-                                'rgba(0, 36, 170, 1)',
-                                'rgba(0, 203, 209, 1)',
-                                'rgba(193, 0, 209, 1)',
-                                'rgba(209,57,0,1)',
-                                'rgba(131,36,0,1)',
-                                'rgba(56,0,131,1)']
-                          },
-                        ],
+            <Card>
+                <CardHeader>
+                    <h1>Ventas por género de película</h1>
+                </CardHeader>
+                <Divider></Divider>
+                <CardBody>
+                    <Pie datasetIdKey='id'
+                    options={{responsive:true,maintainAspectRatio:false}}
+                    style={{height:"300px"}}
+                    data={
+                            {
+                            labels: labels,
+                            datasets: [
+                                {
+                                  id: 1,
+                                  label: 'No. de Ventas',
+                                  data: dataValues,
+                                  backgroundColor:backgroundColors
+                                },
+                              ],
+                        }
                     }
-                }
-            />
+                    />
+                </CardBody>
+            </Card>
         </div>
     )
 }

@@ -18,6 +18,7 @@ export const Header = ({
 	setTotal,
 }) => {
 	const {isOpen,onOpen,onOpenChange, onClose}=useDisclosure();
+	
 	const [active, setActive] = useState(false);
 	const [OrdenProductos,setOrdenProductos]=useState({
 		idordenproducto:0,
@@ -78,6 +79,7 @@ export const Header = ({
 		).then((res)=>{
 			MensajeExito("Compra Realizada con éxito");
 			onClose();
+			navigate("/cine/realizado");
         }).catch((err)=>{
             setErrorValidacion(err.response.data.errors.errors);
         });
@@ -89,6 +91,7 @@ export const Header = ({
         let obj={
             correocliente:DatosCorreo.correocliente,
             nombrecliente:DatosCorreo.nombrecliente,
+			//productos:allProducts,
 			importe:total,
         }
         axios.post("/api/pagoproductoemail",obj

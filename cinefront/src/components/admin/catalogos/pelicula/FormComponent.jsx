@@ -58,6 +58,8 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
         if(ImagePreview(e)){
             let value=e.target.files;
             setFile(value[0]);
+            e.target.value=null;
+            console.log(e.target.files);
         }
     }
     function ListaCategoria(){
