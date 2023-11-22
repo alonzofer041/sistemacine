@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.1.13",
+    "@stripe/react-stripe-js": "^2.3.2",
+    "@stripe/stripe-js": "^2.1.11",
+    "@superset-ui/embedded-sdk": "^0.1.0-alpha.10",
     "axios": "^1.5.0",
     "bootstrap": "^5.3.2",
     "chart.js": "^4.4.0",

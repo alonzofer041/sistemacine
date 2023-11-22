@@ -1,19 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import {Checkbox ,Button, Card, CardHeader, CardBody, CardFooter, Divider, Tabs, Tab, Input, Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, Select, SelectItem, RadioGroup, Radio, CheckboxGroup, Image, ModalFooter} from "@nextui-org/react";
-import { GiTicket, GiDirectorChair, GiSwipeCard } from "react-icons/gi";
+import { GiTicket, GiDirectorChair, GiNotebook, GiCalendar } from "react-icons/gi";
 import { asientos } from "./data";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ReactSVG } from "react-svg";
 // import {Sit} from "../../../assets/sit.svg";
 import axios from "axios";
 import { FormatearFecha, MensajeAdvertencia, MensajeExito } from "../../../helpers/functions";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
+import {loadStripe} from "@stripe/stripe-js";
+import {CardElement, Elements, useElements, useStripe} from "@stripe/react-stripe-js";
+
+const stripePromise=loadStripe("pk_test_Eoz0gXulPv0IDl39oqAFPLHA00d5gzPy1a");
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
-export default function GetTickets() {
+export default function GetTickets(){
+    return(
+        <Elements stripe={stripePromise}>
+            <MyComponent></MyComponent>
+        </Elements>
+    )
+}
+
+function MyComponent() {
+    // STRIPE
+    const stripe=useStripe();
+    const elements=useElements();
+
+    const navigate=useNavigate();
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const location=useLocation();
     const idpelicula=location.state?.idpelicula;
@@ -185,35 +201,45 @@ export default function GetTickets() {
         })
     }
     async function GuardarOrden(){
-        let AsientosData=[];
-        let horaIndex=HorariosDisponibles.findIndex((hora)=>{return hora.hora==HorarioSeleccionado});
-        let hora=HorariosDisponibles[horaIndex];
-        AsientosSeleccionados.forEach((Asiento)=>{
-            let AsientoIndex=Asientos.findIndex((as)=>{return as.nombre==Asiento});
-            AsientosData.push(Asientos[AsientoIndex]);
+
+        const {error,paymentMethod}=await stripe.createPaymentMethod({
+            type:'card',
+            card:elements.getElement(CardElement)
         });
-        let obj={
-            idempresa:Empresa.idempresa,
-            idsucursal:IdSucursal,
-            idsala:IdSala,
-            idpelicula:idpelicula,
-            nombrecliente:Nombre,
-            cantidadentradas:NumEntradasSeleccionadas,
-            correocliente:Correo,
-            estatus:'pagado',
-            preciototal:NumEntradasSeleccionadas*30,
-            idhorario:hora.idhorariopelicula,
-            asientos:AsientosData
-        }
-        await axios.post("/api/ordenentrada",obj,{
-            headers:{
-                "Content-Type":"multipart/form-data"
+        if (!error) {
+            // console.log(paymentMethod);
+            const {id}=paymentMethod;
+            let AsientosData=[];
+            let horaIndex=HorariosDisponibles.findIndex((hora)=>{return hora.hora==HorarioSeleccionado});
+            let hora=HorariosDisponibles[horaIndex];
+            AsientosSeleccionados.forEach((Asiento)=>{
+                let AsientoIndex=Asientos.findIndex((as)=>{return as.nombre==Asiento});
+                AsientosData.push(Asientos[AsientoIndex]);
+            });
+            let obj={
+                idempresa:Empresa.idempresa,
+                idsucursal:IdSucursal,
+                idsala:IdSala,
+                idpelicula:idpelicula,
+                nombrecliente:Nombre,
+                cantidadentradas:NumEntradasSeleccionadas,
+                correocliente:Correo,
+                estatus:'pagado',
+                preciototal:NumEntradasSeleccionadas*30,
+                idhorario:hora.idhorariopelicula,
+                asientos:AsientosData,
+                IdPago:id
             }
-        }).then((res)=>{
-            MensajeExito("Se ha guardado la orden con éxito");
-        }).catch((err)=>{
-            setErrorValidacion(err.response.data.errors.errors);
-        });
+            await axios.post("/api/ordenentrada",obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
+                MensajeExito("Se ha guardado la orden con éxito");
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });   
+        }
     }
     async function EnviarCorreoCompra(){
         let obj={
@@ -229,181 +255,131 @@ export default function GetTickets() {
         axios.post("/api/pagoentradaemail",obj
         ).then((res)=>{
             MensajeExito("Correo Enviado");
+            Realizado();
         }).catch((err)=>{
             alert("Algo fallo");
             setErrorValidacion(err.response.data.errors.errors);
         })
     }
-
+    function Realizado(){
+        navigate("/cine/realizado");
+    }
 	const doBoth = () => {
 		GuardarOrden();
 		EnviarCorreoCompra();
 	}
     return (
-        <div className="center2">
-            <div className="">
-          <Tabs aria-label="Options">
-            <Tab title="Paso 1 - Horario" key="Horario">
-                <Card>
-                    <CardHeader>
-                        <p>Selecciona tu Horario para el día {FormatearFecha(fechafuncion)}</p>
-                    </CardHeader>
-                    <Divider></Divider>
-                    <CardBody>
-                        <Select label="Elige una Sala" onChange={handleIdSala} defaultSelectedKeys={IdSala}>
-                        {SalasDisponibles.map((Sala)=>(
-                            <SelectItem key={Sala.idsala} value={Sala.idsala}>{Sala.nombre}</SelectItem>
-                        ))}
-                        </Select>
-                        <RadioGroup label="Selecciona un Horario" onChange={handleHorarioSeleccionado} value={HorarioSeleccionado}>
-                            {HorariosDisponibles.map((Horario)=>(
-                                <Radio key={Horario.idhorariopelicula} value={Horario.hora}>{Horario.hora}</Radio>
-                            ))}
-                        </RadioGroup>
-                    </CardBody>
-                </Card>
-            </Tab>
-            <Tab title="Paso 2 - Boletos" key="Boletos">
-              <Card>
-                <CardBody>
-                    <Card className="max-w-[400px]">
-                        <CardHeader className="flex gap-3">
-                            <GiTicket size={50}></GiTicket>
-                            <div className="flex flex-col">
-                                <p className="text-md">Selecciona tus boletos</p>
-                            </div>
-                        </CardHeader>
-
-                        <Divider/>
-
-                        {/* <CardBody>
-                        <div>
-                            <Input type="number" min={0} labelPlacement="outside-left" label="Niño" className="inputs"/>
-                        </div>
-                        </CardBody> */}
-
-                        <Divider/>
-
-                        <CardBody>
-                        <div>
-                            <Input value={NumEntradasSeleccionadas} onChange={handleNumEntradasSeleccionadas} type="number" min={0} labelPlacement="outside-left" label="General $30" className="inputs"/>
-                        </div>
-                        </CardBody>
-
-                        {/* <Divider/>
-
-                        <CardBody>
-                        <div>
-                            <Input type="number" min={0} labelPlacement="outside-left" label="Adulto mayor" className="inputs"/>
-                        </div>
-                        </CardBody> */}
-
-                        <Divider/>
-
-                        {/* <CardFooter>
-                            <Button variant="shadow" className="btn" >
-                                Siguiente paso.
-                            </Button>  
-                        </CardFooter> */}
-                    </Card>
-                </CardBody>
-              </Card>  
-            </Tab>
-            <Tab title="Paso 3 - Asientos" key="Asientos">
-              <Card>
-                <CardBody>
-                    <Card className="max-w-[400px]">
-                        <CardHeader className="flex gap-3">
-                            <GiDirectorChair size={50}></GiDirectorChair>
-                            <div className="flex flex-col">
-                                <p className="text-md">Selecciona tu asiento</p>
-                            </div>
-                        </CardHeader>
-
-                        <Divider/>
-
-                        <CardBody>
-                            <div style={{display:"flex",alignItems:"center",marginBottom:"1rem"}}>
-                                <ReactSVG wrapper="span" className="sillasdisponibles" src="../../sit.svg"/>
-                                <span className="textoasiento">Disponible</span>
-                                
-                                <ReactSVG wrapper="span" className="sillaseleccionada ml-2" src="../../sit.svg"/>
-                                <span className="textoasiento">Seleccionado</span>
-                                
-                                <ReactSVG wrapper="span" className="sillasocupadas ml-2" src="../../sit.svg"/>
-                                <span className="textoasiento">Ocupado</span>
-                            </div>
-                            <div>
-                                <CheckboxGroup>
-                                    {Array.from({length:NumFilaSeleccionada}).map((Fila,index)=>(
-                                        <div key={index}><span className="mr-2">{index+1}</span>
-                                            {Asientos.map((Asiento,index2)=>(
-                                                (Asiento.fila==(index+1))?
-                                                (<span style={{display:"inline-block"}} key={Asiento.idasiento}>
-                                                    <input disabled={Asiento.estatus=="disponible" ? false : true} defaultChecked={(AsientosSeleccionados.some(item=>Asientos[index2].nombre===item)) ? true : false} onChange={(e)=>handleAsientoSeleccionado(e,index,index2)} style={{display:"none"}} type="checkbox" value={Asiento.nombre} id={index+'_'+index2}/>
-                                                    {/* <Checkbox id={index+'_'+index2} key={Asiento.idasiento} value={Asiento.idasiento}></Checkbox>  */}
-                                                    <label id={index+'_'+index2} htmlFor={index+'_'+index2} className="form-label">
-                                                        <ReactSVG id={"svg_"+index+"_"+index2} className={Asiento.estatus=="disponible" ? "sillasdisponibles" : "sillasocupadas"} src="../../sit.svg"/>
-                                                    </label>
-                                                </span>)
-                                                : null
-                                            ))}
-                                        </div>
+        <div>
+            <div>
+                <Tabs className="tabs" aria-label="Proceso">
+                    <Tab title="Paso 1 - Horario" key="Horario">
+                        <Card style={{width:"50%", margin:"auto"}}>
+                            <CardHeader>
+                                <GiCalendar size={50}></GiCalendar>
+                                <p style={{paddingLeft: "10px"}}>Selecciona la función para el {FormatearFecha(fechafuncion)}</p>
+                            </CardHeader>
+                            
+                            <Divider/>
+                            
+                            <CardBody>
+                                <Select label="Elige una sala" onChange={handleIdSala} defaultSelectedKeys={IdSala} className="mb-2">
+                                    {SalasDisponibles.map((Sala)=>(
+                                        <SelectItem key={Sala.idsala} value={Sala.idsala}>{Sala.nombre}</SelectItem>
                                     ))}
-                                </CheckboxGroup>
-                                {/* {asientos.map((sillas) => (
-                                    <Checkbox>{sillas}</Checkbox>
-                                ))} */}
-                            </div>
-                        </CardBody>
+                                </Select>
+                                <RadioGroup label="Selecciona un horario" onChange={handleHorarioSeleccionado} value={HorarioSeleccionado}>
+                                    {HorariosDisponibles.map((Horario)=>(
+                                        <Radio key={Horario.idhorariopelicula} value={Horario.hora}>{Horario.hora}</Radio>
+                                    ))}
+                                </RadioGroup>
+                            </CardBody>
+                        </Card>
+                    </Tab>
 
-                        <Divider/>
-                            
-                        {/* <CardFooter>
-                            <Button variant="shadow" className="btn" >
-                                Siguiente paso.
-                            </Button>  
-                        </CardFooter> */}
-                    </Card>
-                </CardBody>
-              </Card>  
-            </Tab>
-            {/* <Tab title="Paso 4 - Pago">
-              <Card>
-                <CardBody>
-                    <Card className="max-w-[300px] m-auto">
-                        <CardHeader className="flex gap-3">
-                            <GiSwipeCard size={50}></GiSwipeCard>
-                            <div className="flex flex-col">
-                                <p className="text-md">Información personal</p>
-                            </div>
-                        </CardHeader>
-                            
-                        <Divider/>
-                            
-                        <CardBody>
-                        <div>
-                            <Input isRequired type="text" label="Nombre" placeholder="Ingresa tu nombre" />
-                        </div>
-                        </CardBody>
-                            
-                        <Divider/>
+                    <Tab title="Paso 2 - Boletos" key="Boletos">
+                        <Card style={{width:"50%", margin:"auto"}}>
+                            <CardHeader>
+                                <GiTicket size={50}></GiTicket>
+                                <p style={{paddingLeft: "10px"}}>Selecciona tus boletos</p>
+                            </CardHeader>
 
-                        <CardBody>
-                        <div>
-                            <Input  isRequired type="text" label="Apellidos" placeholder="Ingresa tus apellidos" />
-                        </div>
-                        </CardBody>
-                            
-                        <Divider/>
+                            <Divider/>
 
-                        <CardBody>
-                        <div>
-                            <Input  isRequired type="email" label="Correo electrónico" placeholder="Ingresa tu correo" />
-                        </div>
-                        </CardBody>
+                            <CardBody>
+                                <div>
+                                    <Input value={NumEntradasSeleccionadas} onChange={handleNumEntradasSeleccionadas} type="number" min={0} labelPlacement="outside-left" label="General $30" className="inputs"/>
+                                </div>
+                            </CardBody>
+                        </Card>  
+                    </Tab>
+
+                    <Tab title="Paso 3 - Asientos" key="Asientos">
+                        <Card style={{width:"50%", margin:"auto"}}>
+                            <CardHeader>
+                                <GiDirectorChair size={50}></GiDirectorChair>
+                                    <p style={{paddingLeft: "10px"}}>Selecciona tu asiento</p>
+                            </CardHeader>
+
+                            <Divider/>
+
+                            <CardBody>
+                                <div style={{display:"flex",alignItems:"center",marginBottom:"1rem"}}>
+                                    <ReactSVG wrapper="span" className="sillasdisponibles" src="../../sit.svg"/>
+                                    <span className="textoasiento">Disponible</span>
+                                    
+                                    <ReactSVG wrapper="span" className="sillaseleccionada ml-2" src="../../sit.svg"/>
+                                    <span className="textoasiento">Seleccionado</span>
+                                    
+                                    <ReactSVG wrapper="span" className="sillasocupadas ml-2" src="../../sit.svg"/>
+                                    <span className="textoasiento">Ocupado</span>
+                                </div>
+                                <div>
+                                    <CheckboxGroup>
+                                        {Array.from({length:NumFilaSeleccionada}).map((Fila,index)=>(
+                                            <div key={index}><span className="mr-2">{index+1}</span>
+                                                {Asientos.map((Asiento,index2)=>(
+                                                    (Asiento.fila==(index+1))?
+                                                    (<span style={{display:"inline-block"}} key={Asiento.idasiento}>
+                                                        <input disabled={Asiento.estatus=="disponible" ? false : true} defaultChecked={(AsientosSeleccionados.some(item=>Asientos[index2].nombre===item)) ? true : false} onChange={(e)=>handleAsientoSeleccionado(e,index,index2)} style={{display:"none"}} type="checkbox" value={Asiento.nombre} id={index+'_'+index2}/>
+                                                        <label id={index+'_'+index2} htmlFor={index+'_'+index2} className="form-label">
+                                                            <ReactSVG id={"svg_"+index+"_"+index2} className={Asiento.estatus=="disponible" ? "sillasdisponibles" : "sillasocupadas"} src="../../sit.svg"/>
+                                                        </label>
+                                                    </span>)
+                                                    : null
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </CheckboxGroup>
+                                </div>
+                            </CardBody>
+                        </Card>  
+                    </Tab>
+
+                    <Tab title="Paso 4 - Datos de compra">
+                        <Card style={{width:"50%", margin:"auto"}}>
+                            <CardHeader>
+                                <GiNotebook size={50}></GiNotebook>
+                                <p style={{paddingLeft: "10px"}}>Resumen de Compra</p >
+                            </CardHeader>
+
+                            <Divider/>
                             
-                        <Divider/>
+                            <CardBody>
+                                <div className="grid grid-cols-12">
+                                    <div className="col-span-3 mr-2">
+                                        <Image src={url+imgportada} width={180} alt="" />
+                                    </div>
+                                    <div className="col-span-9">
+                                        <p className="textoasiento">Título: {titulopelicula}</p>
+                                        <p className="textoasiento">Sala: {NombreSala}</p>
+                                        <p className="textoasiento">Hora: {HorarioSeleccionado}</p>
+                                        <p className="textoasiento">Asientos: {AsientosSeleccionados.map((asiento)=>asiento+", ")}</p>
+                                        <p className="textoasiento">Precio: $ {NumEntradasSeleccionadas*30}</p>
+                                    </div>
+                                </div>
+                            </CardBody>
+
+                            <Divider/>
                             
                         <CardFooter>
                             <Button variant="shadow" className="btn" >
@@ -411,9 +387,9 @@ export default function GetTickets() {
                             </Button>
                         </CardFooter>
                     </Card>
-                </CardBody>
-              </Card>  
-            </Tab> */}
+                
+  
+            </Tab> 
             <Tab title="Paso 4 - Confirmar Compra">
                 <Card style={{width:"50%", margin:"auto"}}>
                     <CardHeader>
@@ -498,6 +474,6 @@ export default function GetTickets() {
             </Tab>
           </Tabs>
         </div>  
-    </div>
+            </div>
   );
 }

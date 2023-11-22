@@ -30,6 +30,8 @@ import GetTickets from "../components/client/moviesprocess/ProcessComponent";
 import { ProtectedRootRoute } from "./ProtectedRootRoute";
 import CarteleraComponent from "../components/client/cartelera/CarteleraComponent";
 import ListaEmpresas from "../components/client";
+import Compra from "../components/client/Compra";
+import Superset from "../components/admin/dashboard/superset/superset";
 
 const Routes=()=>{
   const {Token} = useAuth();
@@ -49,6 +51,10 @@ const Routes=()=>{
     {
       element:<NavBarComponent/>,
       children:[
+        {
+          path:"/cine/realizado",
+          element:<Compra></Compra>
+        },
         {
           path:"/cine/inicio",
           element:<Inicio/>
@@ -151,6 +157,10 @@ const Routes=()=>{
             {
               path:"/dashboard",
               element:<PrincipalChart/>
+            },
+            {
+              path:"/superset",
+              element:<Superset></Superset>
             },
             {
               path:"/combo",

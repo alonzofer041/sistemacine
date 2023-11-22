@@ -1,12 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import {Image, Button,Card, CardBody, Divider, CardHeader} from "@nextui-org/react";
+import {Image, Button,Card, CardBody, Divider, CardHeader, Tooltip} from "@nextui-org/react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {Carousel} from "react-responsive-carousel";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
-// import {
-//   Carousel,
-//   initTE,
-// } from "tw-elements";
+import Footer from "../footerComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SucursalContext } from "../../../provider/SucursalProvider";
@@ -68,150 +65,46 @@ export default function Inicio() {
   return (
     <div className="container-fluid">
       <div className="grid grid-cols-1">
-        <Carousel dynamicHeight={true} showArrows={true} showThumbs={false}>
+        <Carousel className="banners white-background" 
+                  showStatus={false}
+                  autoPlay={true}
+                  interval={5000}
+                  infiniteLoop
+                  dynamicHeight={false}
+                  showArrows={true}
+                  showThumbs={false}>
           {(BannerList.map((Banner)=>(
               <div key={Banner.idbanner}>
-                <img width="100px" src={url+Banner.imgbanner}/>
+                <img className="banerfoto" src={url+Banner.imgbanner}/>
               </div>
           )))}
         </Carousel>
       </div>
-      <div className="grid grid-cols-1 mb-2">
+      <div className="mb-2">
         <div className="titlescinema">
-			  	<p>Para Ver Hoy</p>
+			  	<p>ESTRENOS</p>
 			  </div>
       </div>
-      <div className="grid grid-cols-4 gap-4 ml-4 mr-4">
-      {PeliculasEstreno.map((Pelicula)=>(
-          <div key={Pelicula.idpelicula} className="mb-2">
-            <Card style={{width:"80%"}}>
-              <CardHeader className="justify-center">
-                <Image src={urlpelicula+Pelicula.imgportada} width={150}></Image>
-              </CardHeader>
-              <Divider/>
+      <div className="cards-movie">
+        {PeliculasEstreno.map((Pelicula)=>(
+          <div className="item" key={Pelicula.idpelicula}>
+            <Card>
+              <Tooltip content={Pelicula.titulo}>
+                <figure>
+                  <img className="moviephoto" src={urlpelicula+Pelicula.imgportada}></img>
+                </figure>
+              </Tooltip> 
               <CardBody>
-                <h1 className="text-center">{Pelicula.titulo}</h1>
-                <Button onClick={()=>{IrA(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}} className="mt-4 mb-4" color="default" size="sl" radius="sm" style={{height:"40px"}}>Conseguir Entradas</Button>
+                <Button onClick={()=>{IrA(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}} className="mt-4 mb-4" color="warning" size="sl" radius="sm" style={{height:"40px"}}>Conseguir Entradas</Button>
               </CardBody>
             </Card>
-           
           </div>
         ))}
       </div>
-      {/* <div className="grid grid-cols-3">
-        <div>
-          <h1 className="text-center">DESCUBRE LO NUEVO</h1>
-          <div className="flex justify-center">
-            <Image width={200} alt="nextui hero image" src="../src/components/client/inicio/imagenes/pelicula1.jpg"></Image>
-          </div>
-          <h1 className="text-center">Jesucristo cazador de vampiros</h1>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
-          </div>
-        </div>
-
-        <div>
-          <h1 className="text-center">SERA EMOCIONANTE!</h1>
-          <div className="flex justify-center">
-            <Image width={200} alt="nextui hero image" src="../src/components/client/inicio/imagenes/pelicula2.jpg"></Image>
-          </div>
-          <h1 className="text-center">Sonic la Película 2</h1>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
-          </div>
-        </div>
-
-        <div>
-          <h1 className="text-center">Y DIVERTIDO!</h1>
-          <div className="flex justify-center">
-            <Image width={200} alt="nextui hero image" src="../src/components/client/inicio/imagenes/pelicula3.jpg"></Image>
-          </div>
-          <h1 className="text-center">Avengers: EndGame</h1>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
-          </div>
-        </div>
-
-        <div>
-          <div className="flex justify-center">
-            <Image width={200} alt="nextui hero image" src="../src/components/client/inicio/imagenes/pelicula4.jpg"></Image>
-          </div>
-          <h1 className="text-center">Barbie</h1>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
-          </div>
-        </div>
-
-        <div>
-          <div className="flex justify-center">
-            <Image width={200} alt="nextui hero image" src="../src/components/client/inicio/imagenes/pelicula5.jpg"></Image>
-          </div>
-          <h1 className="text-center">Tortugas Ninja: Caos Mutante</h1>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
-          </div>
-        </div>
-
-        <div>
-          <div className="flex justify-center">
-            <Image width={200} alt="nextui hero image" src="../src/components/client/inicio/imagenes/pelicula6.jpg"></Image>
-          </div>
-          <h1 className="text-center">Five Nights At Freddy's</h1>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrA()}} className="btn mt-4 mb-4" color="default" size="sl" radius="lg">Comprar Boletos</Button>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <div className="grid grid-cols-3 mt-9">
-        <div>
-          <h1 className="text-center">¿Qué tal algo para degustar?</h1>
-          <div className="flex justify-center">
-            <Image
-              width={300}
-              alt="NextUI hero Image"
-              src="../src/components/client/inicio/imagenes/anuncio1.png"
-            />
-          </div>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrAProductos()}} className="btn mt-4 mb-4" color="default" size="sl"radius="sm">
-              Comprar
-            </Button>
-          </div>
-        </div>
-
-        <div>
-          <h1 className="text-center">¿Tal vez algo dulce?</h1>
-          <div className="flex justify-center">
-            <Image
-              width={300}
-              alt="NextUI hero Image"
-              src="../src/components/client/inicio/imagenes/anuncio2.png"
-            />
-          </div>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrAProductos()}} className="btn mt-4 mb-4" color="default" size="sl"radius="sm">
-              Comprar
-            </Button>
-          </div>
-        </div>
-
-        <div>
-          <h1 className="text-center">¿Quizás algo refrescante?</h1>
-          <div className="flex justify-center">
-            <Image
-              width={300}
-              alt="NextUI hero Image"
-              src="../src/components/client/inicio/imagenes/anuncio3.png"
-            />
-          </div>
-          <div className="flex justify-center">
-            <Button onClick={()=>{IrAProductos()}} className="btn mt-4 mb-4" color="default" size="sl"radius="sm">
-              Comprar
-            </Button>
-          </div>
-        </div>
-      </div> */}
+      <br /><br /><br />
+      <div>
+        <Footer/>
+      </div>
     </div>
   );
 }

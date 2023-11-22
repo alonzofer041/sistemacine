@@ -20,10 +20,7 @@ export default function ListGeneralComponent({
     ShowInput=true,
     ShowPaginador=true
 }){
-    // const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    // useEffect(()=>{
-    //     SetPaginator();
-    // },[]);
+
     const onNextPage=React.useCallback(()=>{
         if (Filtro.Pagina<Filtro.TotalPaginas) {
             let Pagina1=Filtro.Pagina+1;
@@ -97,14 +94,6 @@ export default function ListGeneralComponent({
                     <br />
                 </div>
             ):null}
-            {/* <div className="hidden sm:flex w-[30%] justify-end gap-2">
-                <Button isDisabled={Filtro.TotalPaginas === 1} size="sm" variant="flat" onPress={onPrevPage}>
-                    Previous
-                </Button>
-                <Button isDisabled={Filtro.TotalPaginas === 1} size="sm" variant="flat" onPress={onNextPage}>
-                    Next
-                </Button>
-            </div> */}
         </div>
     )
 }

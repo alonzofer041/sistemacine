@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -17,37 +17,62 @@ ChartJS.register(
     Legend
   );
   import { Bar } from 'react-chartjs-2';
+import axios from "axios";
+import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 export default function VentasTicketMesComponent(){
+    const [values,setValues]=useState([]);
+
+    useEffect(()=>{
+        getData();
+    },[])
+    function getData(){
+        setTimeout(() => {
+           axios.get("/api/dashboardticketsmes"
+           ).then((res)=>{
+            let valores=res.data.values;
+            setValues(valores);
+           })
+        }, 500);
+    }
     return(
         <div>
-            <h1>Ventas de tickets por mes</h1>
-            <Bar
-                options={
-                    {
-                        responsive:true,   
+            <Card>
+                <CardHeader>
+                    <h1>Ventas de tickets por mes</h1>
+                </CardHeader>
+                <Divider></Divider>
+                <CardBody>
+                    <Bar
+                    options={
+                        {
+                            responsive:true,
+                            maintainAspectRatio:false   
+                        }
                     }
-                }
-                style={
-                    {
-                        width:'100%',
+                    style={
+                        {
+                            width:'100%',
+                            height:"300px"
+                        }
                     }
-                }
-                data={
-                    {
-                        labels:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-                        datasets:[
-                            {
-                                label:"No. de Ventas",
-                                data:[100,230,123,45,230,212,304,120,125,340,323,230],
-                                backgroundColor:[
-                                    '#FFF'
-                                ]
-                            }
-                        ]
+                    data={
+                        {
+                            labels:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+                            datasets:[
+                                {
+                                    label:"No. de Ventas",
+                                    data:values,
+                                    backgroundColor:[
+                                        '#FFF'
+                                    ]
+                                }
+                            ]
+                        }
                     }
-                }
-            >
-            </Bar>
+                >
+                    </Bar>
+                </CardBody>
+            </Card>
         </div>
     )
 }

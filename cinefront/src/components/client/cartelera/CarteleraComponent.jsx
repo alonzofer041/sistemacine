@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Button, Card, CardBody, Chip, Input } from "@nextui-org/react";
+import Footer from "../footerComponent";
+import { Button, Card, CardBody, Chip, Input, Divider } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
@@ -72,64 +73,60 @@ export default function CarteleraComponent(){
     }
 
     return(
-        <div className="container">
+        <div>
             <div className="titlescinema">
 				<p>Cartelera</p>
 			</div>
-            <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-4">
-                    <h1 className="text-center">Filtros</h1>
-                    <h2 className="text-center">Fecha</h2>
-                    <div className="flex justify-center">
+            
+            <div className="container-cartelera">
+                <div className="">
+                    <h1 className="text-center mb-2">Filtros</h1>
+                    <h2 className="text-center mb-2"><Chip color="warning" variant="bordered">Fecha</Chip></h2>
+                    <div className="flex justify-center mb-2">
                         <DatePicker selected={Fecha} onChange={(date) => TransformarFecha(date)} customInput={<Input label="Selecciona una Fecha" className="max-w-xs"></Input>}></DatePicker>
                     </div>
-                    {/* <div>
-                        <h2>Hora</h2>
-                        <DatePicker
-                            selected={Fecha}
-                            onChange={(date) => setFecha(date)}
-                            showTimeSelectOnly
-                            timeIntervals={15}
-                            timeCaption="Time"
-                            dateFormat="h:mm aa"
-                            showTimeInput
-                            customInput={<Input label="Selecciona una Hora" className="max-w-xs"></Input>}
-                            />
-                    </div> */}
                 </div>
-                <div className="col-span-8">
+                <div className="container-cartelera2">
                     {Peliculas.map((Pelicula)=>(
-                        <div className="mb-3" key={Pelicula.idpelicula}>
+                        <div className="" key={Pelicula.idpelicula}>
                             <Card className="">
                                 <CardBody>
-                                    <div className="grid grid-cols-12 gap-4">
-                                        <div className="col-span-3">
-                                            <img width={150} src={url+Pelicula.imgportada} alt=""/>
-                                            <br />
-                                            {Pelicula.horarios.length>0?(
-                                                <Button className="mt-4 mb-4" color="default" size="sl" radius="sm" style={{height:"40px"}} onClick={()=>IrAComprarEntrada(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}>Conseguir Entradas</Button>
-                                            ):null}
+                                    <div className="container-cartelera">
+                                        <div className="banners">
+                                            <figure>
+                                                <img className="moviecartelera" src={url+Pelicula.imgportada} alt=""/>
+                                            </figure>
                                         </div>
-                                        <div className="col-span-9">
-                                            <h2 className="text-white">{Pelicula.titulo}</h2>
-                                            <p>{Pelicula.categoria} / {Pelicula.duracion}</p>
-                                            <p>Dirigida por: {Pelicula.director}</p>
-                                            <p>Reparto: {Pelicula.reparto}</p>
-                                            <br />
-                                            <p>{Pelicula.sinopsis}</p>
-                                            <br />
-                                            <h2 className="mb-2">Horarios disponibles:</h2>
+                                        <div className="container">
+                                            <p style={{fontSize:"25px"}} className="mb-2">{Pelicula.titulo}</p>
+                                            <Chip className="mb-2" color="warning" variant="flat">{Pelicula.categoria}</Chip> / {Pelicula.duracion} minutos <br />
+                                            <Chip className="mb-2" color="warning" variant="dot" >Dirigida por:</Chip> {Pelicula.director} <br />
+                                            <Chip className="mb-2" color="warning" variant="dot" >Reparto:</Chip> {Pelicula.reparto} <br />
+                                            <Divider className="mb-2"/>
+                                            <p className="mb-2">{Pelicula.sinopsis}</p>
+                                            <Divider className="mb-2"/>
+                                            {Pelicula.horarios.length>0 ? 
+                                                <Chip className="mb-2" color="warning" variant="light">Horarios disponibles:</Chip>
+                                            :null} <br />
                                             {Pelicula.horarios.length>0 ? Pelicula.horarios.map((horario)=>(
                                                 <Chip key={horario.idhorariopelicula} className="mr-2">{horario.hora}</Chip>
-                                            )):<h2>Sin Horarios Disponibles</h2>}
+                                            )):<Chip color="warning" variant="faded">Sin Horarios Disponibles</Chip>}
                                         </div>
-                                        
+                                    </div>
+                                    <div className="banners">
+                                    {Pelicula.horarios.length>0?(
+                                                <Button className="btn" color="warning" onClick={()=>IrAComprarEntrada(Pelicula.idpelicula,Pelicula.titulo,Pelicula.imgportada)}>Conseguir entradas</Button>
+                                            ):<Button className="btn" isDisabled>Conseguir entradas</Button>}
                                     </div>
                                 </CardBody>
                             </Card>
                         </div>
                     ))}
                 </div>
+            </div>
+            <br /><br /><br />
+            <div>
+                <Footer/>
             </div>
         </div>
     )

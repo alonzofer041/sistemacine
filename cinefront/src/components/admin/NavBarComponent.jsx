@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import jwtDecode from "jwt-decode";
 import { useState, useEffect } from "react";
-import LogoCine from "../../assets/logo.png";
+import LogoCine from "../../assets/logo2.png";
 import { EmpresaContext } from "../../provider/EmpresaProvider";
 import { SucursalContext } from "../../provider/SucursalProvider";
 import {useAuth} from "../../provider/AuthProvider";
@@ -25,7 +25,7 @@ import {Navbar,
     Image} from "@nextui-org/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaChevronDown } from "react-icons/fa";
+import { FaArrowLeft, FaChevronDown } from "react-icons/fa";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 const urlempresa=import.meta.env.VITE_ASSET_URL+'/empresas/';
 
@@ -76,60 +76,61 @@ export default function NavBarComponent() {
   return (
     <>
       <Navbar className={"navigation navmain"}>
-      
-      
-      <NavbarContent  className="sm:flex gap-4 " justify="right"  >
-        {index!=-1?(
-          <>
-            <NavbarBrand className="logo">
-              <img src={LogoCine} width="150" height="40" alt="CineFlash" />
-            </NavbarBrand>
-            <NavbarItem>
-              <Link color="foreground" onClick={()=>{Navegar("/cine/inicio")}}>
-                Inicio
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link color="foreground" onClick={()=>{Navegar("/cine/cartelera")}}>
-                Cartelera
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link color="foreground" onClick={()=>{Navegar("/cine/productosventa")}}>
-                Productos
-              </Link>
-            </NavbarItem>
-          </>
-          
-          ) : (
-          <>
-            {jwtDecode(Token).Usuario.rol=="admin" ? (
-              <>
-                <NavbarBrand>
-                  <Image radius="none" width={80} src={urlempresa+jwtDecode(Token).Usuario.imgempresa}></Image>
-                </NavbarBrand>
-                <NavbarItem>
-                  <Link color="foreground" onClick={()=>{Navegar("/dashboard")}} >
-                    Dashboard
-                  </Link>
-                </NavbarItem>
-                <NavbarItem >
-                  <Link onClick={()=>{Navegar("/configuracion")}} color="foreground" aria-current="page" >
-                    Configuración
-                  </Link>
-                </NavbarItem>
-                <NavbarItem>
-                  <Link color="foreground" onClick={()=>{Navegar("/productos")}}>
-                    Productos
-                  </Link>
-                </NavbarItem>
-              </>  
-            ):<NavbarItem>
-              <Link>Menu</Link>
-              </NavbarItem>}
             
-          </>
-          
+        <NavbarContent  className="sm:flex gap-4" justify="right">
+          {index!=-1?(
+            <>
+              <NavbarBrand className="logo">
+                <img src={LogoCine} width="50" alt="CineFlash" />
+              </NavbarBrand>
+              <NavbarItem>
+                <Link color="foreground" onClick={()=>{Navegar("/cine/inicio")}}>
+                  Inicio
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link color="foreground" onClick={()=>{Navegar("/cine/cartelera")}}>
+                  Cartelera
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link color="foreground" onClick={()=>{Navegar("/cine/productosventa")}}>
+                  Productos
+                </Link>
+              </NavbarItem>
+            </>
+            
+            ) : (
+            
+            <>
+              {jwtDecode(Token).Usuario.rol=="admin" ? (
+                <>
+                  <NavbarBrand>
+                    <Image radius="none" width={80} src={urlempresa+jwtDecode(Token).Usuario.imgempresa}></Image>
+                  </NavbarBrand>
+                  <NavbarItem>
+                    <Link color="foreground" onClick={()=>{Navegar("/dashboard")}} >
+                      Dashboard
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem >
+                    <Link onClick={()=>{Navegar("/configuracion")}} color="foreground" aria-current="page" >
+                      Configuración
+                    </Link>
+                  </NavbarItem>
+                  <NavbarItem>
+                    <Link color="foreground" onClick={()=>{Navegar("/productos")}}>
+                      Productos
+                    </Link>
+                  </NavbarItem>
+                </>  
+                ) :
+                <NavbarItem>
+                  <Link>Menu</Link>
+                </NavbarItem>}
+              
+            </>
+            
 
           )
         }
@@ -142,6 +143,9 @@ export default function NavBarComponent() {
           {/* <Button as={Link} color="primary" href="#" variant="flat">
             Sign Up
           </Button> */}
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" onClick={()=>{Navegar("/cines")}}><FaArrowLeft  className="mr-2"></FaArrowLeft> Seleccionar Cine</Link>
         </NavbarItem>
       </NavbarContent>
       {index!=-1?(
@@ -173,15 +177,9 @@ export default function NavBarComponent() {
           </Dropdown>
         </NavbarContent>
       )}
-      <NavbarContent>
-
-      </NavbarContent>
     </Navbar>
-    
-    
     <Outlet></Outlet>
     </>
- 
   );
 }
 // export default NavBarComponent;
