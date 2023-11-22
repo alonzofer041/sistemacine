@@ -17,6 +17,7 @@ export default function ListComponent(){
     },[]);
     // SWAL
     const [swalProps, setSwalProps] = useState({});
+    const InputFile=null;
     
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const [ErrorValidacion,setErrorValidacion]=useState([]);

@@ -79,6 +79,7 @@ export const Header = ({
 		).then((res)=>{
 			MensajeExito("Compra Realizada con éxito");
 			onClose();
+			navigate("/cine/realizado");
         }).catch((err)=>{
             setErrorValidacion(err.response.data.errors.errors);
         });

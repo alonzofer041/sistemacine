@@ -3,6 +3,7 @@ let HorarioxAsientoClass=require("../models/HorarioxAsiento");
 let PeliculaClass=require("../models/Pelicula");
 const transporter=require("../mailqrentrada");
 const validator=require("../helpers/validate");
+const Stripe=require("stripe");
 
 const multer=require('multer');
 
@@ -39,6 +40,16 @@ const addOrdenEntrada=(async(req,res)=>{
         estatus=status
     })
     if (estatus){
+        const stripe=new Stripe("sk_test_xZewoUrJvoMVFL9eo7TwUTej001yK0CtiJ");
+        const payment=await stripe.paymentIntents.create({
+            amount:req.body.preciototal*100,
+            currency:"MXN",
+            description:"Entrada para la película "+req.body.idpelicula,
+            payment_method:req.body.IdPago,
+            payment_method_types:["card"],
+            confirm:true,
+            return_url:"http://127.0.0.1:5173/cine/realizado"
+        });
         let OrdenEntrada=new OrdenEntradaClass;
         OrdenEntrada.idempresa=req.body.idempresa;
         OrdenEntrada.idsucursal=req.body.idsucursal;

@@ -3,17 +3,34 @@ import React, { useContext, useEffect, useState } from "react";
 import {Checkbox ,Button, Card, CardHeader, CardBody, CardFooter, Divider, Tabs, Tab, Input, Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, Select, SelectItem, RadioGroup, Radio, CheckboxGroup, Image, ModalFooter} from "@nextui-org/react";
 import { GiTicket, GiDirectorChair, GiSwipeCard } from "react-icons/gi";
 import { asientos } from "./data";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ReactSVG } from "react-svg";
 // import {Sit} from "../../../assets/sit.svg";
 import axios from "axios";
 import { FormatearFecha, MensajeAdvertencia, MensajeExito } from "../../../helpers/functions";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
+import {loadStripe} from "@stripe/stripe-js";
+import {CardElement, Elements, useElements, useStripe} from "@stripe/react-stripe-js";
+
+const stripePromise=loadStripe("pk_test_Eoz0gXulPv0IDl39oqAFPLHA00d5gzPy1a");
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 
-export default function GetTickets() {
+export default function GetTickets(){
+    return(
+        <Elements stripe={stripePromise}>
+            <MyComponent></MyComponent>
+        </Elements>
+    )
+}
+
+function MyComponent() {
+    // STRIPE
+    const stripe=useStripe();
+    const elements=useElements();
+
+    const navigate=useNavigate();
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const location=useLocation();
     const idpelicula=location.state?.idpelicula;
@@ -185,35 +202,45 @@ export default function GetTickets() {
         })
     }
     async function GuardarOrden(){
-        let AsientosData=[];
-        let horaIndex=HorariosDisponibles.findIndex((hora)=>{return hora.hora==HorarioSeleccionado});
-        let hora=HorariosDisponibles[horaIndex];
-        AsientosSeleccionados.forEach((Asiento)=>{
-            let AsientoIndex=Asientos.findIndex((as)=>{return as.nombre==Asiento});
-            AsientosData.push(Asientos[AsientoIndex]);
+
+        const {error,paymentMethod}=await stripe.createPaymentMethod({
+            type:'card',
+            card:elements.getElement(CardElement)
         });
-        let obj={
-            idempresa:Empresa.idempresa,
-            idsucursal:IdSucursal,
-            idsala:IdSala,
-            idpelicula:idpelicula,
-            nombrecliente:Nombre,
-            cantidadentradas:NumEntradasSeleccionadas,
-            correocliente:Correo,
-            estatus:'pagado',
-            preciototal:NumEntradasSeleccionadas*30,
-            idhorario:hora.idhorariopelicula,
-            asientos:AsientosData
-        }
-        await axios.post("/api/ordenentrada",obj,{
-            headers:{
-                "Content-Type":"multipart/form-data"
+        if (!error) {
+            // console.log(paymentMethod);
+            const {id}=paymentMethod;
+            let AsientosData=[];
+            let horaIndex=HorariosDisponibles.findIndex((hora)=>{return hora.hora==HorarioSeleccionado});
+            let hora=HorariosDisponibles[horaIndex];
+            AsientosSeleccionados.forEach((Asiento)=>{
+                let AsientoIndex=Asientos.findIndex((as)=>{return as.nombre==Asiento});
+                AsientosData.push(Asientos[AsientoIndex]);
+            });
+            let obj={
+                idempresa:Empresa.idempresa,
+                idsucursal:IdSucursal,
+                idsala:IdSala,
+                idpelicula:idpelicula,
+                nombrecliente:Nombre,
+                cantidadentradas:NumEntradasSeleccionadas,
+                correocliente:Correo,
+                estatus:'pagado',
+                preciototal:NumEntradasSeleccionadas*30,
+                idhorario:hora.idhorariopelicula,
+                asientos:AsientosData,
+                IdPago:id
             }
-        }).then((res)=>{
-            MensajeExito("Se ha guardado la orden con éxito");
-        }).catch((err)=>{
-            setErrorValidacion(err.response.data.errors.errors);
-        });
+            await axios.post("/api/ordenentrada",obj,{
+                headers:{
+                    "Content-Type":"multipart/form-data"
+                }
+            }).then((res)=>{
+                MensajeExito("Se ha guardado la orden con éxito");
+            }).catch((err)=>{
+                setErrorValidacion(err.response.data.errors.errors);
+            });   
+        }
     }
     async function EnviarCorreoCompra(){
         let obj={
@@ -229,18 +256,21 @@ export default function GetTickets() {
         axios.post("/api/pagoentradaemail",obj
         ).then((res)=>{
             MensajeExito("Correo Enviado");
+            Realizado();
         }).catch((err)=>{
             alert("Algo fallo");
             setErrorValidacion(err.response.data.errors.errors);
         })
     }
-
+    function Realizado(){
+        navigate("/cine/realizado");
+    }
 	const doBoth = () => {
 		GuardarOrden();
 		EnviarCorreoCompra();
 	}
     return (
-        <div className="center2">
+            <div className="center2">
             <div className="">
           <Tabs aria-label="Options">
             <Tab title="Paso 1 - Horario" key="Horario">
@@ -437,7 +467,8 @@ export default function GetTickets() {
                     <Divider/>
                     <CardFooter>
                         <Button onClick={onOpen} onClose={onClose}className="btn">Pagar</Button>
-                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
+
+                            <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
                                 <ModalContent>
                                 {(onClose) => (
                                     <>
@@ -466,6 +497,7 @@ export default function GetTickets() {
                                             </div>
                                             </CardBody>
                                             <Divider/>
+                                            <CardElement className="form-control"></CardElement>
                                             {/* <CardBody>
                                             <div>
                                                 <Input isRequired type="number" label="Número de tarjeta"/>
@@ -487,17 +519,19 @@ export default function GetTickets() {
                                         </Card>
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button className="btn" color="primary" onClick={doBoth} >Guardar Orden</Button>
+                                        <Button className="btn" color="primary" onClick={()=>{doBoth()}} >Guardar Orden</Button>
                                     </ModalFooter>
                                     </>
                                 )}
                                 </ModalContent>
                             </Modal>
+
+                       
                     </CardFooter>
                 </Card>
             </Tab>
           </Tabs>
         </div>  
-    </div>
+            </div>
   );
 }

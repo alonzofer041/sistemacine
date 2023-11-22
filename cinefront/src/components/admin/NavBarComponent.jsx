@@ -25,7 +25,7 @@ import {Navbar,
     Image} from "@nextui-org/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaChevronDown } from "react-icons/fa";
+import { FaArrowLeft, FaChevronDown } from "react-icons/fa";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 const urlempresa=import.meta.env.VITE_ASSET_URL+'/empresas/';
 
@@ -142,6 +142,9 @@ export default function NavBarComponent() {
           {/* <Button as={Link} color="primary" href="#" variant="flat">
             Sign Up
           </Button> */}
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" onClick={()=>{Navegar("/cines")}}><FaArrowLeft  className="mr-2"></FaArrowLeft> Seleccionar Cine</Link>
         </NavbarItem>
       </NavbarContent>
       {index!=-1?(
