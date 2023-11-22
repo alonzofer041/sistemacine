@@ -72,7 +72,7 @@ export default function Login() {
                                 <CardHeader>
                                     <BiLogIn size={50}></BiLogIn>
                                     <div>
-                                        <p>Iniciar sesión</p>
+                                        <p style={{paddingLeft: "10px"}}>Iniciar sesión</p>
                                     </div>
                                 </CardHeader>
 
@@ -95,7 +95,7 @@ export default function Login() {
                                 <Divider/>
 
                                 <CardFooter>
-                                    <Button className="btn" onClick={Login}>
+                                    <Button color="primary" className="btn" onClick={Login}>
                                         Iniciar sesión
                                     </Button>  
                                 </CardFooter>

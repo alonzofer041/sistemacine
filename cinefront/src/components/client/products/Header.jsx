@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Navbar,useDisclosure } from "@nextui-org/react";
+import { Navbar,useDisclosure, Divider } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import ModalComponent from '../../base/ModalComponent';
 import Pago from '../payment/PaymentComponent';
@@ -182,6 +182,7 @@ export const Header = ({
 							<button className='btn-clear-all' onClick={onCleanCart}>
 								Vaciar Carrito
 							</button>
+							<Divider/>
 							<button className='btn-clear-all' onClick={payCart}>
 								Pagar Carrito
 							</button>		

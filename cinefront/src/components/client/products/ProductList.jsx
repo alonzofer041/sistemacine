@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
+import {Image, Button, Card, CardBody, Divider, CardHeader, Tooltip} from "@nextui-org/react";
 import axios from "axios";
+import Footer from "../footerComponent";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
 import { MensajeExito } from "../../../helpers/functions";
@@ -59,29 +61,29 @@ export const ProductList = ({
 
 	return (
 		<div>
-			{/* <div className="titlescinema">
-				<p>Combos</p>
-			</div> */}
-			
-			<br /><br /><br /><br />
 			<div className="titlescinema">
 				<p>Productos</p>
 			</div>
 			<div className='container-items'>
 				{ProductoList.map(Producto => (
 					<div className="item" key={Producto.idproducto}>
-						<figure>
-							<img src={url+Producto.imgproducto} alt={Producto.idproducto} />
-						</figure>
-					<div className='info-product'>
-						<h2>{Producto.nombre}</h2>
-						<p className='price'>${Producto.valor}.00 MXN</p>
-						<button onClick={() => onAddProduct(Producto)}>
-							Añadir al carrito
-						</button>
-					</div>
+						<Card>
+							<Tooltip content={Producto.nombre}>
+							<figure>
+								<img src={url+Producto.imgproducto} alt={Producto.idproducto} />
+							</figure>
+							</Tooltip>
+							<CardBody>
+								<p className='price'>${Producto.valor}.00 MXN</p>
+								<Button onClick={() => onAddProduct(Producto)} className="mt-4 mb-4" color="warning" size="sl" radius="sm" style={{height:"40px"}}>Añadir al carrito</Button>
+							</CardBody>
+						</Card>
 					</div>
 				))}
+			</div>
+			<br /><br /><br />
+			<div>
+				<Footer/>
 			</div>
 		</div>
 	);
