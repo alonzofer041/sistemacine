@@ -37,11 +37,22 @@ const addProductoCategoria=(async(req,res)=>{
 //@route GET /api/productocategoria
 //@access public
 const getProductoCategoria=(async (req,res)=>{
-    const token=req.headers.authorization
-    const decoded=jwt.verify(token,"jwtSecretKey");
+    let idempresa=0;
+    let idsucursal=0;
+    if (req.query.origen=='cliente') {
+        idempresa=req.query.idempresa;
+        idsucursal=req.query.idsucursal;
+    }
+    else{
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
+        idempresa=decoded.Usuario.idempresa;
+        idsucursal=decoded.Usuario.idsucursal;
+    }
+    
     let ProductoCategoria=new ProductoCategoriaClass;
-    ProductoCategoria.idempresa=decoded.Usuario.idempresa;
-    ProductoCategoria.idsucursal=decoded.Usuario.idsucursal;
+    ProductoCategoria.idempresa=idempresa;
+    ProductoCategoria.idsucursal=idsucursal;
     let respuesta=await ProductoCategoria.listar(res);
     res.json(respuesta);
 });

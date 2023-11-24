@@ -129,6 +129,7 @@ export default function ListComponent(){
         var obj={
             idcombodetalle:ComboDetalle.idcombodetalle,
             idcombo:idcombo,
+            idproducto:ComboDetalle.idproducto,
             nombre:ComboDetalle.nombre,
             cantidad:ComboDetalle.cantidad,
             valor:ComboDetalle.valor

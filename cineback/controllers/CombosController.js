@@ -1,5 +1,6 @@
 const jwt=require("jsonwebtoken");
 let ComboClass=require("../models/Combo");
+let ComboDetalleClass=require("../models/ComboDetalle");
 const multer=require('multer');
 const validator = require("../helpers/validate");
 
@@ -110,4 +111,23 @@ const deleteCombo=(async (req,res)=>{
     res.json(respuesta);
 })
 
-module.exports={addCombo,getCombo,updateCombo,deleteCombo,uploads}
+//@desc obtener combo con lista productos
+//@route GET /api/combosxproductos
+//@access public
+const getCombosxProductos=(async(req,res)=>{
+    let Combo=new ComboClass;
+    Combo.idempresa=req.query.idempresa;
+    Combo.idsucursal=req.query.idsucursal;
+    await Combo.listar().then((response)=>{
+        response.forEach(async(combo)=>{
+            let combodetalle=new ComboDetalleClass;
+            combodetalle.idcombo=combo.idcombo;
+            combo.productos=await combodetalle.listar();
+        });
+        setTimeout(() => {
+            res.json(response);
+        }, 500);
+    });
+    // res.json(respuesta);
+})
+module.exports={addCombo,getCombo,updateCombo,deleteCombo,getCombosxProductos,uploads}

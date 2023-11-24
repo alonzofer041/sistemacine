@@ -46,8 +46,8 @@ const addProducto=(async (req,res)=>{
         // SUBIDA EN BD
         Producto.idproductocategoria=req.body.idproductocategoria;
         Producto.idproveedor=req.body.idproveedor;
-        Producto.idempresa=1;
-        Producto.idsucursal=1;
+        Producto.idempresa=decoded.Usuario.idempresa;
+        Producto.idsucursal=decoded.Usuario.idsucursal;
         Producto.nombre=req.body.nombre;
         Producto.valor=req.body.valor;
         Producto.cantidad=req.body.cantidad;

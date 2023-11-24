@@ -12,6 +12,8 @@ import { MensajeExito } from "../../../../src/helpers/functions";
 export const Header = ({
 	allProducts,
 	setAllProducts,
+	allCombos,
+	setAllCombos,
 	total,
 	countProducts,
 	setCountProducts,
@@ -51,9 +53,19 @@ export const Header = ({
 		setCountProducts(countProducts - Producto.cantidad_default);
 		setAllProducts(results);
 	};
+	const onDeleteCombo=Combo=>{
+		const results = allCombos.filter(
+			item => item.idcombo !== Combo.idcombo
+		);
+
+		setTotal(total - Combo.valor * Combo.cantidad_default);
+		setCountProducts(countProducts - Combo.cantidad_default);
+		setAllCombos(results);
+	}
 
 	const onCleanCart = () => {
 		setAllProducts([]);
+		setAllCombos([]);
 		setTotal(0);
 		setCountProducts(0);
 	};
@@ -139,11 +151,43 @@ export const Header = ({
 						active ? '' : 'hidden-cart'
 					}`}
 				>
-					{allProducts.length ? (
+					{allProducts.length || allCombos.length ? (
 						<>
 							<div className='row-product'>
+								{allCombos.map(Combo=>(
+									<div className='cart-product' key={Combo.idcombo}>
+										<h2>Combos</h2>
+										<div className='info-cart-product'>
+											<span className='cantidad-producto-carrito'>
+												{Combo.cantidad_default}
+											</span>
+											<p className='titulo-producto-carrito'>
+												{Combo.nombre}
+											</p>
+											<span className='precio-producto-carrito'>
+												${Combo.valor}.00 MXN
+											</span>
+										</div>
+										<svg
+											xmlns='http://www.w3.org/2000/svg'
+											fill='none'
+											viewBox='0 0 24 24'
+											strokeWidth='1.5'
+											stroke='currentColor'
+											className='icon-close'
+											onClick={() => onDeleteCombo(Combo)}
+										>
+											<path
+												strokeLinecap='round'
+												strokeLinejoin='round'
+												d='M6 18L18 6M6 6l12 12'
+											/>
+										</svg>
+									</div>
+								))}
 								{allProducts.map(Producto => (
 									<div className='cart-product' key={Producto.idproducto}>
+										<h2>Productos</h2>
 										<div className='info-cart-product'>
 											<span className='cantidad-producto-carrito'>
 												{Producto.cantidad_default}

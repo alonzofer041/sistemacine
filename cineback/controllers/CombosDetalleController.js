@@ -25,13 +25,14 @@ const addComboDetalle=(async (req,res)=>{
     })
     if (estatus) {
         let ComboDetalle=new ComboDetalleClass;
-        ComboDetalle.idcombo=1;
-        ComboDetalle.idproducto=1;
+        ComboDetalle.idcombo=req.body.idcombo;
+        ComboDetalle.idproducto=req.body.idproducto;
         ComboDetalle.cantidad=req.body.cantidad;
         ComboDetalle.valor=req.body.valor;
         ComboDetalle.nombre=req.body.nombre;
         ComboDetalle.created_at=new Date();
         let respuesta=await ComboDetalle.insertar();
+        res.json(respuesta);
     }
 })
 

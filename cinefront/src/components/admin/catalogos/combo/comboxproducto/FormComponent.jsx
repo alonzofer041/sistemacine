@@ -8,9 +8,11 @@ export default function FormComponent({ComboDetalle,setComboDetalle, Errores}){
         ListarProductos();
     },[])
     function changeProducto(e){
+        let index=ListaProductos.findIndex((element)=>element.idproducto==e.target.value);
         setComboDetalle({...ComboDetalle,
-            nombre:ListaProductos[e.target.value].nombre,
-            valor:ListaProductos[e.target.value].valor})
+            idproducto:e.target.value,
+            nombre:ListaProductos[index].nombre,
+            valor:ListaProductos[index].valor})
     }
     function handleCantidad(e){
         setComboDetalle({...ComboDetalle,

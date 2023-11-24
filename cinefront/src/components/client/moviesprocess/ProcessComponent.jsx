@@ -355,7 +355,7 @@ function MyComponent() {
                         </Card>  
                     </Tab>
 
-                    <Tab title="Paso 4 - Datos de compra">
+                    {/* <Tab title="Paso 4 - Datos de compra">
                         <Card style={{width:"50%", margin:"auto"}}>
                             <CardHeader>
                                 <GiNotebook size={50}></GiNotebook>
@@ -389,7 +389,7 @@ function MyComponent() {
                     </Card>
                 
   
-            </Tab> 
+            </Tab>  */}
             <Tab title="Paso 4 - Confirmar Compra">
                 <Card style={{width:"50%", margin:"auto"}}>
                     <CardHeader>
@@ -460,6 +460,7 @@ function MyComponent() {
                                             </div>
                                             </CardBody>
                                             <Divider/> */}
+                                            <CardElement className="form-control"></CardElement>
                                         </Card>
                                     </ModalBody>
                                     <ModalFooter>
