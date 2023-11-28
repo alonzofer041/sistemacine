@@ -23,5 +23,14 @@ class OrdenProductoDetalle{
         ]);
         return respuesta;
     }
+    // async GetProductos(){
+    //     let sql=`SELECT opd.idproducto,opd.valortotal,p.nombre FROM ordenproductosdetalle AS opd
+    //     JOIN productos AS p ON opd.idproducto = p.idproducto
+    //     WHERE opd.idordenproducto =? GROUP BY opd.idordenproducto,p.idproducto`;
+    //     const [respuesta]=await pool.query(sql,[
+    //         this.idordenproducto
+    //     ]);
+    //     return respuesta;
+    // }
 }
 module.exports=OrdenProductoDetalle;

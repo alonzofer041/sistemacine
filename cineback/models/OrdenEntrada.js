@@ -39,6 +39,15 @@ class OrdenEntrada{
         ]);
         return respuesta[0].preciototalentrada;
     }
+    async TotalEntradasVendidas(){
+        let sql=`SELECT SUM(cantidadentradas) AS cantidadentradas FROM ordenentradas WHERE idempresa=? AND idsucursal=? AND MONTH(created_at)=?`
+        let [respuesta]=await pool.query(sql,[
+            this.idempresa,
+            this.idsucursal,
+            this.MesFiltro
+        ]);
+        return respuesta[0].cantidadentradas;
+    }
     async TotalEntradasGenero(){
         let sql=`SELECT SUM(oe.cantidadentradas) AS cantidadentradas,pc.nombre FROM ordenentradas AS oe
         JOIN peliculas AS p ON oe.idpelicula=p.idpelicula

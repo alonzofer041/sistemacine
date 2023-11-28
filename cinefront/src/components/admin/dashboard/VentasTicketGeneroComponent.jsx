@@ -33,7 +33,17 @@ export default function VentasTicketComponent(){
                 <Divider></Divider>
                 <CardBody>
                     <Pie datasetIdKey='id'
-                    options={{responsive:true,maintainAspectRatio:false}}
+                    options={
+                        {
+                            responsive:true,
+                            maintainAspectRatio:false,
+                            plugins:{
+                                legend:{
+                                    labels:{color:"#FFF"}
+                                }
+                            }
+                        }
+                    }
                     style={{height:"300px"}}
                     data={
                             {

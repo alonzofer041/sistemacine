@@ -6,6 +6,8 @@ function Productos() {
 	const [allProducts, setAllProducts] = useState([]);
 	const [allCombos, setAllCombos]=useState([]);
 	const [total, setTotal] = useState(0);
+	const [iva,setIva]=useState(0);
+	const [totalIva,setTotalva]=useState(0);
 	const [countProducts, setCountProducts] = useState(0);
 
 	return (
@@ -19,6 +21,10 @@ function Productos() {
 				setTotal={setTotal}
 				countProducts={countProducts}
 				setCountProducts={setCountProducts}
+				iva={iva}
+				setIva={setIva}
+				totalIva={totalIva}
+				setTotalIva={setTotalva}
 			/>
 			<ProductList
 				allProducts={allProducts}
@@ -29,6 +35,10 @@ function Productos() {
 				setTotal={setTotal}
 				countProducts={countProducts}
 				setCountProducts={setCountProducts}
+				iva={iva}
+				setIva={setIva}
+				totalIva={totalIva}
+				setTotalIva={setTotalva}
 			/>
 		</>
 	);

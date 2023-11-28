@@ -7,9 +7,12 @@ import axios from "axios";
 import { EmpresaContext } from '../../../provider/EmpresaProvider';
 import { SucursalContext } from '../../../provider/SucursalProvider';
 import { MensajeExito } from "../../../../src/helpers/functions";
+import {loadStripe} from "@stripe/stripe-js";
+import {CardElement, Elements, useElements, useStripe} from "@stripe/react-stripe-js";
 
+const stripePromise=loadStripe("pk_test_Eoz0gXulPv0IDl39oqAFPLHA00d5gzPy1a");
 
-export const Header = ({
+export const Header=({
 	allProducts,
 	setAllProducts,
 	allCombos,
@@ -18,7 +21,46 @@ export const Header = ({
 	countProducts,
 	setCountProducts,
 	setTotal,
+	iva,
+	setIva,
+	totalIva,
+	setTotalIva})=>{
+		return(
+			<Elements stripe={stripePromise}>
+				<ComponenteHeader 
+					allProducts={allProducts}
+					setAllProducts={setAllProducts}
+					allCombos={allCombos}
+					setAllCombos={setAllCombos}
+					total={total}
+					countProducts={countProducts}
+					setCountProducts={setCountProducts}
+					setTotal={setTotal}
+					iva={iva}
+					setIva={setIva}
+					totalIva={totalIva}
+					setTotalIva={setTotalIva}
+				></ComponenteHeader>
+			</Elements>
+		)
+	}
+
+const ComponenteHeader = ({
+	allProducts,
+	setAllProducts,
+	allCombos,
+	setAllCombos,
+	total,
+	countProducts,
+	setCountProducts,
+	setTotal,
+	iva,
+	setIva,
+	totalIva,
+	setTotalIva
 }) => {
+	const stripe=useStripe();
+    const elements=useElements();
 	const {isOpen,onOpen,onOpenChange, onClose}=useDisclosure();
 	
 	const [active, setActive] = useState(false);
@@ -50,6 +92,8 @@ export const Header = ({
 		);
 
 		setTotal(total - Producto.valor * Producto.cantidad_default);
+		setIva(total*0.16);
+		setTotalIva(total+iva);
 		setCountProducts(countProducts - Producto.cantidad_default);
 		setAllProducts(results);
 	};
@@ -59,6 +103,8 @@ export const Header = ({
 		);
 
 		setTotal(total - Combo.valor * Combo.cantidad_default);
+		setIva(total*0.16);
+		setTotalIva(total+iva);
 		setCountProducts(countProducts - Combo.cantidad_default);
 		setAllCombos(results);
 	}
@@ -67,6 +113,8 @@ export const Header = ({
 		setAllProducts([]);
 		setAllCombos([]);
 		setTotal(0);
+		setIva(0);
+		setTotalIva(0);
 		setCountProducts(0);
 	};
 
@@ -76,26 +124,34 @@ export const Header = ({
 	};
 
 
-	const GuardarOrden=()=>{
-		let obj={
-			idordenproducto:OrdenProductos.idordenproducto,
-			idempresa:Empresa.idempresa,
-			idsucursal:IdSucursal,
-			nombrecliente:OrdenProductos.nombrecliente,
-			importe:total,
-			correocliente:OrdenProductos.correocliente,
-			ordenproductosdetalle:allProducts
-		}
-
-		axios.post("/api/ordenproducto",obj
-		).then((res)=>{
-			MensajeExito("Compra Realizada con éxito");
-			onClose();
-			navigate("/cine/realizado");
-        }).catch((err)=>{
-            setErrorValidacion(err.response.data.errors.errors);
+	const GuardarOrden=async ()=>{
+		const {error,paymentMethod}=await stripe.createPaymentMethod({
+            type:'card',
+            card:elements.getElement(CardElement)
         });
-		
+		if (!error) {
+			const {id}=paymentMethod;
+			let obj={
+				idordenproducto:OrdenProductos.idordenproducto,
+				idempresa:Empresa.idempresa,
+				idsucursal:IdSucursal,
+				nombrecliente:OrdenProductos.nombrecliente,
+				importe:total,
+				correocliente:OrdenProductos.correocliente,
+				ordenproductosdetalle:allProducts,
+				combos:allCombos,
+				idpago:id
+			}
+	
+			axios.post("/api/ordenproducto",obj
+			).then((res)=>{
+				MensajeExito("Compra Realizada con éxito");
+				onClose();
+				navigate("/cine/realizado");
+			}).catch((err)=>{
+				setErrorValidacion(err.response.data.errors.errors);
+			});
+		}	
 		
 	}
 
@@ -218,9 +274,22 @@ export const Header = ({
 								))}
 							</div>
 
-							<div className='cart-total'>
-								<h3>Total:</h3>
-								<span className='total-pagar'>${total}.00 MXN</span>
+							<div>
+								<div className='cart-total'>
+									<h3>SubTotal:</h3>
+									<span className='total-pagar'>${total}.00 MXN</span>
+								</div>
+								<br />
+								<div className='cart-total'>
+									<h3>Iva:</h3>
+									<span className='total-pagar'>${iva}.00 MXN</span>
+								</div>
+								<br />
+								<div className='cart-total'>
+									<h3>Total:</h3>
+									<span className='total-pagar'>${totalIva}.00 MXN</span>
+								</div>
+
 							</div>
 
 							<button className='btn-clear-all' onClick={onCleanCart}>
@@ -243,7 +312,7 @@ export const Header = ({
 				isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose}
 				Size={"xl"}
 				EventoGuardar={doBoth}
-				CuerpoFormulario={<Pago Orden={OrdenProductos} setOrden={setOrdenProductos} Errores={ErrorValidacion} DatosCorreo={DatosCorreo} setDatosCorreo={setDatosCorreo}/>}
+				CuerpoFormulario={<Pago Orden={OrdenProductos} setOrden={setOrdenProductos} Errores={ErrorValidacion} DatosCorreo={DatosCorreo} setDatosCorreo={setDatosCorreo} CardElement={CardElement}/>}
 			></ModalComponent>
 		</header>
 	);

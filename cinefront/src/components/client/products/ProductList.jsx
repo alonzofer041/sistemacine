@@ -4,7 +4,7 @@ import axios from "axios";
 import Footer from "../footerComponent";
 import { EmpresaContext } from "../../../provider/EmpresaProvider";
 import { SucursalContext } from "../../../provider/SucursalProvider";
-import { MensajeExito } from "../../../helpers/functions";
+import { MensajeAdvertencia, MensajeExito } from "../../../helpers/functions";
 
 
 const url=import.meta.env.VITE_ASSET_URL+'/productos/';
@@ -18,17 +18,48 @@ export const ProductList = ({
 	setCountProducts,
 	total,
 	setTotal,
+	iva,
+	setIva,
+	totalIva,
+	setTotalIva
 }) => {
+	useEffect(()=>{
+		setIva(total*0.16);
+	},[total]);
+	useEffect(()=>{
+		setTotalIva(total+iva);
+	},[iva]);
 	const onAddProduct = (Producto,Tipo) => {
+		let bndAgregar=true;
 		if (Tipo=='Producto') {
 			if (allProducts.find(item => item.idproducto === Producto.idproducto)) {
-				const products = allProducts.map(item =>
-					item.idproducto === Producto.idproducto
-						? { ...item, cantidad_default: item.cantidad_default + 1 }
-						: item
-				);
-				setTotal(total + Producto.valor * Producto.cantidad_default);
-				setCountProducts(countProducts + Producto.cantidad_default);
+				// const products = allProducts.map(item =>
+				// 	item.idproducto === Producto.idproducto
+				// 		? item.cantidad_default+1 < item.cantidad ? { ...item, cantidad_default: item.cantidad_default + 1 } : MensajeAdvertencia("Ya no hay existencias disponibles")
+				// 		: item
+				// );
+				const products=allProducts.map((item)=>{
+					if (item.idproducto===Producto.idproducto) {
+						if (item.cantidad_default+1<=item.cantidad) {
+							let obj=({...item,cantidad_default:item.cantidad_default+1});
+							return obj;	
+						}
+						else{
+							bndAgregar=false;
+							return item;
+						}
+					}
+					else{
+						return item;
+					}
+				});
+				if (bndAgregar) {
+					setTotal(total + Producto.valor * Producto.cantidad_default);
+					setCountProducts(countProducts + Producto.cantidad_default);	
+				}
+				else{
+					MensajeAdvertencia("Las existencias de este producto se agotaron");
+				}
 				return setAllProducts([...products]);
 			}
 		}
@@ -39,6 +70,11 @@ export const ProductList = ({
 					setTotal(total + Producto.valor * Producto.cantidad_default);
 					setCountProducts(countProducts + Producto.cantidad_default);
 					return setAllCombos([...combos]);
+				// const combos=allCombos.map((item)=>{
+				// 	if (item.idcombo===Producto.idcombo) {
+						
+				// 	}
+				// })
 			}
 		}
 		setTotal(total + Producto.valor * Producto.cantidad_default);

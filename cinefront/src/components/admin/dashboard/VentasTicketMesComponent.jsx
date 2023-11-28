@@ -46,13 +46,28 @@ export default function VentasTicketMesComponent(){
                     options={
                         {
                             responsive:true,
-                            maintainAspectRatio:false   
+                            maintainAspectRatio:false,
+                            plugins:{
+                                legend:{
+                                    labels:{color:"#FFF"}
+                                }
+                            },
+                            scales:{
+                                x:{
+                                    ticks:{color:"#FFF"},
+                                    grid:{color:"#939393"}
+                                },
+                                y:{
+                                    ticks:{color:"#FFF"},
+                                    grid:{color:"#939393"}
+                                }
+                            }  
                         }
                     }
                     style={
                         {
                             width:'100%',
-                            height:"300px"
+                            height:"300px",
                         }
                     }
                     data={

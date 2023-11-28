@@ -5,8 +5,12 @@ import VentasTicketProductosComponent from "./VentasTicketProductosComponent";
 import VentasTicketMontoMes from "./VentasTicketMontoMes";
 import axios from "axios";
 import { Card, CardBody } from "@nextui-org/react";
+import MontoOrdenesProductosMes from "./MontoOrdenesProductosMes";
 export default function PrincipalComponent(){
-    const [MontoTotalEntradas,setMontoTotalEntradas]=useState("");
+    const [TotalEntradas,setTotalEntradas]=useState(0);
+    const [MontoTotalEntradas,setMontoTotalEntradas]=useState(0);
+    const [TotalProductos,setTotalProductos]=useState(0);
+    const [MontoTotalProductos,setMontoTotalProductos]=useState(0);
     useEffect(()=>{
         DatosContadores();
     },[])
@@ -14,8 +18,14 @@ export default function PrincipalComponent(){
         setTimeout(() => {
             axios.get("/api/dashboardcontadores"
             ).then((res)=>{
-                let montoentradas=res.data.MontoTotalEntradas
+                let montoentradas=res.data.MontoTotalEntradas;
+                let totalentradas=res.data.TotalEntradas;
+                let totalproductos=res.data.TotalProductos;
+                let montoproductos=res.data.MontoTotalProductos;
                 setMontoTotalEntradas(montoentradas);
+                setTotalEntradas(totalentradas);
+                setTotalProductos(totalproductos);
+                setMontoTotalProductos(montoproductos);
             })
         }, 1000);
     }
@@ -26,7 +36,7 @@ export default function PrincipalComponent(){
                     <CardBody>
                         <div className="shadow-lg h-20">
                             <h5>Total de productos vendidos</h5>
-                            <h1 className="text-center text-3xl">17000</h1>
+                            <h1 className="text-center text-3xl">{TotalProductos}</h1>
                         </div>
                     </CardBody>
                 </Card>
@@ -34,7 +44,7 @@ export default function PrincipalComponent(){
                     <CardBody>
                         <div className="shadow-lg h-20 ml-3">
                             <h5>Total de entradas vendidas</h5>
-                            <h1 className="text-center text-3xl">18000</h1>
+                            <h1 className="text-center text-3xl">{TotalEntradas}</h1>
                         </div>
                     </CardBody>
                 </Card>
@@ -42,7 +52,7 @@ export default function PrincipalComponent(){
                     <CardBody>
                         <div className="shadow-lg h-20 ml-3">
                             <h5>Monto Total de Productos Vendidos</h5>
-                            <h1 className="text-center text-3xl">$18000</h1>
+                            <h1 className="text-center text-3xl">${MontoTotalProductos}</h1>
                         </div>
                     </CardBody>
                 </Card>
@@ -60,6 +70,7 @@ export default function PrincipalComponent(){
                 <VentasTicketMesComponent/>
                 <VentasTicketMontoMes/>
                 <VentasTicketProductosComponent/>
+                <MontoOrdenesProductosMes/>
             </div>
         </div>
     )

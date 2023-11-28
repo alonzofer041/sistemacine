@@ -55,5 +55,19 @@ class Producto{
         ])
         return rows;
     }
+    async GetCantidad(){
+        let [respuesta]=await pool.query('SELECT cantidad FROM productos WHERE idproducto=?',[
+            this.idproducto
+        ]);
+        return respuesta;
+    }
+    async ActualizarCantidad(){
+        let respuesta=await pool.query('UPDATE productos SET cantidad=?, updated_at=? WHERE idproducto=?',[
+            this.cantidad,
+            this.updated_at,
+            this.idproducto
+        ]);
+        return respuesta;
+    }
 }
 module.exports=Producto

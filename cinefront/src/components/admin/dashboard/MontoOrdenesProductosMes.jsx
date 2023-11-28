@@ -12,8 +12,7 @@ import {
   import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import { Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
-import { color } from 'framer-motion';
-  ChartJS.register(
+ChartJS.register(
     CategoryScale,
     LinearScale,
     PointElement,
@@ -22,14 +21,14 @@ import { color } from 'framer-motion';
     Tooltip,
     Legend
   );
-  export default function VentasTicketMontoMes(){
+  export default function MontoOrdenesProductosMes(){
     const [values,setValues]=useState([]);
     useEffect(()=>{
         getData();
     },[]);
     function getData(){
         setTimeout(() => {
-            axios.get("/api/dashboardmontoticketsmes"
+            axios.get("/api/dashboardproductosvendidoslineasmes"
             ).then((res)=>{
                 let valores=res.data.values;
                 setValues(valores);
@@ -40,18 +39,11 @@ import { color } from 'framer-motion';
         <div>
             <Card>
                 <CardHeader>
-                    <h1>Monto de Ventas de Boletos por Mes</h1>
+                    <h1>Monto de Ventas de Productos por Mes</h1>
                 </CardHeader>
                 <Divider></Divider>
                 <CardBody>
                     <Line
-                        // plugins={[
-                        //     Legend={
-                        //         labels:{
-                        //             color:"#FFF"
-                        //         }
-                        //     }
-                        // ]}
                         options={
                             {
                                 responsive:true,
@@ -71,7 +63,6 @@ import { color } from 'framer-motion';
                                         grid:{color:"#636363"}
                                     }
                                 } 
-                                // plugins:Legend.labels.color="#FFF"
                             }
                         }
                         data={

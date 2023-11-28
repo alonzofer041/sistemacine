@@ -44,7 +44,10 @@ class CombosDetalle{
         return respuesta
     }
     async listar(){
-        const [rows]=await pool.execute('SELECT * FROM `combosdetalle` WHERE `idcombo`=?  AND deleted_at IS NULL',[
+        let sql=`SELECT cd.*,p.cantidad as cantidadproducto FROM combosdetalle AS cd 
+        JOIN productos AS p on cd.idproducto = p.idproducto
+        WHERE cd.idcombo=? AND cd.deleted_at IS NULL`;
+        const [rows]=await pool.execute(sql,[
             this.idcombo,
         ]);
         return rows;
