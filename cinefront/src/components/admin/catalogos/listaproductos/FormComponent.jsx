@@ -49,7 +49,7 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
     }
 
     return (
-        <div className="container" >
+        <div className="" >
             <div className="grid grid-cols-12 mb-3">
                 <div className="previaimagen">
                     <div className="contenedorinputimagen">
@@ -61,16 +61,15 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
                     <div className="contenedorimagenprevia mb-2">
                         <div id="ImagePreview" style={{backgroundImage:"url('"+url+Producto.imgproducto+"')"}}></div>
                     </div>
-                </div>
-                <div className="col-span-8 mb-2">
-                    <Input name="nombre"  label="Nombre Producto"  value={Producto.nombre} onChange={handleNombre}></Input>
-                    {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label>:null}
-                </div>
-                
+                </div>                
             </div>
             <div className="grid grid-cols-2 mb-2">
+                <div className="col-span-8 mb-2">
+                        <Input isRequired name="nombre"  label="Nombre Producto"  value={Producto.nombre} onChange={handleNombre}></Input>
+                        {!Object.is(Errores.nombre,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombre[0]}</label>:null}
+                    </div>
                     <div>
-                        <Select selectedKeys={[Producto.idproveedor.toString()]} onChange={handleIdProveedor} label="Seleccione un Proveedor">
+                        <Select isRequired selectedKeys={[Producto.idproveedor.toString()]} onChange={handleIdProveedor} label="Seleccione un Proveedor">
                             {ProveedorList.map((Proveedor)=>(
                                 <SelectItem key={Proveedor.idproveedor} value={Proveedor.idproveedor}>
                                     {Proveedor.nombrecomercial}
@@ -79,7 +78,7 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
                         </Select>
                     </div>
                     <div className="ml-2">
-                        <Select selectedKeys={[Producto.idproductocategoria.toString()]} onChange={handleIdProductoCategoria} label="Seleccione un tipo de producto">
+                        <Select isRequired selectedKeys={[Producto.idproductocategoria.toString()]} onChange={handleIdProductoCategoria} label="Seleccione un tipo de producto">
                             {ProductoCategoriaList.map((ProductoCategoria)=>(
                                 <SelectItem key={ProductoCategoria.idproductocategoria} value={ProductoCategoria.idproductocategoria}>
                                     {ProductoCategoria.nombre}
@@ -90,13 +89,16 @@ export default function FormComponent({Producto,setProducto, File, setFile, Erro
                 </div>
                 <div className="grid grid-cols-2 mb-2">
                     <div>
-                        <Input name="valor" label="Precio"  value={Producto.valor} onChange={handlePrecio}></Input>
+                        <Input isRequired name="valor" label="Precio"  value={Producto.valor} onChange={handlePrecio}></Input>
                         {!Object.is(Errores.valor,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.valor[0]}</label>:null}
                     </div>
                     <div className="ml-2">
-                        <Input name="cantidad"  label="Cantidad" value={Producto.cantidad} onChange={handleCantidad}></Input>
+                        <Input isRequired name="cantidad"  label="Cantidad" value={Producto.cantidad} onChange={handleCantidad}></Input>
                         {!Object.is(Errores.cantidad,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.cantidad[0]}</label>:null}
                     </div>
+                </div>
+                <div>
+                    <p className="asterisco">* Campos obligatorios</p>
                 </div>
         </div>
     )

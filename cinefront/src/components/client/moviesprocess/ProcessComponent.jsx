@@ -41,6 +41,7 @@ function MyComponent() {
     const {IdSucursal,setIdSucursal}=useContext(SucursalContext);
 
     const [SalasDisponibles,setSalasDisponibles]=useState([]);
+    const [precioentrada,setPrecioEntrada]=useState(0);
     const [IdSala,setIdSala]=useState("");
     const [NombreSala,setNombreSala]=useState("");
     const [HorariosDisponibles,setHorariosDisponibles]=useState([]);
@@ -55,6 +56,7 @@ function MyComponent() {
     const [Correo,setCorreo]=useState("");
     const [PestaniasDeshabilitadas,setPestaniasDeshabilitadas]=useState([]);
     const [ErrorValidacion,setErrorValidacion]=useState([]);
+    const [EstadoValidacion,setEstadoValidacion]=useState(true);
     
     const [DatosCorreo,setDatosCorreo]=useState({
         correocliente:'',
@@ -65,7 +67,8 @@ function MyComponent() {
 
     useEffect(()=>{
         if (IdSala=="") {
-            ListaSalasDisponibles();   
+            ListaSalasDisponibles();
+            recovery();   
         }
         else{
             ListaHorariosDisponibles();
@@ -77,7 +80,7 @@ function MyComponent() {
             // ListarAsientos();
             ListarAsientosOcupados();
         }
-    },[HorarioSeleccionado]);
+    },[HorarioSeleccionado,EstadoValidacion]);
     useEffect(()=>{
         ListarAsientos();
     },[AsientosOcupados])
@@ -122,6 +125,21 @@ function MyComponent() {
     function handleCorreo(e){
         setCorreo(e.target.value)
         setDatosCorreo(e.target.value)
+    }
+    function recovery(){
+        axios.get("/api/sucursalrecovery",{
+            params:{
+                origen:"admin",
+                idsucursal:IdSucursal
+            }
+        }).then((res)=>{
+            if (res.data.precioentrada==null) {
+                setPrecioEntrada(0);
+            }
+            else{
+                setPrecioEntrada(res.data.precioentrada);
+            }
+        })
     }
     async function ListaSalasDisponibles(){
         let year=fechafuncion.getFullYear();
@@ -207,6 +225,7 @@ function MyComponent() {
             card:elements.getElement(CardElement)
         });
         if (!error) {
+            setEstadoValidacion(true);
             // console.log(paymentMethod);
             const {id}=paymentMethod;
             let AsientosData=[];
@@ -216,29 +235,91 @@ function MyComponent() {
                 let AsientoIndex=Asientos.findIndex((as)=>{return as.nombre==Asiento});
                 AsientosData.push(Asientos[AsientoIndex]);
             });
-            let obj={
-                idempresa:Empresa.idempresa,
-                idsucursal:IdSucursal,
-                idsala:IdSala,
-                idpelicula:idpelicula,
-                nombrecliente:Nombre,
-                cantidadentradas:NumEntradasSeleccionadas,
-                correocliente:Correo,
-                estatus:'pagado',
-                preciototal:NumEntradasSeleccionadas*30,
-                idhorario:hora.idhorariopelicula,
-                asientos:AsientosData,
-                IdPago:id
-            }
-            await axios.post("/api/ordenentrada",obj,{
-                headers:{
-                    "Content-Type":"multipart/form-data"
+            let ocupados=[];
+                // let data=response.data;
+                // setAsientosOcupados(data);
+                // console.log(AsientosData);
+                // AsientosData.forEach((AsientoData)=>{
+                //     let index=AsientosOcupados.findIndex((element)=>AsientoData.idasiento==element.idasiento);
+                //     if (index!=-1) {
+                //         ocupados.push(AsientoData);
+                //     }
+                // })
+                // if (ocupados.length>0) {
+                //     return false;
+                // }
+                // let obj={
+                //     idempresa:Empresa.idempresa,
+                //     idsucursal:IdSucursal,
+                //     idsala:IdSala,
+                //     idpelicula:idpelicula,
+                //     nombrecliente:Nombre,
+                //     cantidadentradas:NumEntradasSeleccionadas,
+                //     correocliente:Correo,
+                //     estatus:'pagado',
+                //     preciototal:NumEntradasSeleccionadas*30,
+                //     idhorario:hora.idhorariopelicula,
+                //     asientos:AsientosData,
+                //     IdPago:id
+                // }
+                // await axios.post("/api/ordenentrada",obj,{
+                //     headers:{
+                //         "Content-Type":"multipart/form-data"
+                //     }
+                // }).then((res)=>{
+                //     MensajeExito("Se ha guardado la orden con éxito");
+                //     EnviarCorreoCompra();
+                // }).catch((err)=>{
+                //     setErrorValidacion(err.response.data.errors.errors);
+                // });  
+            // VOLVER A LISTAR LOS ASIENTOS OCUPADOS
+            // let horaIndex=HorariosDisponibles.findIndex((hora)=>{return hora.hora==HorarioSeleccionado});
+            // let hora=HorariosDisponibles[horaIndex];
+            await axios.get("/api/asientosocupados",{
+                params:{
+                    idhorario:hora.idhorariopelicula
                 }
-            }).then((res)=>{
-                MensajeExito("Se ha guardado la orden con éxito");
-            }).catch((err)=>{
-                setErrorValidacion(err.response.data.errors.errors);
-            });   
+            }).then(async(response)=>{
+                let ocupados=[];
+                let data=response.data;
+                setAsientosOcupados(data);
+                console.log(AsientosData);
+                AsientosData.forEach((AsientoData)=>{
+                    let index=response.data.findIndex((element)=>AsientoData.idasiento==element.idasiento);
+                    if (index!=-1) {
+                        ocupados.push(AsientoData);
+                    }
+                })
+                if (ocupados.length>0) {
+                    MensajeAdvertencia("Los asientos ya han sido ocupados");
+                    setAsientosSeleccionados([])
+                    return false;
+                }
+                let obj={
+                    idempresa:Empresa.idempresa,
+                    idsucursal:IdSucursal,
+                    idsala:IdSala,
+                    idpelicula:idpelicula,
+                    nombrecliente:Nombre,
+                    cantidadentradas:NumEntradasSeleccionadas,
+                    correocliente:Correo,
+                    estatus:'pagado',
+                    preciototal:NumEntradasSeleccionadas*precioentrada,
+                    idhorario:hora.idhorariopelicula,
+                    asientos:AsientosData,
+                    IdPago:id
+                }
+                await axios.post("/api/ordenentrada",obj,{
+                    headers:{
+                        "Content-Type":"multipart/form-data"
+                    }
+                }).then((res)=>{
+                    MensajeExito("Se ha guardado la orden con éxito");
+                    EnviarCorreoCompra();
+                }).catch((err)=>{
+                    setErrorValidacion(err.response.data.errors.errors);
+                });  
+            }) 
         }
     }
     async function EnviarCorreoCompra(){
@@ -250,7 +331,7 @@ function MyComponent() {
             nombreasiento:AsientosSeleccionados,
             hora: HorarioSeleccionado,
             nombresala: NombreSala,
-            preciototal:NumEntradasSeleccionadas*30
+            preciototal:NumEntradasSeleccionadas*precioentrada
         }
         axios.post("/api/pagoentradaemail",obj
         ).then((res)=>{
@@ -266,7 +347,6 @@ function MyComponent() {
     }
 	const doBoth = () => {
 		GuardarOrden();
-		EnviarCorreoCompra();
 	}
     return (
         <div>
@@ -307,7 +387,7 @@ function MyComponent() {
 
                             <CardBody>
                                 <div>
-                                    <Input value={NumEntradasSeleccionadas} onChange={handleNumEntradasSeleccionadas} type="number" min={0} labelPlacement="outside-left" label="General $30" className="inputs"/>
+                                    <Input value={NumEntradasSeleccionadas} onChange={handleNumEntradasSeleccionadas} type="number" min={0} labelPlacement="outside-left" label={"General $"+precioentrada} className="inputs"/>
                                 </div>
                             </CardBody>
                         </Card>  
@@ -390,7 +470,7 @@ function MyComponent() {
                 
   
             </Tab>  */}
-            <Tab title="Paso 4 - Confirmar Compra">
+            <Tab title="Paso 4 - Confirmar compra">
                 <Card style={{width:"50%", margin:"auto"}}>
                     <CardHeader>
                         <h3>Resumen de Compra</h3>
@@ -406,7 +486,7 @@ function MyComponent() {
                                 <p className="textoasiento">Sala: {NombreSala}</p>
                                 <p className="textoasiento">Hora: {HorarioSeleccionado}</p>
                                 <p className="textoasiento">Asientos: {AsientosSeleccionados.map((asiento)=>asiento+", ")}</p>
-                                <p className="textoasiento">Precio: $ {NumEntradasSeleccionadas*30}</p>
+                                <p className="textoasiento">Precio: $ {NumEntradasSeleccionadas*precioentrada}</p>
                             </div>
                         </div>
                     </CardBody>
@@ -460,8 +540,11 @@ function MyComponent() {
                                             </div>
                                             </CardBody>
                                             <Divider/> */}
-                                            <CardElement className="form-control"></CardElement>
+                                            <CardElement className="stripeconfig"></CardElement>
                                         </Card>
+                                        <div>
+                                            <p className="asterisco">* Campos obligatorios</p>
+                                        </div>
                                     </ModalBody>
                                     <ModalFooter>
                                         <Button className="btn" color="primary" onClick={doBoth} >Guardar Orden</Button>

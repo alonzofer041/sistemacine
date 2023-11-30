@@ -51,7 +51,7 @@ export default function VentasTicketComponent(){
                             datasets: [
                                 {
                                   id: 1,
-                                  label: 'No. de Ventas',
+                                  label: 'No. de ventas',
                                   data: dataValues,
                                   backgroundColor:backgroundColors
                                 },

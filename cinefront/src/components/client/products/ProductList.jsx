@@ -162,17 +162,8 @@ export const ProductList = ({
 
 	return (
 		<div>
-			<div>
-				<Select defaultSelectedKeys={[categoria]} onChange={handleCategoria} label="Seleccione una Categoría">
-                	{productoCategorias.map((ProductoCategoria)=>(
-                	    <SelectItem key={ProductoCategoria.idproductocategoria} value={ProductoCategoria.idproductocategoria}>
-                	        {ProductoCategoria.nombre}
-                	    </SelectItem>
-                	))}
-                </Select>
-			</div>
 			<div className="titlescinema">
-				Combos
+				Promociones
 			</div>
 			<div className="container-items">
 				{ComboList.map(Combo=>(
@@ -191,7 +182,18 @@ export const ProductList = ({
 					</div>
 				))}
 			</div>
+			<br />
 			<Divider/>
+			<br />
+			<div className='container-items'>
+				<Select defaultSelectedKeys={[categoria]} onChange={handleCategoria} label="Seleccione una categoría">
+                	{productoCategorias.map((ProductoCategoria)=>(
+                	    <SelectItem key={ProductoCategoria.idproductocategoria} value={ProductoCategoria.idproductocategoria}>
+                	        {ProductoCategoria.nombre}
+                	    </SelectItem>
+                	))}
+                </Select>
+			</div>
 			<div className="titlescinema">
 				<p>Productos</p>
 			</div>
@@ -212,7 +214,7 @@ export const ProductList = ({
 					</div>
 				))}
 			</div>
-			<br /><br /><br />
+			<br />
 			<div>
 				<Footer/>
 			</div>

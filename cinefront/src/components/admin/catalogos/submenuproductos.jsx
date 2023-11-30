@@ -25,7 +25,7 @@ export default function SubMenuProducto(){
                 </Button>
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarProductoCategoria}>
                     <FaTag size="2em"/>
-                    Tipos de Producto
+                    Tipos de producto
                 </Button>
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarProducto}>
                     <FaHotdog size="2em"/>
@@ -33,7 +33,7 @@ export default function SubMenuProducto(){
                 </Button>
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarCombo}>
                     <FaHotdog size="2em"/>
-                    Combos
+                    Promociones
                 </Button>
                 
             </div>

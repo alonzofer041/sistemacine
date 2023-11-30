@@ -1,3 +1,4 @@
+const jwt=require("jsonwebtoken");
 let SucursalClass = require("../models/Sucursal");
 const validator = require("../helpers/validate");
 
@@ -97,9 +98,43 @@ const deleteSucursal=(async (req,res)=>{
     res.json(respuesta);
 })
 
+
+//@desc cambiar precio boleto
+//@route POST /api/sucursalprecio/:id
+//@access public
+const ActualizarPrecio=(async(req,res)=>{
+    const token=req.headers.authorization
+    const decoded=jwt.verify(token,"jwtSecretKey");
+    let Sucursal=new SucursalClass;
+    Sucursal.idsucursal=decoded.Usuario.idsucursal;
+    Sucursal.precioentrada=req.body.precioentrada;
+    let respuesta=await Sucursal.ActualizarEntrada();
+    res.json(respuesta);
+})
+
+//@desc recuperar sucursal
+//@route GET /api/sucursalrecovery
+//@access public
+const Recovery=(async(req,res)=>{
+    let idsucursal=0;
+    if (req.query.origen=='cliente') {
+        idsucursal=req.query.idsucursal;
+    }
+    else{
+        const token=req.headers.authorization
+        const decoded=jwt.verify(token,"jwtSecretKey");
+        idsucursal=decoded.Usuario.idsucursal;
+    }
+    let Sucursal=new SucursalClass;
+    Sucursal.idsucursal=idsucursal;
+    let respuesta=await Sucursal.Recovery();
+    res.json(respuesta);
+})
 module.exports={
     addSucursal,
     getSucursal,
     updateSucursal,
-    deleteSucursal
+    deleteSucursal,
+    ActualizarPrecio,
+    Recovery
 }

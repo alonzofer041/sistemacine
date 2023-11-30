@@ -187,11 +187,11 @@ export default function ListComponent(){
                 <TableHeader>
                     <TableColumn>#</TableColumn>
                     <TableColumn>Proveedor</TableColumn>
-                    <TableColumn>Razon Social</TableColumn>
+                    <TableColumn>Razón social</TableColumn>
                     <TableColumn>Email</TableColumn>
                     <TableColumn>Contacto</TableColumn>
-                    <TableColumn>Telefono</TableColumn>
-                    <TableColumn>Direccion</TableColumn>
+                    <TableColumn>Teléfono</TableColumn>
+                    <TableColumn>Dirección</TableColumn>
                     <TableColumn>Estado</TableColumn>
                     <TableColumn>Ciudad</TableColumn>
                     <TableColumn>Acciones</TableColumn>

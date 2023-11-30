@@ -135,7 +135,8 @@ export default function NavBarComponent() {
           )
         }
       </NavbarContent>
-      <NavbarContent justify="end">
+      {index!=-1?(
+        <NavbarContent justify="end">
         <NavbarItem className=" lg:flex" >
           {/* <Link color="foreground" href="#">Bienvenido</Link> */}
         </NavbarItem>
@@ -148,6 +149,7 @@ export default function NavBarComponent() {
           <Link color="foreground" onClick={()=>{Navegar("/cines")}}><FaArrowLeft  className="mr-2"></FaArrowLeft> Seleccionar Cine</Link>
         </NavbarItem>
       </NavbarContent>
+      ):null}
       {index!=-1?(
         <NavbarContent>
           <Link color="foreground">{Empresa.nombrecomercial}</Link>

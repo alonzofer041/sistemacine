@@ -205,7 +205,7 @@ export default function ListComponent(){
                     <TableColumn>Producto</TableColumn>
                     <TableColumn>Precio</TableColumn>
                     <TableColumn>Cantidad</TableColumn>
-                    <TableColumn>Imagen Producto</TableColumn>
+                    <TableColumn>Imagen del producto</TableColumn>
                     <TableColumn>Acciones</TableColumn>
                 </TableHeader>
             }

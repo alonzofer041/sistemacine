@@ -17,9 +17,12 @@ export default function Footer() {
               Acerca de nosotros
             </p>
             <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste atque ea quis molestias.
-              Fugiat pariatur maxime quis culpa corporis vitae repudiandae aliquam voluptatem veniam,
-              est atque cumque eum delectus sint!
+            En un mundo cada vez más digitalizado, la presencia de
+            servicios en línea se ha convertido en algo crucial para el
+            éxito de cualquier negocio. Varias empresas invierten cada
+            vez más en aplicaciones web que agilicen procesos,
+            además de ser una buena forma de marketing en los
+            modelos de negocio.
             </p>
           </div>
 

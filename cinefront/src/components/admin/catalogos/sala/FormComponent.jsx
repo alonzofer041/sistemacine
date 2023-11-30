@@ -21,7 +21,7 @@ export default function FormComponent({Sala,setSala,Errores}){
                 <Input isRequired name="ubicacion" label="Ubicación" value={Sala.ubicacion} onChange={handleUbicacion}></Input>
                 {!Object.is(Errores.ubicacion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.ubicacion[0]}</label> : null}
             </div>
-            <div className="mb-12">
+            <div>
                 <Input isRequired name="numfilas" label="Número de Filas" value={Sala.numfilas} onChange={handleNumFilas}></Input>
                 {!Object.is(Errores.numfilas,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.numfilas[0]}</label> : null}
             </div>

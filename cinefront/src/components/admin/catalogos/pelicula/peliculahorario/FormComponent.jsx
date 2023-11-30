@@ -3,7 +3,7 @@ import { Input,Select,SelectItem } from "@nextui-org/react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-export default function FormComponent({PeliculaHorario,setPeliculaHorario}){
+export default function FormComponent({PeliculaHorario,setPeliculaHorario,FechaSeleccionada,setFechaSeleccionada}){
     const [startDate, setStartDate] = useState(new Date());
     const [ListaSalas,setListaSalas]=useState([
     ]);
@@ -18,6 +18,7 @@ export default function FormComponent({PeliculaHorario,setPeliculaHorario}){
     }
     function handleDate(date){
         setStartDate(date);
+        setFechaSeleccionada(date);
         let year=date.getFullYear();
         let month=date.getMonth()+1;
         let day=date.getDate();
@@ -39,14 +40,14 @@ export default function FormComponent({PeliculaHorario,setPeliculaHorario}){
     return(
         <div>
             <div className="grid grid-cols-2">
-                <Select defaultSelectedKeys={[PeliculaHorario.idsala.toString()]} label="Selecciona una sala" onChange={changeIdSala}>
+                <Select isRequired defaultSelectedKeys={[PeliculaHorario.idsala.toString()]} label="Selecciona una sala" onChange={changeIdSala}>
                 {ListaSalas.map((Sala)=>(
                         <SelectItem key={Sala.idsala} value={Sala.idsala}>
                             {Sala.nombre}
                         </SelectItem>
                     ))}
                 </Select>
-                <DatePicker withPortal showTimeInput customInput={<Input label="Fecha"></Input>} selected={startDate} onChange={(date)=>handleDate(date)}></DatePicker>
+                <DatePicker withPortal showTimeInput customInput={<Input isRequired label="Fecha"></Input>} selected={startDate} onChange={(date)=>handleDate(date)}></DatePicker>
                 {/* <Input name="horario" label="Horario" type="text" value={PeliculaHorario.hora} onChange={handleHora}/>  */}
             </div>
         </div>

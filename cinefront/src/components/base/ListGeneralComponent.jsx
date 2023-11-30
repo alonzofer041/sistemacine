@@ -18,7 +18,8 @@ export default function ListGeneralComponent({
     EventoLimpiar,
     TotalPagina,
     ShowInput=true,
-    ShowPaginador=true
+    ShowPaginador=true,
+    OtrosFiltros
 }){
 
     const onNextPage=React.useCallback(()=>{
@@ -73,6 +74,7 @@ export default function ListGeneralComponent({
                         <option value="15">15</option>
                     </select>
                 </div>
+                {OtrosFiltros}
             </div>
            <Table aria-label="Example table with dynamic content">
             {CabeceraTabla}

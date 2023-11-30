@@ -85,7 +85,7 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
                 </div>
                 <div className="col-span-8">
                     <div className="mb-2">
-                        <Select defaultSelectedKeys={[Pelicula.idpeliculacategoria.toString()]} onChange={handleIdPeliculaCategoria} label="Seleccione una Categoría">
+                        <Select isRequired defaultSelectedKeys={[Pelicula.idpeliculacategoria.toString()]} onChange={handleIdPeliculaCategoria} label="Seleccione una categoría">
                             {PeliculaCategoriaList.map((PeliculaCategoria)=>(
                                 <SelectItem key={PeliculaCategoria.idpeliculacategoria} value={PeliculaCategoria.idpeliculacategoria}>
                                     {PeliculaCategoria.nombre}
@@ -94,29 +94,29 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
                         </Select>
                     </div>
                     <div className="mb-2">
-                        <Input name="titulo" label="Titulo de la pelicula" value={Pelicula.titulo} onChange={handleTitulo}></Input>
+                        <Input isRequired name="titulo" label="Titulo de la pelicula" value={Pelicula.titulo} onChange={handleTitulo}></Input>
                         {!Object.is(Errores.titulo,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.titulo[0]}</label> : null}
                     </div>
                     <div className="mb-2">
                         <div className="grid grid-cols-2">
                             <div>
-                                <DatePicker customInput={<Input label="Fecha"></Input>} selected={startDate} onChange={(date)=>handleFechaEstreno(date)}/>
+                                <DatePicker customInput={<Input isRequired label="Fecha"></Input>} selected={startDate} onChange={(date)=>handleFechaEstreno(date)}/>
                             </div>
                             <div>
-                                <Input value={Pelicula.aniorealizacion} onChange={handleAnioRealizacion} name="aniorealizacion" label="Año de estreno"></Input>
+                                <Input isRequired value={Pelicula.aniorealizacion} onChange={handleAnioRealizacion} name="aniorealizacion" label="Año de estreno"></Input>
                                 {!Object.is(Errores.aniorealizacion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.aniorealizacion[0]}</label> : null}
                             </div>
                         </div> 
                     </div>
                     <div>
-                        <Input value={Pelicula.director} onChange={handleDirector}  name="director" label="Director"></Input>
+                        <Input isRequired value={Pelicula.director} onChange={handleDirector}  name="director" label="Director"></Input>
                         {!Object.is(Errores.director,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.director[0]}</label> : null}   
                     </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 mb-2">
                 <div>
-                    <Textarea value={Pelicula.sinopsis} onChange={handleSinopsis} label="Sinopsis" labelPlacement="inside"></Textarea>
+                    <Textarea isRequired value={Pelicula.sinopsis} onChange={handleSinopsis} label="Sinopsis" labelPlacement="inside"></Textarea>
                     {!Object.is(Errores.sinopsis,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.sinopsis[0]}</label> : null}
                 </div>
             </div>
@@ -125,22 +125,25 @@ export default function FormComponent({Pelicula,setPelicula,File,setFile, Errore
                 </div>
             </div>
             <div className="grid grid-cols-1 mb-2">
-                <Textarea value={Pelicula.reparto} onChange={handleReparto} label="Reparto" labelPlacement="intside" placeholder="Reparto"></Textarea>
+                <Textarea isRequired value={Pelicula.reparto} onChange={handleReparto} label="Reparto"  placeholder="Reparto"></Textarea>
                 {!Object.is(Errores.reparto,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.reparto[0]}</label> : null}
             </div>
             <div className="grid grid-cols-3">
                 <div>
-                    <Input name="productora" label="Productora" value={Pelicula.productora} onChange={handleProductora}></Input>
+                    <Input isRequired name="productora" label="Productora" value={Pelicula.productora} onChange={handleProductora}></Input>
                     {!Object.is(Errores.productora,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.productora[0]}</label> : null}
                 </div>
                 <div className="ml-2">
-                    <Input name="productora" label="Distribuidora" value={Pelicula.distribuidora} onChange={handleDistribuidora}></Input>
+                    <Input isRequired name="productora" label="Distribuidora" value={Pelicula.distribuidora} onChange={handleDistribuidora}></Input>
                     {!Object.is(Errores.distribuidora,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.distribuidora[0]}</label> : null}
                 </div>
                 <div className="ml-2">
-                    <Input name="duracion" label="Duración" value={Pelicula.duracion} onChange={handleDuracion}></Input>
+                    <Input isRequired name="duracion" label="Duración" value={Pelicula.duracion} onChange={handleDuracion}></Input>
                     {!Object.is(Errores.duracion,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.duracion[0]}</label> : null}
                 </div>
+            </div>
+            <div>
+                <br /><p className="asterisco">* Campos obligatorios</p>
             </div>
         </div>
     )

@@ -7,18 +7,20 @@ class Sucursal{
         this.direccion='';
         this.telefono='';
         this.email='';
+        this.precioentrada=0;
         this.created_at='';
         this.updated_at='';
         this.deleted_at='';
 
     }
     async insertar(){
-        const respuesta=await pool.query('INSERT INTO sucursal (idempresa,nombre,direccion,telefono,email,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
+        const respuesta=await pool.query('INSERT INTO sucursal (idempresa,nombre,direccion,telefono,email,precioentrada,created_at,updated_at,deleted_at) VALUES (?,?,?,?,?,?,?,?)',[
             this.idempresa,
             this.nombre,
             this.direccion,
             this.telefono,
             this.email,
+            null,
             this.created_at,
             null,
             null
@@ -48,6 +50,19 @@ class Sucursal{
             this.idempresa
         ]);
         return rows;
+    }
+    async ActualizarEntrada(){
+        const respuesta=await pool.execute('UPDATE sucursal SET precioentrada=? WHERE idsucursal=?',[
+            this.precioentrada,
+            this.idsucursal
+        ])
+        return respuesta;
+    }
+    async Recovery(){
+        const [row]=await pool.execute('SELECT * FROM sucursal WHERE idsucursal=?',[
+            this.idsucursal
+        ]);
+        return row[0];
     }
 }
 module.exports=Sucursal;

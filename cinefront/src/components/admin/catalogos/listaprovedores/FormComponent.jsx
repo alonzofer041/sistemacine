@@ -33,7 +33,7 @@ export default function FormComponent({Proveedor,setProveedor, Errores}){
                 {!Object.is(Errores.nombrecomercial,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.nombrecomercial[0]}</label> : null}
             </div>
             <div className="grid grid-cols-1 mb-2">
-                <Input isRequired className="ml-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
+                <Input isRequired className="mb-3" name="razonsocial" label="Razon Social" value={Proveedor.razonsocial} onChange={handleRazonSocial}></Input>
                 {!Object.is(Errores.razonsocial,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.razonsocial[0]}</label> : null}
             </div>
             <div className="grid grid-cols-3 mb-3">

@@ -1,0 +1,20 @@
+{
+	"name": "Cineflash",
+	"short_name": "cineflash",
+	"description": "cineflash",
+	"background_color": "#FFF",
+	"theme_color": "#10161F",
+	"orientation": "portrait",
+	"display": "standalone",
+	"start_url": "./cines",
+	"scope": "./cines",
+	"lang": "es-MX",
+	"icons":[
+		{
+			"src": "./Recurso2.png",
+			"sizes": "250x250",
+			"type": "image/png"
+		}
+	]
+}
+

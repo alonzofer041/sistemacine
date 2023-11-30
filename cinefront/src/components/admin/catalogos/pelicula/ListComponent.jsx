@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ListGeneralComponent from "../../../base/ListGeneralComponent";
-import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link ,Image, Spinner} from "@nextui-org/react";
+import { TableHeader,TableBody,TableColumn,TableCell, TableRow, useDisclosure, Button, Link ,Image, Spinner, Input} from "@nextui-org/react";
 import Modal from "../../../base/ModalComponent";
 import BtnAccionComponent from "../../../base/BtnAccionComponent";
 import FormComponent from "../pelicula/FormComponent";
@@ -8,12 +8,14 @@ import { useState } from "react";
 import axios from "axios";
 import SweetAlert2 from 'react-sweetalert2';
 import { useNavigate } from "react-router-dom";
-import { FormatearFecha, MensajeAdvertencia } from "../../../../helpers/functions";
+import { FormatearFecha, MensajeAdvertencia, MensajeExito } from "../../../../helpers/functions";
+// import { SucursalContext } from "../../provider/SucursalProvider";
 
 const url=import.meta.env.VITE_ASSET_URL+'/peliculas/';
 export default function ListComponent(){
     useEffect(()=>{
         Lista();
+        recovery();
     },[]);
     // SWAL
     const [swalProps, setSwalProps] = useState({});
@@ -39,6 +41,7 @@ export default function ListComponent(){
     });
     const [PeliculaList,setPeliculaList]=useState([
     ]);
+    const [precioentrada,setPrecioEntrada]=useState(0);
     // FILTROS
     const [Filtro,setFiltro]=useState({
         NumFilas:5,
@@ -144,8 +147,8 @@ export default function ListComponent(){
         );
         onOpen();
     }
-    function Navegar(idpelicula,titulo){
-        navigate('/peliculahorario',{state:{idpelicula:idpelicula,titulo:titulo}})
+    function Navegar(idpelicula,titulo,duracion){
+        navigate('/peliculahorario',{state:{idpelicula:idpelicula,titulo:titulo,duracion:duracion}})
     }
     function Guardar(){
         let mensajes=[];
@@ -202,6 +205,32 @@ export default function ListComponent(){
             });
         }
     }
+    function recovery(){
+        axios.get("/api/sucursalrecovery",{
+            params:{
+                origen:"admin"
+            }
+        }).then((res)=>{
+            if (res.data.precioentrada==null) {
+                setPrecioEntrada(0);
+            }
+            else{
+                setPrecioEntrada(res.data.precioentrada);
+            }
+        })
+    }
+    function ActualizarEntrada(){
+        let obj={
+            precioentrada:precioentrada
+        }
+        axios.post("/api/sucursalprecio",obj
+        ).then((res)=>{
+            MensajeExito("El precio de las entradas se actualizó correctamente");
+        })
+    }
+    function handlePrecioEntrada(e){
+        setPrecioEntrada(e.target.value);
+    }
     return(
         <div>
             <ListGeneralComponent
@@ -215,12 +244,24 @@ export default function ListComponent(){
             NombreLista={"Configuración"}
             EventoLimpiar={Limpiar}
             TotalPagina={Paginator}
+            OtrosFiltros={
+                <div className="form-inline" style={{width:"250px"}}>
+                    <label htmlFor="">Precio de la entrada</label>
+                    <Input startContent={
+            <div className="pointer-events-none flex items-center">
+              <span className="text-default-400 text-small">$</span>
+            </div>
+          } onChange={handlePrecioEntrada} value={precioentrada} name="precioentrada"
+                style={{height:"40px"}}></Input>
+                <Button onClick={ActualizarEntrada} className="btn mt-2">Guardar</Button>
+                </div>
+            }
             CabeceraTabla={
                 <TableHeader>
                     <TableColumn>#</TableColumn>
                     <TableColumn>Portada</TableColumn>
                     <TableColumn>Título</TableColumn>
-                    <TableColumn>Fecha de Estreno</TableColumn>
+                    <TableColumn>Fecha de estreno</TableColumn>
                     <TableColumn>Director</TableColumn>
                     <TableColumn>Productora</TableColumn>
                     <TableColumn>Duración</TableColumn>
@@ -246,7 +287,7 @@ export default function ListComponent(){
                                     EventoEliminar={Eliminar}
                                     Id={item.idpelicula}
                                     BotonesAdicionales={
-                                        <Button as={Link} variant="light" onClick={()=>Navegar(item.idpelicula,item.titulo)}>Asignar Horarios</Button>
+                                        <Button as={Link} variant="light" onClick={()=>Navegar(item.idpelicula,item.titulo,item.duracion)}>Asignar Horarios</Button>
                                     }
                                     ></BtnAccionComponent>
                             </TableCell>

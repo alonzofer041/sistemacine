@@ -40,7 +40,7 @@ import { color } from 'framer-motion';
         <div>
             <Card>
                 <CardHeader>
-                    <h1>Monto de Ventas de Boletos por Mes</h1>
+                    <h1>Monto de ventas de boletos por mes</h1>
                 </CardHeader>
                 <Divider></Divider>
                 <CardBody>

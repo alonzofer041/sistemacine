@@ -30,7 +30,7 @@ export default function VentasTicketProductosComponent(){
         <div>
             <Card>
                 <CardHeader>
-                    <h1>Productos Vendidos</h1>
+                    <h1>Productos vendidos</h1>
                 </CardHeader>
                 <Divider></Divider>
                 <CardBody>

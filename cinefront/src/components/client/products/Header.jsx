@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Navbar,useDisclosure, Divider } from "@nextui-org/react";
+import { Navbar,useDisclosure, Divider, Chip } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import ModalComponent from '../../base/ModalComponent';
 import Pago from '../payment/PaymentComponent';
@@ -212,7 +212,7 @@ const ComponenteHeader = ({
 							<div className='row-product'>
 								{allCombos.map(Combo=>(
 									<div className='cart-product' key={Combo.idcombo}>
-										<h2>Combos</h2>
+										<Chip>Promoción</Chip>
 										<div className='info-cart-product'>
 											<span className='cantidad-producto-carrito'>
 												{Combo.cantidad_default}
@@ -221,7 +221,7 @@ const ComponenteHeader = ({
 												{Combo.nombre}
 											</p>
 											<span className='precio-producto-carrito'>
-												${Combo.valor}.00 MXN
+												${Combo.valor} MXN
 											</span>
 										</div>
 										<svg
@@ -252,7 +252,7 @@ const ComponenteHeader = ({
 												{Producto.nombre}
 											</p>
 											<span className='precio-producto-carrito'>
-												${Producto.valor}.00 MXN
+												${Producto.valor} MXN
 											</span>
 										</div>
 										<svg
@@ -276,28 +276,28 @@ const ComponenteHeader = ({
 
 							<div>
 								<div className='cart-total'>
-									<h3>SubTotal:</h3>
-									<span className='total-pagar'>${total}.00 MXN</span>
+									<h3>Subtotal:</h3>
+									<span className='total-pagar'>${total} MXN</span>
 								</div>
 								<br />
-								<div className='cart-total'>
-									<h3>Iva:</h3>
-									<span className='total-pagar'>${iva}.00 MXN</span>
+								<div style={{fontSize:"13px", display:"flex", paddingLeft:"91px", marginTop:"-40px", color:"red"}}>
+									<p>+ IVA:</p>
+									<p>${iva} MXN</p>
 								</div>
 								<br />
 								<div className='cart-total'>
 									<h3>Total:</h3>
-									<span className='total-pagar'>${totalIva}.00 MXN</span>
+									<span className='total-pagar'>${totalIva} MXN</span>
 								</div>
 
 							</div>
 
 							<button className='btn-clear-all' onClick={onCleanCart}>
-								Vaciar Carrito
+								Vaciar carrito
 							</button>
 							<Divider/>
 							<button className='btn-clear-all' onClick={payCart}>
-								Pagar Carrito
+								Pagar carrito
 							</button>		
 							
 						</>

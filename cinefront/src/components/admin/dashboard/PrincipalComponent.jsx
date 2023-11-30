@@ -35,7 +35,7 @@ export default function PrincipalComponent(){
                 <Card className="mr-2">
                     <CardBody>
                         <div className="shadow-lg h-20">
-                            <h5>Total de productos vendidos</h5>
+                            <h5 className="text-center">Total de productos vendidos</h5>
                             <h1 className="text-center text-3xl">{TotalProductos}</h1>
                         </div>
                     </CardBody>
@@ -43,7 +43,7 @@ export default function PrincipalComponent(){
                 <Card className="mr-2">
                     <CardBody>
                         <div className="shadow-lg h-20 ml-3">
-                            <h5>Total de entradas vendidas</h5>
+                            <h5 className="text-center">Total de entradas vendidas</h5>
                             <h1 className="text-center text-3xl">{TotalEntradas}</h1>
                         </div>
                     </CardBody>
@@ -51,7 +51,7 @@ export default function PrincipalComponent(){
                 <Card className="mr-2">
                     <CardBody>
                         <div className="shadow-lg h-20 ml-3">
-                            <h5>Monto Total de Productos Vendidos</h5>
+                            <h5 className="text-center">Monto total de productos vendidos</h5>
                             <h1 className="text-center text-3xl">${MontoTotalProductos}</h1>
                         </div>
                     </CardBody>
@@ -59,7 +59,7 @@ export default function PrincipalComponent(){
                 <Card>
                     <CardBody>
                         <div className="shadow-lg h-20 ml-3">
-                            <h5>Monto Total de Entradas Vendidas</h5>
+                            <h5 className="text-center">Monto total de entradas vendidas</h5>
                             <h1 className="text-center text-3xl">${MontoTotalEntradas}</h1>
                         </div>   
                     </CardBody>

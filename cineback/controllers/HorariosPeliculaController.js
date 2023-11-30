@@ -82,7 +82,21 @@ const getAsientosOcupados=(async(req,res)=>{
     HorarioxAsiento.idhorario=req.query.idhorario;
     let AsientosOcupados=await HorarioxAsiento.listar();
     res.json(AsientosOcupados);
-})
+});
+
+//@desc obtener lista de horarios para validacion
+//@route GET /api/horariosvalidacion
+//@access public
+const HorariosValidacion=(async(req,res)=>{
+    let HorarioPelicula=new HorarioPeliculaClass;
+    HorarioPelicula.idsala=req.query.idsala;
+    HorarioPelicula.fecha=req.query.fecha;
+    HorarioPelicula.hora=req.query.hora;
+    HorarioPelicula.HoraFiltro=req.query.horaintervalo;
+    let validacionmismohorario=await HorarioPelicula.ListaHorarioValidacion();
+    let validacionperiodo=await HorarioPelicula.DiferenciaHorario();
+    res.json({validacionmismohorario:validacionmismohorario,validacionperiodo:validacionperiodo});
+});
 
 module.exports={
     addHorarioPelicula,
@@ -91,5 +105,6 @@ module.exports={
     deleteHorarioPelicula,
     getListaSalasDisponibles,
     getHorarios,
-    getAsientosOcupados
+    getAsientosOcupados,
+    HorariosValidacion
 }

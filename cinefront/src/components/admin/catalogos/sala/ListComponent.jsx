@@ -152,7 +152,7 @@ export default function ListComponent(){
                     <TableColumn>#</TableColumn>
                     <TableColumn>Nombre</TableColumn>
                     <TableColumn>Ubicación</TableColumn>
-                    <TableColumn>Número de Filas</TableColumn>
+                    <TableColumn>Número de filas</TableColumn>
                     <TableColumn>Acciones</TableColumn>
                 </TableHeader>
             }

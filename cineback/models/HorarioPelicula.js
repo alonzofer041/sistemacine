@@ -76,5 +76,22 @@ class HorarioPelicula{
         ])
         return rows;
     }
+    async ListaHorarioValidacion(){
+        const [rows]=await pool.query('SELECT * FROM horariospelicula WHERE fecha=? AND idsala=? AND hora=? AND deleted_at IS NULL',[
+            this.fecha,
+            this.idsala,
+            this.hora
+        ]);
+        return rows;
+    }
+    async DiferenciaHorario(){
+        const [rows]=await pool.query('SELECT * FROM horariospelicula WHERE (TIME(hora) BETWEEN ? AND ?) AND idsala=? AND fecha=? AND deleted_at IS NULL',[
+            this.HoraFiltro,
+            this.hora,
+            this.idsala,
+            this.fecha
+        ]);
+        return rows;
+    }
 }
 module.exports=HorarioPelicula

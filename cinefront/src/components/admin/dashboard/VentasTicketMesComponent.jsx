@@ -75,7 +75,7 @@ export default function VentasTicketMesComponent(){
                             labels:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
                             datasets:[
                                 {
-                                    label:"No. de Ventas",
+                                    label:"No. de ventas",
                                     data:values,
                                     backgroundColor:[
                                         '#FFF'

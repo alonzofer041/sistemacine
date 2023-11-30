@@ -27,7 +27,7 @@ function Pago({Orden,setOrden,Errores, DatosCorreo, setDatosCorreo,CardElement})
                     <Input type='text' label="CORREO" placeholder="Su Correo Electronico" value={Orden.correocliente} onChange={handleCorreoCliente}/>
                     {!Object.is(Errores.correocliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{Errores.correocliente[0]}</label> : null}
                 </div>
-                <CardElement className="form-control"></CardElement>
+                <CardElement className="stripeconfig"></CardElement>
                 
                 {/* <Input type='text' label="NOMBRE DE LA TARJETA" placeholder="Tal y como aparece en la tarjeta" />
                 <Input type='number' label="NÚMERO DE TARJETA" placeholder="Digite los 16 números" />

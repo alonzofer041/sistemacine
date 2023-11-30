@@ -15,6 +15,7 @@ import AuthProvider from './provider/AuthProvider'
 import {EmpresaProvider} from './provider/EmpresaProvider'
 import {SucursalProvider} from './provider/SucursalProvider'
 import { ToastContainer } from 'react-toastify'
+import * as serviceWorker from './sw.js'
 // const router=createBrowserRouter([
 //   {
 //     path:'/',

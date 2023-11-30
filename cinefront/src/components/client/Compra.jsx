@@ -7,12 +7,13 @@ export default function Compra(){
         navigate("/cine/inicio");
     }
     return(
-        <div className="center2">
+        <div className="tabs">
             <Card>
                 <CardBody>
-                    <h1 className='mb-2'>Felicidades, su compra se realizó con éxito</h1>
+                    <p style={{fontSize:"80px", textAlign:"center"}} className='mb-2'>¡Felicidades!</p>
+                    <p style={{fontSize:"60px", textAlign:"center"}} className='mb-2'>Su compra se ha realizado con éxito</p>
                     <Divider></Divider>
-                    <Button onClick={inicio} class="btn" color="primary">Volver al Inicio</Button>
+                    <Button onClick={inicio} className="btn" color="warning">Volver al Inicio</Button>
                 </CardBody>
             </Card>
         </div>

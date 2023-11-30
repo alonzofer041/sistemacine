@@ -12,8 +12,9 @@ import { MensajeAdvertencia } from "../../../../../helpers/functions";
 
 export default function ListComponent(){
     const location=useLocation();
-    const idpelicula=location.state?.idpelicula
-    const titulo=location.state?.titulo
+    const idpelicula=location.state?.idpelicula;
+    const titulo=location.state?.titulo;
+    const duracion=location.state?.duracion;
 
     const[PeliculaHorarioList,setPeliculaHorarioList]=useState([
         
@@ -31,6 +32,8 @@ export default function ListComponent(){
         hora: '',
         fecha:''
     });
+
+    const [FechaSeleccionada,setFechaSeleccionada]=useState(null);
 
 
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -71,25 +74,63 @@ export default function ListComponent(){
             });
             return false;
         }
-        var obj={
-            idhorariopelicula:PeliculaHorario.idhorariopelicula,
-            idpelicula:idpelicula,
-            idsala:PeliculaHorario.idsala,
-            hora:PeliculaHorario.hora,
-            fecha:PeliculaHorario.fecha
+        let FechaMinutos=new Date(FechaSeleccionada.getTime()-Number(duracion)*60000);
+        let hour=FechaMinutos.getHours();
+        let minutes=FechaMinutos.getMinutes();
+        let HoraIntervalo=hour+':'+minutes+':00';
+        // console.log(HoraIntervalo);
+        // return false;
+
+        axios.get("/api/horariosvalidacion",{
+            params:{
+                idsala:PeliculaHorario.idsala,
+                fecha:PeliculaHorario.fecha,
+                hora:PeliculaHorario.hora+':00',
+                horaintervalo:HoraIntervalo
+            }
         }
-        if (obj.idhorariopelicula==0) {
-            axios.post("/api/horariopelicula",obj).then((res)=>{
-                Lista();
-                onClose();
-            });   
-        }
-        else{
-            axios.post("/api/horariopelicula/"+PeliculaHorario.idhorariopelicula,obj).then((res)=>{
-                Lista();
-                onClose();
+        ).then((res)=>{
+            res.data.validacionmismohorario.forEach((horario)=>{
+                // console.log(horario.fecha.substring(0,10));
+                if (PeliculaHorario.fecha==horario.fecha.substring(0,10) || PeliculaHorario.hora==horario.hora) {
+                    mensajes.push("Este horario ya está asignado");
+                }
             });
-        }
+            // console.log(res.data.validacionperiodo);
+            if (res.data.validacionperiodo.length>0) {
+                mensajes.push("La función de la película aún no termina en la hora seleccionada");
+            }
+        }).finally(()=>{
+            // console.log(new Date(FechaSeleccionada.getTime()-Number(duracion)*60000));
+            // return false;
+            if (mensajes.length>0){
+                mensajes.forEach((mensaje)=>{
+                    MensajeAdvertencia(mensaje);
+                });
+                return false;
+            }
+            var obj={
+                idhorariopelicula:PeliculaHorario.idhorariopelicula,
+                idpelicula:idpelicula,
+                idsala:PeliculaHorario.idsala,
+                hora:PeliculaHorario.hora,
+                fecha:PeliculaHorario.fecha
+            }
+            if (obj.idhorariopelicula==0) {
+                axios.post("/api/horariopelicula",obj).then((res)=>{
+                    Lista();
+                    onClose();
+                });   
+            }
+            else{
+                axios.post("/api/horariopelicula/"+PeliculaHorario.idhorariopelicula,obj).then((res)=>{
+                    Lista();
+                    onClose();
+                });
+            }
+        })
+
+        
     }
     function Editar(index){
         let indexPeliculaHorario=PeliculaHorarioList.findIndex((element)=>element.idhorariopelicula==index);
@@ -147,7 +188,11 @@ export default function ListComponent(){
                  EventoGuardar={Guardar}
                  Titulo={"Agregar Horario"}
                  isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}
-                 CuerpoFormulario={<FormComponent PeliculaHorario={PeliculaHorario} setPeliculaHorario={setPeliculaHorario}></FormComponent>}
+                 CuerpoFormulario={<FormComponent 
+                    PeliculaHorario={PeliculaHorario} 
+                    setPeliculaHorario={setPeliculaHorario} 
+                    FechaSeleccionada={FechaSeleccionada} 
+                    setFechaSeleccionada={setFechaSeleccionada}></FormComponent>}
             ></Modal>
             <SweetAlert2 {...swalProps}
             onConfirm={()=>{

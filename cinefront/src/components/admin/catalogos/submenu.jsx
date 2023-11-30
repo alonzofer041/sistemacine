@@ -29,7 +29,7 @@ export default function SubMenuConfig(){
 
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarCategoria}>
                     <FaFilm size="2em"/>
-                    Género de Películas
+                    Género de películas
                 </Button>
                 <Button className="btn-menu" as={Link} variant="shadow" onClick={NavegarSala}>
                     <FaGopuram size="2em"/>

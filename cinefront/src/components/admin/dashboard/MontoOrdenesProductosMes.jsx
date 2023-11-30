@@ -39,7 +39,7 @@ ChartJS.register(
         <div>
             <Card>
                 <CardHeader>
-                    <h1>Monto de Ventas de Productos por Mes</h1>
+                    <h1>Monto de ventas de productos por mes</h1>
                 </CardHeader>
                 <Divider></Divider>
                 <CardBody>
