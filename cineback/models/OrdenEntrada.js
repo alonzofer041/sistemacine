@@ -30,6 +30,18 @@ class OrdenEntrada{
         ]);
         return respuesta;
     }
+    async Recovery(){
+        let [rows]=await pool.query('SELECT * FROM ordenentradas WHERE idordenentrada=?',[
+            this.idordenentrada
+        ]);
+        return rows[0];
+    }
+    async ActualizarEstado(){
+        let respuesta=await pool.query('UPDATE ordenentradas SET estatus="escaneada" WHERE idordenentrada=?',[
+            this.idordenentrada
+        ]);
+        return respuesta;
+    }
     async TotalMontoEntradasVendidas(){
         let sql=`SELECT SUM(preciototal) AS preciototalentrada FROM ordenentradas WHERE idempresa=? AND idsucursal=? AND MONTH(created_at)=?`
         let [respuesta]=await pool.query(sql,[

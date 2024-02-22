@@ -129,7 +129,7 @@ function MyComponent() {
     function recovery(){
         axios.get("/api/sucursalrecovery",{
             params:{
-                origen:"admin",
+                origen:"cliente",
                 idsucursal:IdSucursal
             }
         }).then((res)=>{
@@ -315,15 +315,16 @@ function MyComponent() {
                     }
                 }).then((res)=>{
                     MensajeExito("Se ha guardado la orden con éxito");
-                    EnviarCorreoCompra();
+                    EnviarCorreoCompra(res.data.respuesta[0].insertId);
                 }).catch((err)=>{
                     setErrorValidacion(err.response.data.errors.errors);
                 });  
             }) 
         }
     }
-    async function EnviarCorreoCompra(){
+    async function EnviarCorreoCompra(idorden){
         let obj={
+            idordenentrada:idorden,
             nombrecliente:Nombre + ' ' + Apellido,
             titulo: titulopelicula,
             correocliente:Correo,
@@ -513,7 +514,6 @@ function MyComponent() {
                                                 {!Object.is(ErrorValidacion.nombrecliente,undefined) ? <label className="mensajeerrorvalidacion" htmlFor="">{ErrorValidacion.nombrecliente[0]}</label> : null}
                                             </div>
                                             </CardBody>
-                                            <Divider/>
                                             <Divider/>
                                             <CardBody>
                                             <div>

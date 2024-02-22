@@ -32,6 +32,7 @@ import CarteleraComponent from "../components/client/cartelera/CarteleraComponen
 import ListaEmpresas from "../components/client";
 import Compra from "../components/client/Compra";
 import Superset from "../components/admin/dashboard/superset/superset";
+import Qrscan from "../components/admin/qrscan";
 
 const Routes=()=>{
   const {Token} = useAuth();
@@ -49,12 +50,17 @@ const Routes=()=>{
       element:<Register/>
     },
     {
+      path:"/cine/qr",
+      element:<Qrscan/>
+    },
+    {
       element:<NavBarComponent/>,
       children:[
         {
           path:"/cine/realizado",
           element:<Compra></Compra>
         },
+        
         {
           path:"/cine/inicio",
           element:<Inicio/>

@@ -76,6 +76,25 @@ const addOrdenEntrada=(async(req,res)=>{
     
 })
 
+//@desc cambiar estado orden de entrada
+//@route POST /api/ordenentradaestado
+//@access public
+const updateEstatusEntrada=(async(req,res)=>{
+    let OrdenEntrada=new OrdenEntradaClass;
+    OrdenEntrada.idordenentrada=req.body.idordenentrada;
+    let respuesta=await OrdenEntrada.ActualizarEstado();
+    res.json(respuesta);
+});
+
+//@desc obtener datos orden de entrada
+//@route GET /api/ordenentrada
+//@access public
+const Recovery=(async(req,res)=>{
+    let OrdenEntrada=new OrdenEntradaClass;
+    OrdenEntrada.idordenentrada=req.query.idordenentrada;
+    let respuesta=await OrdenEntrada.Recovery();
+    res.json(respuesta);
+})
 //@desc correo de pago
 //@route POST /api/pagoentradaemail
 //@access public
@@ -97,6 +116,7 @@ const pagoEmail=(async (req,res)=>{
         estatus=status
     })
     if (estatus){
+        let idordenentrada=req.body.idordenentrada;
         let nombrecliente=req.body.nombrecliente;
         let idempresa=req.body.idempresa;
         let idsucursal=req.body.idsucursal;
@@ -110,6 +130,7 @@ const pagoEmail=(async (req,res)=>{
         //let destinatario=req.body.destinatario;
         let url="127.0.0.1:5173/pagoentrada/"+idempresa+"/"+idsucursal;
         const qrData = {
+            idordenentrada:idordenentrada,
             nombrecliente: nombrecliente,
             pagototal: preciototal,
             NumEntradasSeleccionadas: cantidadentradas,
@@ -149,4 +170,4 @@ const generateQRCode = async (data) => {
         throw error;
     }
 };
-module.exports={addOrdenEntrada, pagoEmail, uploads}
+module.exports={addOrdenEntrada, pagoEmail, uploads, updateEstatusEntrada, Recovery}
